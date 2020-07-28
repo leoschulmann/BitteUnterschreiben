@@ -36,6 +36,8 @@ public class AppWindow extends JFrame {
         menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption(this, topScrollerPanel));
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
-        add(new MainPanel(), BorderLayout.CENTER);
+        MainPanel mainPanel = new MainPanel();
+        GUIController.setMainPanel(mainPanel);  //todo should switch to Spring...
+        add(mainPanel, BorderLayout.CENTER);
     }
 }

@@ -13,9 +13,17 @@ public class PDFController {
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
         PDFRenderer renderer = new PDFRenderer(pdDocument);
         for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
-            images[i] = renderer.renderImageWithDPI(i, 6.4f);
+            images[i] = renderer.renderImageWithDPI(i, 6.4f);    // for 75 px ..?
         }
         pdDocument.close();
         return images;
+    }
+
+    public static BufferedImage get300dpiPage(String file, int page) throws IOException {
+        PDDocument pdDocument = PDDocument.load(new File(file));
+        PDFRenderer renderer = new PDFRenderer(pdDocument);
+        BufferedImage bufferedImage = renderer.renderImageWithDPI(page, 300f);
+        pdDocument.close();
+        return bufferedImage;
     }
 }

@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.GUIController;
 import com.leoschulmann.podpishiplz.controller.PDFController;
 
 import javax.swing.*;
@@ -19,8 +20,21 @@ public class TopScrollerPanel {
 
     public void loadFile(String file) throws IOException {
         BufferedImage[] images = PDFController.loadPDF(file);
-        for (BufferedImage image : images) {
+        for (int i = 0; i < images.length; i++) {
+            BufferedImage image = images[i];
             JButton jb = new JButton(new ImageIcon(image));
+            int page = i;
+            jb.addActionListener(e -> {
+                try {
+                    BufferedImage selectedPage300dpi = PDFController.get300dpiPage(file, page);
+                    GUIController.openPage(selectedPage300dpi);
+                } catch (IOException ioException) {
+                    JOptionPane.showMessageDialog(this.getWrapper(), e.getClass().toString()
+                            + " " + ioException.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+                    ioException.printStackTrace();
+                }
+            });
             panel.add(jb);
         }
         panel.revalidate();
