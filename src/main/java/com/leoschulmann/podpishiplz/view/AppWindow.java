@@ -34,6 +34,7 @@ public class AppWindow extends JFrame {
         TopScrollerPanel topScrollerPanel = new TopScrollerPanel();
 
         menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption(this, topScrollerPanel));
+        menuBar.getOptionPlace().addActionListener(e -> GUIController.placeOption(this));
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         MainPanel mainPanel = new MainPanel();

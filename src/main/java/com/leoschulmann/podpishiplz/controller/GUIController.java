@@ -12,7 +12,7 @@ public class GUIController {
     static MainPanel mainPanel;
 
     public static void openOption(AppWindow appWindow, TopScrollerPanel topScrollerPanel) {
-        String file = FilePicker.open(appWindow);
+        String file = FilePicker.openPDF(appWindow);
         if (file != null) {
             try {
                 topScrollerPanel.loadFile(file);
@@ -21,6 +21,18 @@ public class GUIController {
             }
         }
 
+    }
+
+    public static void placeOption(AppWindow appWindow)  {
+        String file = FilePicker.openOverlay(appWindow);
+        if (file != null) {
+            try {
+                mainPanel.addNewOverlay(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mainPanel.repaint();
+        }
     }
 
     public static void openPage(BufferedImage image) {

@@ -5,17 +5,26 @@ import java.awt.*;
 
 public class FilePicker {
 
-    public static String open(JFrame parent) {
+    public static String openPDF(JFrame parent) {
         FileDialog fileDialog = new FileDialog(parent, "Открыть файл", FileDialog.LOAD);
-        fileDialog.setFile("*.pdf");
-        fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".pdf"));
+        fileDialog.setFile("*.pdf");   //for Win
+        fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".pdf"));  // for Mac
         fileDialog.setMultipleMode(false);
         fileDialog.setVisible(true);
         if (fileDialog.getFile() == null) return null;
         return fileDialog.getDirectory() + fileDialog.getFile();
     }
 
-    static void save(JFrame parent) {
+    static void savePDF(JFrame parent) {
     }
 
+    public static String openOverlay(AppWindow appWindow) {
+        FileDialog fileDialog = new FileDialog(appWindow, "Открыть файл", FileDialog.LOAD);
+        fileDialog.setFile("*.png");   //for Win
+        fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".png"));  // for Mac
+        fileDialog.setMultipleMode(false);
+        fileDialog.setVisible(true);
+        if (fileDialog.getFile() == null) return null;
+        return fileDialog.getDirectory() + fileDialog.getFile();
+    }
 }
