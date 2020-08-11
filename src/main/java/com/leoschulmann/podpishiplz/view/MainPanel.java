@@ -3,67 +3,55 @@ package com.leoschulmann.podpishiplz.view;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainPanel extends JPanel {
-    private static final java.util.List<Overlay> overlays = new ArrayList<>();
-    private BufferedImage bufIm;
-    private int resizeHeight = 0;
-    private int resizeWidth = 0;
-    private double resizeRatio = 0.0;
-    private static final int INSET = 10;
-    private int x1 = 0;
-    private int y1 = 0;
+    private final java.util.List<Overlay> overlays = new ArrayList<>();
+    private BufferedImage bufIm;  // real (actual) page image
+    private int pageHeight = 0;  // resized page size
+    private int pageWidth = 0;
+    private double resizeRatio = 0.0;  // resized divided by real
+    private static final int INSET = 10;  // margin (px)
+    private int pageX0 = 0;  // resized page top left coords
+    private int pageY0 = 0;
 
     public MainPanel() {
-//        MouseController mouse = new MouseController(overlays);
-//        addMouseListener(mouse);
-//        addMouseMotionListener(mouse);
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                overlays.forEach(overlay -> overlay.setSelected(false));
-                overlays.stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
-                        .findFirst()
-                        .ifPresent(o -> o.setSelected(true));
-                repaint();
-            }
-        });
+        MouseController mouse = new MouseController(this);
+        addMouseListener(mouse);
+        addMouseMotionListener(mouse);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         if (bufIm != null) {
             if (bufIm.getHeight() > bufIm.getWidth()) { //picture is vertical
-                resizeHeight = this.getHeight() - (INSET * 2);
-                resizeWidth = resizeHeight * bufIm.getWidth() / bufIm.getHeight();
-                x1 = (this.getWidth() - resizeWidth) / 2;
-                y1 = INSET;
+                pageHeight = this.getHeight() - (INSET * 2);
+                pageWidth = pageHeight * bufIm.getWidth() / bufIm.getHeight();
+                pageX0 = (this.getWidth() - pageWidth) / 2;
+                pageY0 = INSET;
 
             } else { // horizontal
-                resizeWidth = this.getWidth() - (INSET * 2);
-                resizeHeight = resizeWidth * bufIm.getHeight() / bufIm.getWidth();
-                x1 = INSET;
-                y1 = (this.getHeight() - resizeHeight) / 2;
+                pageWidth = this.getWidth() - (INSET * 2);
+                pageHeight = pageWidth * bufIm.getHeight() / bufIm.getWidth();
+                pageX0 = INSET;
+                pageY0 = (this.getHeight() - pageHeight) / 2;
             }
 
-            g.drawImage(bufIm, x1, y1, resizeWidth, resizeHeight, null);
+            g.drawImage(bufIm, pageX0, pageY0, pageWidth, pageHeight, null);
 
-            resizeRatio = 1.0 * resizeHeight / bufIm.getHeight();
+            resizeRatio = 1.0 * pageHeight / bufIm.getHeight();
         }
 
         if (overlays.size() > 0) {
             overlays.forEach(o -> {
                 int overlayResizeWidth = (int) (o.getWidth() * resizeRatio);
                 int overlayResizeHeight = (int) (o.getHeight() * resizeRatio);
-                int overlayX = x1 + (int) (o.getRelCentX() * resizeWidth) - overlayResizeWidth / 2;
-                int overlayY = y1 + (int) (o.getRelCentY() * resizeHeight) - overlayResizeHeight / 2;
+                int overlayX = pageX0 + (int) (o.getRelCentX() * pageWidth) - overlayResizeWidth / 2;
+                int overlayY = pageY0 + (int) (o.getRelCentY() * pageHeight) - overlayResizeHeight / 2;
                 o.setBounds(overlayX, overlayY, overlayResizeWidth, overlayResizeHeight);
                 g.drawImage(o.getImage(), overlayX, overlayY, overlayResizeWidth, overlayResizeHeight, null);
             });
@@ -90,5 +78,25 @@ public class MainPanel extends JPanel {
         o.setSelected(true);
         overlays.forEach(overlay -> overlay.setSelected(false));
         overlays.add(o);
+    }
+
+    public List<Overlay> getOverlays() {
+        return overlays;
+    }
+
+    public int getPageHeight() {
+        return pageHeight;
+    }
+
+    public int getPageWidth() {
+        return pageWidth;
+    }
+
+    public int getPageX0() {
+        return pageX0;
+    }
+
+    public int getPageY0() {
+        return pageY0;
     }
 }
