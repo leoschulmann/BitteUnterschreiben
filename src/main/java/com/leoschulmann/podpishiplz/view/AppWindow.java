@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.GUIController;
 
 import javax.swing.*;
@@ -40,5 +41,7 @@ public class AppWindow extends JFrame {
         MainPanel mainPanel = new MainPanel();
         GUIController.setMainPanel(mainPanel);  //todo should switch to Spring...
         add(mainPanel, BorderLayout.CENTER);
+
+        DocumentController.createDocument();
     }
 }

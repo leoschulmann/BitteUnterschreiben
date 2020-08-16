@@ -19,8 +19,8 @@ public class PDFController {
         return images;
     }
 
-    public static BufferedImage get300dpiPage(String file, int page) throws IOException {
-        PDDocument pdDocument = PDDocument.load(new File(file));
+    public static BufferedImage get300dpiPage(File file, int page) throws IOException {
+        PDDocument pdDocument = PDDocument.load(file);
         PDFRenderer renderer = new PDFRenderer(pdDocument);
         BufferedImage bufferedImage = renderer.renderImageWithDPI(page, 300f);
         pdDocument.close();
