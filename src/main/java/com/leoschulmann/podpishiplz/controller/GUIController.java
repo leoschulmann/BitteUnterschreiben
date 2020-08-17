@@ -41,6 +41,10 @@ public class GUIController {
         }
     }
 
+    public static void deleteSelectedOverlay() {
+        mainPanel.removeSelectedOverlay();
+    }
+
     public static void setMainPanel(MainPanel mainPanel) {
         GUIController.mainPanel = mainPanel;
     }

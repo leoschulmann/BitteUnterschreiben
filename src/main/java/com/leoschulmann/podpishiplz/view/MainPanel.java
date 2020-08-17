@@ -80,6 +80,12 @@ public class MainPanel extends JPanel {
         overlays.add(o);
     }
 
+    public void removeSelectedOverlay() {
+        Overlay o = overlays.stream().filter(Overlay::isSelected).findFirst().orElse(null);
+        overlays.remove(o);
+        repaint();
+    }
+
     public List<Overlay> getOverlays() {
         return overlays;
     }
