@@ -2,6 +2,7 @@ package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.GUIController;
+import com.leoschulmann.podpishiplz.controller.MainPanelController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,11 +37,12 @@ public class AppWindow extends JFrame {
 
         menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption(this, topScrollerPanel));
         menuBar.getOptionPlace().addActionListener(e -> GUIController.placeOption(this));
-        menuBar.getOptionRemove().addActionListener(e -> GUIController.deleteSelectedOverlay());
+        menuBar.getOptionRemove().addActionListener(e -> GUIController.deleteSelectedOverlayOption());
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         MainPanel mainPanel = new MainPanel();
         GUIController.setMainPanel(mainPanel);  //todo should switch to Spring...
+        MainPanelController.setMainPanel(mainPanel);
         add(mainPanel, BorderLayout.CENTER);
 
         DocumentController.createDocument();

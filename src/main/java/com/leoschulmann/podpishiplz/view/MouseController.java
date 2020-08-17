@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.MainPanelController;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,8 +19,8 @@ public class MouseController extends MouseAdapter {
     public void mousePressed(MouseEvent e) {
         clickX = e.getX();
         clickY = e.getY();
-        panel.getOverlays().forEach(overlay -> overlay.setSelected(false));
-        panel.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
+        MainPanelController.getOverlays().forEach(overlay -> overlay.setSelected(false));
+        MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
                 .findFirst()
                 .ifPresent(o -> o.setSelected(true));
         panel.repaint();
@@ -26,7 +28,7 @@ public class MouseController extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        panel.getOverlays().stream()
+        MainPanelController.getOverlays().stream()
                 .filter(overlay -> overlay.getBounds().contains(clickX, clickY))
                 .findFirst()
                 .ifPresent(overlay -> {
@@ -35,8 +37,8 @@ public class MouseController extends MouseAdapter {
                     //todo fix snapping to overlay centre
 //                    int mouseClickToOverlayCenterX = clickX - (overlay.getBounds().width / 2);
 //                    int mouseClickToOverlayCenterY = clickY - (overlay.getBounds().height / 2);
-                    overlay.setRelCentX((1.0 * e.getX() - panel.getPageX0()) / panel.getPageWidth());
-                    overlay.setRelCentY((1.0 * e.getY() - panel.getPageY0()) / panel.getPageHeight());
+                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageStartX()) / MainPanelController.getPageWidth());
+                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageStartY()) / MainPanelController.getPageHeight());
                     clickX += shiftX;
                     clickY += shiftY;
                     panel.repaint();

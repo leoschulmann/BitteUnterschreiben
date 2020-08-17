@@ -18,7 +18,7 @@ public class FilePicker {
     static void savePDF(JFrame parent) {
     }
 
-    public static String openOverlay(AppWindow appWindow) {
+    public static String openOverlay(JFrame appWindow) {
         FileDialog fileDialog = new FileDialog(appWindow, "Открыть файл", FileDialog.LOAD);
         fileDialog.setFile("*.png");   //for Win
         fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".png"));  // for Mac

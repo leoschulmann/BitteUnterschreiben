@@ -1,4 +1,4 @@
-package com.leoschulmann.podpishiplz.view;
+package com.leoschulmann.podpishiplz.model;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

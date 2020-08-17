@@ -1,37 +1,46 @@
 package com.leoschulmann.podpishiplz.model;
 
+import com.leoschulmann.podpishiplz.controller.PDFController;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Page {
-    private File originalFile;
-    private int originalFilePageNumber;
+    private final File originalFile;
+    private final int originalFilePageNumber;
     private BufferedImage image;
     private BufferedImage thumbnail;
-    private Map<BufferedImage, Position> overlays;
+    private List<Overlay> overlays;
 
 
     public Page(String filename, int number) {
-        overlays = new HashMap<>();
+        overlays = new ArrayList<>();
         originalFile = new File(filename);
         originalFilePageNumber = number;
     }
 
     public void addOverlay(BufferedImage im, double x, double y) {
-        overlays.put(im, new Position(x, y));
+        Overlay o = new Overlay(im);
+        o.setRelCentX(x);
+        o.setRelCentY(y);
+        overlays.add(o);
     }
 
-    public void remOverlay() {
-        //todo remove overlay
+    public void remOverlay(Overlay o) {
+        overlays.remove(o);
     }
 
     public File getOriginalFile() {
         return originalFile;
     }
 
-    public BufferedImage getImage() {
+    public BufferedImage getImage() throws IOException {
+        if (image == null) {
+            image = PDFController.get300dpiPage(originalFile, originalFilePageNumber);
+        }
         return image;
     }
 
@@ -39,7 +48,7 @@ public class Page {
         return thumbnail;
     }
 
-    public Map<BufferedImage, Position> getOverlays() {
+    public List<Overlay> getOverlays() {
         return overlays;
     }
 
@@ -51,7 +60,7 @@ public class Page {
         this.thumbnail = thumbnail;
     }
 
-    public void setOverlays(Map<BufferedImage, Position> overlays) {
+    public void setOverlays(List<Overlay> overlays) {
         this.overlays = overlays;
     }
 

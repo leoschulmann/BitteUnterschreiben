@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Document {
-    private List<Page> pages;
+    private final List<Page> pages;
 
     public Document() {
         pages = new ArrayList<>();
@@ -20,11 +20,11 @@ public class Document {
         return pages.get(pos);
     }
 
-    public int addPage(BufferedImage th, String file, int origPageNum) {
-        Page p = new Page(file, origPageNum);
+    public Page addPageAndReturn(BufferedImage th, String file, int sourcePdfPage) {
+        Page p = new Page(file, sourcePdfPage);
         p.setThumbnail(th);
         pages.add(p);
-        return pages.indexOf(p);
+        return p;
     }
 
     public void remPage(int pos) {
@@ -32,5 +32,9 @@ public class Document {
         p.setThumbnail(null);
         p.setImage(null);
         p.setOverlays(null);  //might be excessive
+    }
+
+    public boolean contains(Page page) {
+        return pages.contains(page);
     }
 }

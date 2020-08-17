@@ -1,23 +1,13 @@
 package com.leoschulmann.podpishiplz.view;
 
-import javax.imageio.ImageIO;
+
+import com.leoschulmann.podpishiplz.controller.DocumentController;
+import com.leoschulmann.podpishiplz.controller.MainPanelController;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainPanel extends JPanel {
-    private final java.util.List<Overlay> overlays = new ArrayList<>();
-    private BufferedImage bufIm;  // real (actual) page image
-    private int pageHeight = 0;  // resized page size
-    private int pageWidth = 0;
-    private double resizeRatio = 0.0;  // resized divided by real
-    private static final int INSET = 10;  // margin (px)
-    private int pageX0 = 0;  // resized page top left coords
-    private int pageY0 = 0;
 
     public MainPanel() {
         MouseController mouse = new MouseController(this);
@@ -27,82 +17,33 @@ public class MainPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        if (bufIm != null) {
-            if (bufIm.getHeight() > bufIm.getWidth()) { //picture is vertical
-                pageHeight = this.getHeight() - (INSET * 2);
-                pageWidth = pageHeight * bufIm.getWidth() / bufIm.getHeight();
-                pageX0 = (this.getWidth() - pageWidth) / 2;
-                pageY0 = INSET;
+        if (DocumentController.getCurrentPage() != null) {
 
-            } else { // horizontal
-                pageWidth = this.getWidth() - (INSET * 2);
-                pageHeight = pageWidth * bufIm.getHeight() / bufIm.getWidth();
-                pageX0 = INSET;
-                pageY0 = (this.getHeight() - pageHeight) / 2;
+            int pageHeight = MainPanelController.getPageHeight();
+            int pageWidth = MainPanelController.getPageWidth();
+            int pageX0 = MainPanelController.getPageStartX();
+            int pageY0 = MainPanelController.getPageStartY();
+
+            g.drawImage(MainPanelController.getImage(), pageX0, pageY0, pageWidth, pageHeight, null);
+
+            if (MainPanelController.getOverlays().size() > 0) {
+                MainPanelController.getOverlays().forEach(o -> {
+                    int overlayResizeWidth = MainPanelController.getOverlayResizeWidth(o);
+                    int overlayResizeHeight = MainPanelController.getOverlayResizeHeight(o);
+                    int overlayX = MainPanelController.getOverlayX(o);
+                    int overlayY = MainPanelController.getOverlayY(o);
+                    o.setBounds(overlayX, overlayY, overlayResizeWidth, overlayResizeHeight);
+                    g.drawImage(o.getImage(), overlayX, overlayY, overlayResizeWidth, overlayResizeHeight, null);
+                });
             }
 
-            g.drawImage(bufIm, pageX0, pageY0, pageWidth, pageHeight, null);
+            MainPanelController.getSelectedOverlayBounds().ifPresent(bounds -> {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setColor(Color.GREEN);
+                g2.setStroke(new BasicStroke(2));
+                g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
-            resizeRatio = 1.0 * pageHeight / bufIm.getHeight();
-        }
-
-        if (overlays.size() > 0) {
-            overlays.forEach(o -> {
-                int overlayResizeWidth = (int) (o.getWidth() * resizeRatio);
-                int overlayResizeHeight = (int) (o.getHeight() * resizeRatio);
-                int overlayX = pageX0 + (int) (o.getRelCentX() * pageWidth) - overlayResizeWidth / 2;
-                int overlayY = pageY0 + (int) (o.getRelCentY() * pageHeight) - overlayResizeHeight / 2;
-                o.setBounds(overlayX, overlayY, overlayResizeWidth, overlayResizeHeight);
-                g.drawImage(o.getImage(), overlayX, overlayY, overlayResizeWidth, overlayResizeHeight, null);
             });
         }
-
-        overlays.stream().filter(Overlay::isSelected)
-                .findFirst()
-                .ifPresent(o -> {
-                    Graphics2D g2 = (Graphics2D) g;
-                    g2.setColor(Color.GREEN);
-                    g2.setStroke(new BasicStroke(3));
-                    g.drawRect(o.getBounds().x, o.getBounds().y, o.getBounds().width, o.getBounds().height);
-                });
-    }
-
-    public void setBufferedImage(BufferedImage bufferedImage) {
-        this.bufIm = bufferedImage;
-    }
-
-    public void addNewOverlay(String file) throws IOException {
-        Overlay o = new Overlay(ImageIO.read(new File(file)));
-        o.setRelCentX(Math.random());
-        o.setRelCentY(Math.random());
-        o.setSelected(true);
-        overlays.forEach(overlay -> overlay.setSelected(false));
-        overlays.add(o);
-    }
-
-    public void removeSelectedOverlay() {
-        Overlay o = overlays.stream().filter(Overlay::isSelected).findFirst().orElse(null);
-        overlays.remove(o);
-        repaint();
-    }
-
-    public List<Overlay> getOverlays() {
-        return overlays;
-    }
-
-    public int getPageHeight() {
-        return pageHeight;
-    }
-
-    public int getPageWidth() {
-        return pageWidth;
-    }
-
-    public int getPageX0() {
-        return pageX0;
-    }
-
-    public int getPageY0() {
-        return pageY0;
     }
 }
