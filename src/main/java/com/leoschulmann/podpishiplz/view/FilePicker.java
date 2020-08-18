@@ -15,7 +15,15 @@ public class FilePicker {
         return fileDialog.getDirectory() + fileDialog.getFile();
     }
 
-    static void savePDF(JFrame parent) {
+    public static String savePDF(JFrame parent) {
+        FileDialog fileDialog = new FileDialog(parent, "Сохранить как...", FileDialog.SAVE);
+        fileDialog.setFile("*.pdf");   //for Win
+        fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".pdf"));  // for Mac
+        fileDialog.setMultipleMode(false);
+        fileDialog.setVisible(true);
+        if (fileDialog.getFile() == null) {
+            return null;
+        } else return fileDialog.getDirectory() + fileDialog.getFile();
     }
 
     public static String openOverlay(JFrame appWindow) {

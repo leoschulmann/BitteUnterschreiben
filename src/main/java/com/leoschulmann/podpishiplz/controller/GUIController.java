@@ -32,11 +32,7 @@ public class GUIController {
 
     public static void placeOption(JFrame appWindow) {
         FileIOController.loadOverlay(appWindow);
-//        String file = FilePicker.openOverlay(appWindow);
-//        if (file != null) {
-//            DocumentController.addNewOverlay(file);
             mainPanel.repaint();
-//        }
     }
 
     public static void deleteSelectedOverlayOption() {
@@ -56,6 +52,15 @@ public class GUIController {
         if (DocumentController.getDoc().contains(page)) {
             DocumentController.setCurrentPage(page);
             mainPanel.repaint();
+        }
+    }
+
+    public static void saveFile(JFrame appWindow) {
+        try {
+            DocumentController.renderAllPages();
+            FileIOController.saveFile(appWindow);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

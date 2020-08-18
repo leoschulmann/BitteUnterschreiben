@@ -37,4 +37,8 @@ public class Document {
     public boolean contains(Page page) {
         return pages.contains(page);
     }
+
+    public List<Page> getPages() {
+        return pages;
+    }
 }

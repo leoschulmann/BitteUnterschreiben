@@ -20,4 +20,9 @@ public class FileIOController {
             }
         }
     }
+
+    public static void saveFile(JFrame appWindow) throws IOException {
+        String file = FilePicker.savePDF(appWindow);
+        PDFController.savePDF(file);
+    }
 }
