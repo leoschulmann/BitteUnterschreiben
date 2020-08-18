@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PDFController {
-    public static BufferedImage[] loadPDF(String file) throws IOException {
+    public static void loadPDF(String file) throws IOException {
         PDDocument pdDocument = PDDocument.load(new File(file));
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
         PDFRenderer renderer = new PDFRenderer(pdDocument);
@@ -21,7 +21,7 @@ public class PDFController {
             images[i] = renderer.renderImageWithDPI(i, 6.4f);    // for 75 px ..?
         }
         pdDocument.close();
-        return images;
+        GUIController.generateThumbnailButtons(images, file);
     }
 
     public static BufferedImage get300dpiPage(File file, int page) throws IOException {
@@ -43,7 +43,7 @@ public class PDFController {
                     imageXObject.getWidth()/300f * 72, imageXObject.getHeight()/300f * 72);
             contentStream.close();
         }
-        pdf.save(new File(file));
+        pdf.save(new File(file)); //todo write file details ('software', etc)
         pdf.close();
     }
 }

@@ -35,7 +35,7 @@ public class AppWindow extends JFrame {
         setJMenuBar(menuBar);
         TopScrollerPanel topScrollerPanel = new TopScrollerPanel();
 
-        menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption(this, topScrollerPanel));
+        menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption(this));
         menuBar.getOptionPlace().addActionListener(e -> GUIController.placeOption(this));
         menuBar.getOptionRemove().addActionListener(e -> GUIController.deleteSelectedOverlayOption());
         menuBar.getOptionSaveAs().addActionListener(e -> GUIController.saveFile(this));
@@ -43,6 +43,7 @@ public class AppWindow extends JFrame {
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         MainPanel mainPanel = new MainPanel();
         GUIController.setMainPanel(mainPanel);  //todo should switch to Spring...
+        GUIController.setTopScrollerPanel(topScrollerPanel);
         MainPanelController.setMainPanel(mainPanel);
         add(mainPanel, BorderLayout.CENTER);
 

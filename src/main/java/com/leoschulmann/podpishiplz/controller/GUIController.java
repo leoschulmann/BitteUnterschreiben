@@ -2,7 +2,6 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.AppWindow;
-import com.leoschulmann.podpishiplz.view.FilePicker;
 import com.leoschulmann.podpishiplz.view.MainPanel;
 import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
 
@@ -12,21 +11,13 @@ import java.io.IOException;
 
 public class GUIController {
     private static MainPanel mainPanel;
+    private static TopScrollerPanel topScrollerPanel;
 
-    public static void openOption(AppWindow appWindow, TopScrollerPanel topScrollerPanel) {
-        String file = FilePicker.openPDF(appWindow);
-        if (file != null) {
-            try {
-                BufferedImage[] thumbs = PDFController.loadPDF(file);
-                for (int sourcePdfPage = 0; sourcePdfPage < thumbs.length; sourcePdfPage++) {
-                    BufferedImage th = thumbs[sourcePdfPage];
-                    Page documentPage = DocumentController.addNewPageToDocument(th, file, sourcePdfPage);
-                    JButton jb = topScrollerPanel.addNewButton(th);
-                    GUIController.addActionToThumbnailButton(jb, documentPage);
-                }
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+    public static void openOption(AppWindow appWindow) {
+        try {
+            FileIOController.openPdfFile(appWindow);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -63,4 +54,16 @@ public class GUIController {
             e.printStackTrace();
         }
     }
+
+    public static void setTopScrollerPanel(TopScrollerPanel topScrollerPanel) {
+        GUIController.topScrollerPanel = topScrollerPanel;
+    }
+
+    public static void generateThumbnailButtons(BufferedImage[] thumbs, String file) {
+        for (int sourcePdfPage = 0; sourcePdfPage < thumbs.length; sourcePdfPage++) {
+            BufferedImage th = thumbs[sourcePdfPage];
+            Page documentPage = DocumentController.addNewPageToDocument(th, file, sourcePdfPage);
+            JButton jb = topScrollerPanel.addNewButton(th);
+            GUIController.addActionToThumbnailButton(jb, documentPage);}
+        }
 }
