@@ -4,7 +4,7 @@ import com.leoschulmann.podpishiplz.view.AppWindow;
 
 import javax.swing.*;
 
-public class Main {
+public class BitteUnterschreiben {
 
     public static void main(String[] asda) {
         SwingUtilities.invokeLater(AppWindow::new);

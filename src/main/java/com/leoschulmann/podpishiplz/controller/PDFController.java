@@ -43,7 +43,8 @@ public class PDFController {
                     imageXObject.getWidth()/300f * 72, imageXObject.getHeight()/300f * 72);
             contentStream.close();
         }
-        pdf.save(new File(file)); //todo write file details ('software', etc)
+        pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
+        pdf.save(new File(file));
         pdf.close();
     }
 }

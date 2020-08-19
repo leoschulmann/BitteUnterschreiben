@@ -22,7 +22,7 @@ public class AppWindow extends JFrame {
             e.printStackTrace();
         }
 
-        setTitle("Подпиши плз");
+        setTitle("Bitte Unterschreiben");
         setSize(new Dimension(850, 600));
         setVisible(true);
         setResizable(true);

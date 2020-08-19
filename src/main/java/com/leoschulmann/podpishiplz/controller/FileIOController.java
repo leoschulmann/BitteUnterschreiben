@@ -24,7 +24,7 @@ public class FileIOController {
 
     public static void saveFile(JFrame appWindow) throws IOException {
         String file = FilePicker.savePDF(appWindow);
-        PDFController.savePDF(file);
+        if (file != null) PDFController.savePDF(file);
     }
 
     public static void openPdfFile(AppWindow appWindow) throws IOException {
