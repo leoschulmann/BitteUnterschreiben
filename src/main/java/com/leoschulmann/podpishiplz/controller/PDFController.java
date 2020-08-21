@@ -32,8 +32,9 @@ public class PDFController {
         return bufferedImage;
     }
 
-    public static void savePDF(String file) throws IOException {
+    public static PDDocument prepareToSavePDF() throws IOException {
         PDDocument pdf = new PDDocument();
+        pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
         for (BufferedImage im : DocumentController.getRenders()) {
             PDPage page = new PDPage(PDRectangle.A4);
             pdf.addPage(page);
@@ -43,8 +44,6 @@ public class PDFController {
                     imageXObject.getWidth()/300f * 72, imageXObject.getHeight()/300f * 72);
             contentStream.close();
         }
-        pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
-        pdf.save(new File(file));
-        pdf.close();
+        return pdf;
     }
 }

@@ -2,6 +2,7 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.view.AppWindow;
 import com.leoschulmann.podpishiplz.view.FilePicker;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,7 +25,11 @@ public class FileIOController {
 
     public static void saveFile(JFrame appWindow) throws IOException {
         String file = FilePicker.savePDF(appWindow);
-        if (file != null) PDFController.savePDF(file);
+        if (file != null) {
+            PDDocument pdf = PDFController.prepareToSavePDF();
+            pdf.save(new File(file));
+            pdf.close();
+        }
     }
 
     public static void openPdfFile(AppWindow appWindow) throws IOException {
