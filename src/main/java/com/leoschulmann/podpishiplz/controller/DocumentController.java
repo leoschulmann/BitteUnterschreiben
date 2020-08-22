@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.controller;
 
+import com.leoschulmann.podpishiplz.graphics.BlenderComposite;
 import com.leoschulmann.podpishiplz.model.Document;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
@@ -71,7 +72,7 @@ public class DocumentController {
         currentPage.getOverlays().remove(ov);
     }
 
-    public static void renderAllPages() throws IOException {
+    public static void renderAllPages(Class<? extends CompositeContext> blender) throws IOException {
         renders = new ArrayList<>();
         for (Page p : doc.getPages()) {
             BufferedImage im = p.getImage();
@@ -80,6 +81,7 @@ public class DocumentController {
             BufferedImage render = new BufferedImage(imWidth, imHeight, im.getType());
             Graphics2D g2d = render.createGraphics();
             g2d.drawImage(im, 0,0, null);
+            g2d.setComposite(new BlenderComposite(blender));
             for (Overlay o : p.getOverlays()) {
                 int ovWidth = o.getImage().getWidth();
                 int ovHeight = o.getImage().getHeight();

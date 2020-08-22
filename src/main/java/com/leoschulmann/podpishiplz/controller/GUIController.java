@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.controller;
 
+import com.leoschulmann.podpishiplz.graphics.BlenderMultiply;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.AppWindow;
 import com.leoschulmann.podpishiplz.view.MainPanel;
@@ -48,7 +49,7 @@ public class GUIController {
 
     public static void saveFile(JFrame appWindow) {
         try {
-            DocumentController.renderAllPages();
+            DocumentController.renderAllPages(BlenderMultiply.class);  //todo hardcoded for now
             FileIOController.saveFile(appWindow);
         } catch (IOException e) {
             e.printStackTrace();
