@@ -11,6 +11,7 @@ public class MenuBar extends JMenuBar {
     private final JMenuItem optionPlace;
     private final JMenuItem optionRemove;
     private final JMenuItem optionSaveAs;
+    private final JMenuItem optionSettings;
 
     public MenuBar() {
         JMenu menuFile = new JMenu("File");
@@ -19,17 +20,21 @@ public class MenuBar extends JMenuBar {
         optionPlace = new JMenuItem("Place");
         optionRemove = new JMenuItem("Remove selected");
         optionSaveAs = new JMenuItem("Save As...");
+        optionSettings = new JMenuItem("Settings...");
 
         menuFile.add(optionOpen);
         menuFile.add(optionSaveAs);
         menuEdit.add(optionPlace);  // todo make disabled on empty window
         menuEdit.add(optionRemove);
+        menuEdit.addSeparator();
+        menuEdit.add(optionSettings);
         add(menuFile);
         add(menuEdit);
         optionOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
         optionSaveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
         optionPlace.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
         optionRemove.setAccelerator(KeyStroke.getKeyStroke("BACK_SPACE"));
+        optionSettings.setAccelerator(KeyStroke.getKeyStroke("F12"));
     }
 
     public JMenuItem getOptionOpen() {
@@ -46,5 +51,9 @@ public class MenuBar extends JMenuBar {
 
     public JMenuItem getOptionSaveAs() {
         return optionSaveAs;
+    }
+
+    public JMenuItem getOptionSettings() {
+        return optionSettings;
     }
 }

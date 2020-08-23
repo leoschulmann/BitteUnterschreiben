@@ -80,8 +80,8 @@ public class DocumentController {
             int imHeight = im.getHeight();
             BufferedImage render = new BufferedImage(imWidth, imHeight, im.getType());
             Graphics2D g2d = render.createGraphics();
-            g2d.drawImage(im, 0,0, null);
-            g2d.setComposite(new BlenderComposite(blender));
+            g2d.drawImage(im, 0, 0, null);
+            if (blender != null) g2d.setComposite(new BlenderComposite(blender));
             for (Overlay o : p.getOverlays()) {
                 int ovWidth = o.getImage().getWidth();
                 int ovHeight = o.getImage().getHeight();
