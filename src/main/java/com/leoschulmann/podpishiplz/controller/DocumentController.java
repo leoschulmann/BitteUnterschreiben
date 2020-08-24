@@ -7,7 +7,6 @@ import com.leoschulmann.podpishiplz.model.Page;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class DocumentController {
         return p;
     }
 
-    public static Page getPage(int page) throws IOException {
+    public static Page getPage(int page) {
         Page p = doc.getPage(page);
         if (p.getImage() == null) {
             DocumentController.reloadFullScaleImage(page);
@@ -47,7 +46,7 @@ public class DocumentController {
         return doc.getPage(page);
     }
 
-    public static void reloadFullScaleImage(int page) throws IOException {
+    public static void reloadFullScaleImage(int page)  {
         Page p = doc.getPage(page);
         p.setImage(PDFController.get300dpiPage(p.getOriginalFile(), p.getOriginalFilePageNumber()));
     }
@@ -72,7 +71,7 @@ public class DocumentController {
         currentPage.getOverlays().remove(ov);
     }
 
-    public static void renderAllPages(Class<? extends CompositeContext> blender) throws IOException {
+    public static void renderAllPages(Class<? extends CompositeContext> blender) {
         renders = new ArrayList<>();
         for (Page p : doc.getPages()) {
             BufferedImage im = p.getImage();

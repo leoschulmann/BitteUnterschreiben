@@ -11,7 +11,6 @@ import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class GUIController {
     private static MainPanel mainPanel;
@@ -19,11 +18,7 @@ public class GUIController {
     private static SettingsDialogue settingsDialogue;
 
     public static void openOption(AppWindow appWindow) {
-        try {
             FileIOController.openPdfFile(appWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void placeOption(JFrame appWindow) {
@@ -52,23 +47,18 @@ public class GUIController {
     }
 
     public static void saveFile(JFrame appWindow) {
-        try {
-            Class<? extends CompositeContext> blender =null;
+            Class<? extends CompositeContext> blender = null;
             switch (SettingsController.getBlendingMode()) {
                 case (1):
                     blender = BlenderDarken.class;
                     break;
-                case (2) :
+                case (2):
                     blender = BlenderMultiply.class;
                     break;
                 default:
-                    blender = null;
             }
-            DocumentController.renderAllPages(blender);  //todo hardcoded for now
+            DocumentController.renderAllPages(blender);
             FileIOController.saveFile(appWindow);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void setTopScrollerPanel(TopScrollerPanel topScrollerPanel) {

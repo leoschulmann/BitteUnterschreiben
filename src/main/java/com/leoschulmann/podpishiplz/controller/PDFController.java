@@ -24,11 +24,17 @@ public class PDFController {
         GUIController.generateThumbnailButtons(images, file);
     }
 
-    public static BufferedImage get300dpiPage(File file, int page) throws IOException {
-        PDDocument pdDocument = PDDocument.load(file);
-        PDFRenderer renderer = new PDFRenderer(pdDocument);
-        BufferedImage bufferedImage = renderer.renderImageWithDPI(page, 300f);
-        pdDocument.close();
+    public static BufferedImage get300dpiPage(File file, int page)  {
+        PDDocument pdDocument;
+        BufferedImage bufferedImage = null;
+        try {
+            pdDocument = PDDocument.load(file);
+            PDFRenderer renderer = new PDFRenderer(pdDocument);
+            bufferedImage = renderer.renderImageWithDPI(page, 300f);
+            pdDocument.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return bufferedImage;
     }
 

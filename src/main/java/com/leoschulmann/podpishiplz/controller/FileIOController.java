@@ -32,19 +32,28 @@ public class FileIOController {
         }
     }
 
-    public static void saveFile(JFrame appWindow) throws IOException {
+    public static void saveFile(JFrame appWindow) {
         String file = FilePicker.savePDF(appWindow);
         if (file != null) {
-            PDDocument pdf = PDFController.prepareToSavePDF();
-            pdf.save(new File(file));
-            pdf.close();
+            PDDocument pdf;
+            try {
+                pdf = PDFController.prepareToSavePDF();
+                pdf.save(new File(file));
+                pdf.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static void openPdfFile(AppWindow appWindow) throws IOException {
+    public static void openPdfFile(AppWindow appWindow)  {
         String file = FilePicker.openPDF(appWindow);
         if (file != null) {
-            PDFController.loadPDF(file);
+            try {
+                PDFController.loadPDF(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

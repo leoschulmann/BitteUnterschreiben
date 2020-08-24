@@ -4,7 +4,6 @@ import com.leoschulmann.podpishiplz.controller.PDFController;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class Page {
         return originalFile;
     }
 
-    public BufferedImage getImage() throws IOException {
+    public BufferedImage getImage() {
         if (image == null) {
             image = PDFController.get300dpiPage(originalFile, originalFilePageNumber);
         }
