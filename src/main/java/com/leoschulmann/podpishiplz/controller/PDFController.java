@@ -38,14 +38,14 @@ public class PDFController {
         return bufferedImage;
     }
 
-    public static PDDocument prepareToSavePDF() throws IOException {
+    public static PDDocument prepareToSavePDF(float jpegQuality) throws IOException {
         PDDocument pdf = new PDDocument();
         pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
         for (BufferedImage im : DocumentController.getRenders()) {
             PDPage page = new PDPage(PDRectangle.A4);
             pdf.addPage(page);
             PDPageContentStream contentStream = new PDPageContentStream(pdf, page, PDPageContentStream.AppendMode.APPEND, false);
-            PDImageXObject imageXObject = JPEGFactory.createFromImage(pdf, im);
+            PDImageXObject imageXObject = JPEGFactory.createFromImage(pdf, im, jpegQuality);
             contentStream.drawImage(imageXObject, 0,0,
                     imageXObject.getWidth()/300f * 72, imageXObject.getHeight()/300f * 72);
             contentStream.close();

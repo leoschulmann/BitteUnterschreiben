@@ -10,6 +10,7 @@ public class SettingsDialogue extends JDialog {
     public static JRadioButton darkenBlender;
     public static JRadioButton multiplyBlender;
     public static JRadioButton[] btns;
+    public static JSlider jpegQltySlider;
 
 
     public SettingsDialogue(JFrame appWindow) {
@@ -24,10 +25,16 @@ public class SettingsDialogue extends JDialog {
         //init components
         ButtonGroup radioGroup = initRadios(SettingsController.getBlendingMode());
         JButton ok = new JButton("OK");
-        ok.addActionListener(e -> confirm(btns));
+        ok.addActionListener(e -> confirm());
         getRootPane().setDefaultButton(ok);
         JButton cancel = new JButton("cancel");
         cancel.addActionListener(e -> setVisible(false));
+        jpegQltySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, (int) (SettingsController.getJpegQuality()*100));
+        jpegQltySlider.setMajorTickSpacing(20);
+        jpegQltySlider.setMinorTickSpacing(10);
+        jpegQltySlider.setSnapToTicks(true);
+        jpegQltySlider.setPaintTicks(true);
+        jpegQltySlider.setPaintLabels(true);
 
         //placeholder
         ImageIcon icon = new ImageIcon(appWindow.getClass().getClassLoader().getResource("pholder.png"));
@@ -54,6 +61,13 @@ public class SettingsDialogue extends JDialog {
         gbc.gridx++;
         add(multiplyBlender, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        add(new JLabel("Степень сжатия JPEG"), gbc);
+        gbc.gridx++;
+        add(jpegQltySlider, gbc);
+
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 3;
@@ -76,7 +90,7 @@ public class SettingsDialogue extends JDialog {
         return jp;
     }
 
-    private void confirm(JRadioButton[] btns) {
+    private void confirm() {
         for (int i = 0; i < btns.length; i++) {
             if (btns[i].isSelected()) {
                 SettingsController.setBlendingMode(i);
@@ -84,6 +98,7 @@ public class SettingsDialogue extends JDialog {
                 break;
             }
         }
+        SettingsController.setJpegQuality(1.0f * jpegQltySlider.getValue() / 100);
     }
 
     private ButtonGroup initRadios(int i) {

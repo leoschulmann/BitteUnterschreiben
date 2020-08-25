@@ -58,7 +58,7 @@ public class GUIController {
                 default:
             }
             DocumentController.renderAllPages(blender);
-            FileIOController.saveFile(appWindow);
+            FileIOController.saveFile(appWindow, SettingsController.getJpegQuality());
     }
 
     public static void setTopScrollerPanel(TopScrollerPanel topScrollerPanel) {

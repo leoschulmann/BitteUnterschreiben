@@ -32,12 +32,12 @@ public class FileIOController {
         }
     }
 
-    public static void saveFile(JFrame appWindow) {
+    public static void saveFile(JFrame appWindow, float jpegQuality) {
         String file = FilePicker.savePDF(appWindow);
         if (file != null) {
             PDDocument pdf;
             try {
-                pdf = PDFController.prepareToSavePDF();
+                pdf = PDFController.prepareToSavePDF(jpegQuality);
                 pdf.save(new File(file));
                 pdf.close();
             } catch (IOException e) {

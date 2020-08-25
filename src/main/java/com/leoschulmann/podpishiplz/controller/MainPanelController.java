@@ -55,12 +55,7 @@ public class MainPanelController {
 
     public static BufferedImage getImage() {
         BufferedImage bufferedImage = null;
-        try {
-            bufferedImage = DocumentController.getCurrentPage().getImage();
-            return bufferedImage;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        bufferedImage = DocumentController.getCurrentPage().getImage();
         return bufferedImage;
     }
 
