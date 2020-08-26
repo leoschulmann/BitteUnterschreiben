@@ -4,6 +4,8 @@ import com.leoschulmann.podpishiplz.graphics.BlenderComposite;
 import com.leoschulmann.podpishiplz.model.Document;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,45 +15,16 @@ public class DocumentController {
 
     private static Page currentPage;
 
-    public static void setCurrentPage(Page currentPage) {
-        DocumentController.currentPage = currentPage;
+    public static void setCurrentPage(Page page) {
+        DocumentController.currentPage = page;
     }
 
     public static Page getCurrentPage() {
         return currentPage;
     }
 
-    public static Document getDoc() {
-        return doc;
-    }
-
     public static void createDocument() {
         doc = new Document();
-    }
-
-    public static Page addNewPageToDocument(BufferedImage im, String file, int sourcePdfPage) {
-        Page p = doc.addPageAndReturn(im, file, sourcePdfPage);
-        currentPage = p;
-        return p;
-    }
-
-    public static Page getPage(int page) {
-        Page p = doc.getPage(page);
-        if (p.getImage() == null) {
-            DocumentController.reloadFullScaleImage(page);
-        }
-        return doc.getPage(page);
-    }
-
-    public static void reloadFullScaleImage(int page) {
-        Page p = doc.getPage(page);
-        p.setImage(PDFController.get300dpiPage(p.getOriginalFile(), p.getOriginalFilePageNumber()));
-    }
-
-    public static void removePages() {
-    }
-
-    public static void reorderPage() {
     }
 
     public static void addNewOverlay(BufferedImage image) {
@@ -88,5 +61,31 @@ public class DocumentController {
             g2d.dispose();
             p.setRenderedImage(render);
         }
+    }
+
+    public static void addFileToDocument(PDDocument pdDocument, String filename) {
+        BufferedImage[] thumbnails = PDFController.generatePageThumbnails(pdDocument);
+        PDRectangle[] mediaBoxes = PDFController.getMediaBoxes(pdDocument);
+
+        for (int pg = 0; pg < pdDocument.getNumberOfPages(); pg++) {
+            Page p = new Page(filename, pg);
+            p.setMediaWidth((int) (mediaBoxes[pg].getWidth()));
+            p.setMediaHeight((int) (mediaBoxes[pg].getHeight()));
+            p.setThumbnail(thumbnails[pg]);
+            addPage(p);
+            GUIController.placeButton(GUIController.generateThumbnailButton(thumbnails[pg], p));
+        }
+    }
+
+    private static void addPage(Page p) {
+        doc.getPages().add(p);
+    }
+
+    public static boolean contains(Page page) {
+        return doc.getPages().contains(page);
+    }
+
+    public static Iterable<? extends Page> getAllPages() {
+        return doc.getPages();
     }
 }

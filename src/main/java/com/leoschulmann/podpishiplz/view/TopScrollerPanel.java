@@ -2,7 +2,6 @@ package com.leoschulmann.podpishiplz.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class TopScrollerPanel {
     private final JPanel panel;
@@ -18,11 +17,7 @@ public class TopScrollerPanel {
         return wrapper;
     }
 
-    public JButton addNewButton(BufferedImage th) {
-        JButton jb = new JButton(new ImageIcon(th));
-        panel.add(jb);
-        panel.revalidate();
-        panel.repaint();
-        return jb;
+    public JPanel getPanel() {
+        return panel;
     }
 }

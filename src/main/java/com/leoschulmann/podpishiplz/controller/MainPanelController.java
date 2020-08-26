@@ -5,7 +5,6 @@ import com.leoschulmann.podpishiplz.view.MainPanel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,9 +53,7 @@ public class MainPanelController {
     }
 
     public static BufferedImage getImage() {
-        BufferedImage bufferedImage = null;
-        bufferedImage = DocumentController.getCurrentPage().getImage();
-        return bufferedImage;
+        return DocumentController.getCurrentPage().getImage();
     }
 
     public static List<Overlay> getOverlays() {

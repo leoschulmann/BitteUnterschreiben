@@ -18,7 +18,7 @@ public class GUIController {
     private static SettingsDialogue settingsDialogue;
 
     public static void openOption(AppWindow appWindow) {
-            FileIOController.openPdfFile(appWindow);
+        FileIOController.openPdfFile(appWindow);
     }
 
     public static void placeOption(JFrame appWindow) {
@@ -35,43 +35,48 @@ public class GUIController {
         GUIController.mainPanel = mainPanel;
     }
 
-    private static void addActionToThumbnailButton(JButton jb, Page page) {
-        jb.addActionListener(e -> GUIController.openPage(page));
-    }
-
     private static void openPage(Page page) {
-        if (DocumentController.getDoc().contains(page)) {
+        if (DocumentController.contains(page)) {
             DocumentController.setCurrentPage(page);
             mainPanel.repaint();
         }
     }
 
     public static void saveFile(JFrame appWindow) {
-            Class<? extends CompositeContext> blender = null;
-            switch (SettingsController.getBlendingMode()) {
-                case (1):
-                    blender = BlenderDarken.class;
-                    break;
-                case (2):
-                    blender = BlenderMultiply.class;
-                    break;
-                default:
-            }
-            DocumentController.renderAllPages(blender);
-            FileIOController.saveFile(appWindow, SettingsController.getJpegQuality());
+        Class<? extends CompositeContext> blender = null;
+        switch (SettingsController.getBlendingMode()) {
+            case (1):
+                blender = BlenderDarken.class;
+                break;
+            case (2):
+                blender = BlenderMultiply.class;
+                break;
+            default:
+        }
+        DocumentController.renderAllPages(blender);
+        FileIOController.savePdfFile(appWindow, SettingsController.getJpegQuality());
     }
 
     public static void setTopScrollerPanel(TopScrollerPanel topScrollerPanel) {
         GUIController.topScrollerPanel = topScrollerPanel;
     }
 
-    public static void generateThumbnailButtons(BufferedImage[] thumbs, String file) {
-        for (int sourcePdfPage = 0; sourcePdfPage < thumbs.length; sourcePdfPage++) {
-            BufferedImage th = thumbs[sourcePdfPage];
-            Page documentPage = DocumentController.addNewPageToDocument(th, file, sourcePdfPage);
-            JButton jb = topScrollerPanel.addNewButton(th);
-            GUIController.addActionToThumbnailButton(jb, documentPage);
-        }
+    public static JButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
+        JButton jb = new JButton(new ImageIcon(thumbnail));
+        jb.addActionListener(e -> GUIController.openPage(p));
+        return jb;
+    }
+
+    public static void placeButton(JButton jb) {
+        topScrollerPanel.getPanel().add(jb);
+        topScrollerPanel.getPanel().revalidate();
+        topScrollerPanel.getPanel().repaint();
+    }
+
+    public static void remButton(JButton jb) {
+        topScrollerPanel.getPanel().remove(jb);
+        topScrollerPanel.getPanel().revalidate();
+        topScrollerPanel.getPanel().repaint();
     }
 
     public static void openSettingsDialogue(AppWindow appWindow) {

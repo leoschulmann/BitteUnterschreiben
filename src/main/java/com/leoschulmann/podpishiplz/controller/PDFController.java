@@ -14,15 +14,26 @@ import java.io.File;
 import java.io.IOException;
 
 public class PDFController {
-    public static void loadPDF(String file) throws IOException {
-        PDDocument pdDocument = PDDocument.load(new File(file));
+    public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument)  {
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
-        PDFRenderer renderer = new PDFRenderer(pdDocument);
-        for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
-            images[i] = renderer.renderImageWithDPI(i, 6.4f);    // for 75 px ..?
+        try {
+            PDFRenderer renderer = new PDFRenderer(pdDocument);
+            for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
+                images[i] = renderer.renderImageWithDPI(i, 6.4f);    // for 75 px ..?
+            }
+            pdDocument.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        pdDocument.close();
-        GUIController.generateThumbnailButtons(images, file);
+        return images;
+    }
+
+    public static PDRectangle[] getMediaBoxes(PDDocument pdDocument) {
+        PDRectangle[] boxes = new PDRectangle[pdDocument.getNumberOfPages()];
+        for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
+            boxes[i] = pdDocument.getPage(i).getMediaBox();
+        }
+        return boxes;
     }
 
     public static BufferedImage get300dpiPage(File file, int page)  {
@@ -39,10 +50,10 @@ public class PDFController {
         return bufferedImage;
     }
 
-    public static PDDocument prepareToSavePDF(float jpegQuality) throws IOException {
+    public static PDDocument buildPDF(float jpegQuality) throws IOException {
         PDDocument pdf = new PDDocument();
         pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
-        for (Page pg : DocumentController.getDoc().getPages()) {
+        for (Page pg : DocumentController.getAllPages()) {
             int width = pg.getMediaWidth();
             int height = pg.getMediaHeight();
             PDPage page = new PDPage(new PDRectangle(width, height));
@@ -53,18 +64,5 @@ public class PDFController {
             contentStream.close();
         }
         return pdf;
-    }
-
-    public static PDRectangle getMediabox(File originalFile, int originalFilePageNumber) {
-        PDDocument pdDocument;
-        PDRectangle rect = null;
-        try {
-            pdDocument = PDDocument.load(originalFile);
-            rect = pdDocument.getPage(originalFilePageNumber).getMediaBox();
-            pdDocument.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return rect;
     }
 }

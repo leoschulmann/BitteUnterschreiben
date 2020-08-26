@@ -66,21 +66,11 @@ public class Page {
         this.overlays = overlays;
     }
 
-    public int getOriginalFilePageNumber() {
-        return originalFilePageNumber;
-    }
-
     public int getMediaWidth() {  // todo refactor
-        if (mediaWidth == 0) {
-            mediaWidth = (int)(PDFController.getMediabox(originalFile, originalFilePageNumber).getWidth());
-        }
         return mediaWidth;
     }
 
     public int getMediaHeight() {
-        if (mediaHeight == 0) {
-            mediaHeight = (int)(PDFController.getMediabox(originalFile, originalFilePageNumber).getHeight());
-        }
         return mediaHeight;
     }
 
@@ -90,5 +80,13 @@ public class Page {
 
     public void setRenderedImage(BufferedImage renderedImage) {
         this.renderedImage = renderedImage;
+    }
+
+    public void setMediaWidth(int mediaWidth) {
+        this.mediaWidth = mediaWidth;
+    }
+
+    public void setMediaHeight(int mediaHeight) {
+        this.mediaHeight = mediaHeight;
     }
 }
