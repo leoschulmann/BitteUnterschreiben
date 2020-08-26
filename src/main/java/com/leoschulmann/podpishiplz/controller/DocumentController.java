@@ -7,14 +7,11 @@ import com.leoschulmann.podpishiplz.model.Page;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DocumentController {
     private static Document doc;
 
     private static Page currentPage;
-    private static List<BufferedImage> renders;
 
     public static void setCurrentPage(Page currentPage) {
         DocumentController.currentPage = currentPage;
@@ -46,7 +43,7 @@ public class DocumentController {
         return doc.getPage(page);
     }
 
-    public static void reloadFullScaleImage(int page)  {
+    public static void reloadFullScaleImage(int page) {
         Page p = doc.getPage(page);
         p.setImage(PDFController.get300dpiPage(p.getOriginalFile(), p.getOriginalFilePageNumber()));
     }
@@ -71,30 +68,25 @@ public class DocumentController {
         currentPage.getOverlays().remove(ov);
     }
 
-    public static void renderAllPages(Class<? extends CompositeContext> blender) {
-        renders = new ArrayList<>();
+    public static void renderAllPages(Class<? extends CompositeContext> blender) {  //todo add proper interpolation
         for (Page p : doc.getPages()) {
             BufferedImage im = p.getImage();
-            int imWidth = im.getWidth();
-            int imHeight = im.getHeight();
+            int imWidth = (int) (im.getWidth() * SettingsController.getResolutionMultiplier());
+            int imHeight = (int) (im.getHeight() * SettingsController.getResolutionMultiplier());
             BufferedImage render = new BufferedImage(imWidth, imHeight, im.getType());
             Graphics2D g2d = render.createGraphics();
-            g2d.drawImage(im, 0, 0, null);
+            g2d.drawImage(im, 0, 0, imWidth, imHeight, null);
             if (blender != null) g2d.setComposite(new BlenderComposite(blender));
             for (Overlay o : p.getOverlays()) {
-                int ovWidth = o.getImage().getWidth();
-                int ovHeight = o.getImage().getHeight();
+                int ovWidth = (int) (o.getImage().getWidth() * SettingsController.getResolutionMultiplier());
+                int ovHeight = (int) (o.getImage().getHeight() * SettingsController.getResolutionMultiplier());
                 g2d.drawImage(o.getImage(),
                         (int) (o.getRelCentX() * imWidth - (ovWidth / 2)),
                         (int) (o.getRelCentY() * imHeight - (ovHeight / 2)),
                         ovWidth, ovHeight, null);
             }
             g2d.dispose();
-            renders.add(render);
+            p.setRenderedImage(render);
         }
-    }
-
-    public static List<BufferedImage> getRenders() {
-        return renders;
     }
 }

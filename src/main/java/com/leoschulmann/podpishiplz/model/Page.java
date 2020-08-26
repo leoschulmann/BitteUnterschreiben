@@ -13,6 +13,9 @@ public class Page {
     private BufferedImage image;
     private BufferedImage thumbnail;
     private List<Overlay> overlays;
+    private int mediaWidth;  // in px @ 72 dpi
+    private int mediaHeight;
+    private BufferedImage renderedImage;
 
 
     public Page(String filename, int number) {
@@ -65,5 +68,27 @@ public class Page {
 
     public int getOriginalFilePageNumber() {
         return originalFilePageNumber;
+    }
+
+    public int getMediaWidth() {  // todo refactor
+        if (mediaWidth == 0) {
+            mediaWidth = (int)(PDFController.getMediabox(originalFile, originalFilePageNumber).getWidth());
+        }
+        return mediaWidth;
+    }
+
+    public int getMediaHeight() {
+        if (mediaHeight == 0) {
+            mediaHeight = (int)(PDFController.getMediabox(originalFile, originalFilePageNumber).getHeight());
+        }
+        return mediaHeight;
+    }
+
+    public BufferedImage getRenderedImage() {
+        return renderedImage;
+    }
+
+    public void setRenderedImage(BufferedImage renderedImage) {
+        this.renderedImage = renderedImage;
     }
 }

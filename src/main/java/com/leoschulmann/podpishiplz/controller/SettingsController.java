@@ -8,6 +8,7 @@ public class SettingsController {
      */
     private static int blendingMode = 1;  //todo rewrite to .yml properties file
     private static float jpegQuality = 0.6f;
+    private static float resolutionMultiplier = 0.667f;  // 1.0 == 300 dpi
 
     public static int getBlendingMode() {
         return blendingMode;
@@ -23,5 +24,13 @@ public class SettingsController {
 
     public static void setJpegQuality(float jpegQuality) {
         SettingsController.jpegQuality = jpegQuality;
+    }
+
+    public static float getResolutionMultiplier() {
+        return resolutionMultiplier;
+    }
+
+    public static void setResolutionMultiplier(float resolutionMultiplier) {
+        SettingsController.resolutionMultiplier = resolutionMultiplier;
     }
 }

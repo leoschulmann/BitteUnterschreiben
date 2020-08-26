@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.controller;
 
+import com.leoschulmann.podpishiplz.model.Page;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -41,15 +42,29 @@ public class PDFController {
     public static PDDocument prepareToSavePDF(float jpegQuality) throws IOException {
         PDDocument pdf = new PDDocument();
         pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
-        for (BufferedImage im : DocumentController.getRenders()) {
-            PDPage page = new PDPage(PDRectangle.A4);
+        for (Page pg : DocumentController.getDoc().getPages()) {
+            int width = pg.getMediaWidth();
+            int height = pg.getMediaHeight();
+            PDPage page = new PDPage(new PDRectangle(width, height));
             pdf.addPage(page);
             PDPageContentStream contentStream = new PDPageContentStream(pdf, page, PDPageContentStream.AppendMode.APPEND, false);
-            PDImageXObject imageXObject = JPEGFactory.createFromImage(pdf, im, jpegQuality);
-            contentStream.drawImage(imageXObject, 0,0,
-                    imageXObject.getWidth()/300f * 72, imageXObject.getHeight()/300f * 72);
+            PDImageXObject imXObj = JPEGFactory.createFromImage(pdf, pg.getRenderedImage(), jpegQuality);
+            contentStream.drawImage(imXObj, 0, 0, width, height);
             contentStream.close();
         }
         return pdf;
+    }
+
+    public static PDRectangle getMediabox(File originalFile, int originalFilePageNumber) {
+        PDDocument pdDocument;
+        PDRectangle rect = null;
+        try {
+            pdDocument = PDDocument.load(originalFile);
+            rect = pdDocument.getPage(originalFilePageNumber).getMediaBox();
+            pdDocument.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rect;
     }
 }

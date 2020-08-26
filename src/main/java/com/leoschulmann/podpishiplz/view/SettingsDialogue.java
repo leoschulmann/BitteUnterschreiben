@@ -11,6 +11,7 @@ public class SettingsDialogue extends JDialog {
     public static JRadioButton multiplyBlender;
     public static JRadioButton[] btns;
     public static JSlider jpegQltySlider;
+    public static JSlider dpiSlider;
 
 
     public SettingsDialogue(JFrame appWindow) {
@@ -35,6 +36,12 @@ public class SettingsDialogue extends JDialog {
         jpegQltySlider.setSnapToTicks(true);
         jpegQltySlider.setPaintTicks(true);
         jpegQltySlider.setPaintLabels(true);
+
+        dpiSlider = new JSlider(JSlider.HORIZONTAL, 100, 600, (int) (SettingsController.getJpegQuality()*300));
+        dpiSlider.setMajorTickSpacing(100);
+        dpiSlider.setSnapToTicks(true);
+        dpiSlider.setPaintTicks(true);
+        dpiSlider.setPaintLabels(true);
 
         //placeholder
         ImageIcon icon = new ImageIcon(appWindow.getClass().getClassLoader().getResource("pholder.png"));
@@ -68,6 +75,13 @@ public class SettingsDialogue extends JDialog {
         gbc.gridx++;
         add(jpegQltySlider, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        add(new JLabel("Разрешение изображений, dpi"), gbc);
+        gbc.gridx++;
+        add(dpiSlider, gbc);
+
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 3;
@@ -99,6 +113,7 @@ public class SettingsDialogue extends JDialog {
             }
         }
         SettingsController.setJpegQuality(1.0f * jpegQltySlider.getValue() / 100);
+        SettingsController.setResolutionMultiplier(1.0f * dpiSlider.getValue()/300);
     }
 
     private ButtonGroup initRadios(int i) {
