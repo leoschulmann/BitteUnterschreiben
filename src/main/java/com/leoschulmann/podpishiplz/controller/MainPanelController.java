@@ -57,6 +57,7 @@ public class MainPanelController {
     }
 
     public static List<Overlay> getOverlays() {
+        if (DocumentController.getCurrentPage() == null) return null;
         return DocumentController.getCurrentPage().getOverlays();
     }
 

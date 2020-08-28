@@ -18,13 +18,15 @@ public class MouseController extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        clickX = e.getX();
-        clickY = e.getY();
-        MainPanelController.getOverlays().forEach(overlay -> overlay.setSelected(false));
-        MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
-                .findFirst()
-                .ifPresent(o -> o.setSelected(true));
-        panel.repaint();
+        if (MainPanelController.getOverlays() != null) {
+            clickX = e.getX();
+            clickY = e.getY();
+            MainPanelController.getOverlays().forEach(overlay -> overlay.setSelected(false));
+            MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
+                    .findFirst()
+                    .ifPresent(o -> o.setSelected(true));
+            panel.repaint();
+        }
     }
 
     @Override
