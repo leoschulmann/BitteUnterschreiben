@@ -55,7 +55,7 @@ public class GUIController {
                 break;
             default:
         }
-        DocumentController.renderAllPages(blender);
+        DocumentController.renderAllPages(blender);    // todo reorder after picking file, rendering might be long
         FileIOController.savePdfFile(appWindow, SettingsController.getJpegQuality());
     }
 

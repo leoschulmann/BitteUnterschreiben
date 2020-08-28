@@ -2,7 +2,8 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.view.AppWindow;
 import com.leoschulmann.podpishiplz.view.FilePicker;
-import org.apache.pdfbox.pdmodel.PDDocument;
+import com.leoschulmann.podpishiplz.worker.OpeningWorker;
+import com.leoschulmann.podpishiplz.worker.SavingWorker;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,26 +36,18 @@ public class FileIOController {
     public static void savePdfFile(JFrame appWindow, float jpegQuality) {
         String file = FilePicker.savePDF(appWindow);
         if (file != null) {
-            PDDocument pdf;
-            try {
-                pdf = PDFController.buildPDF(jpegQuality);
-                pdf.save(new File(file));
-                pdf.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            SavingWorker worker = new SavingWorker(file, jpegQuality, appWindow);
+            worker.execute();
+            worker.runDialog();
         }
     }
 
     public static void openPdfFile(AppWindow appWindow)  {
         String file = FilePicker.openPDF(appWindow);
         if (file != null) {
-            try {
-                PDDocument pdDocument = PDDocument.load(new File(file));
-                DocumentController.addFileToDocument(pdDocument, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            OpeningWorker worker = new OpeningWorker(file, appWindow);
+            worker.execute();
+            worker.runDialog();
         }
     }
 }
