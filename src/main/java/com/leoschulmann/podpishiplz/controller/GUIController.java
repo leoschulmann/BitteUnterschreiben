@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static java.lang.String.valueOf;
+
 public class GUIController {
     private static MainPanel mainPanel;
     private static TopScrollerPanel topScrollerPanel;
@@ -63,6 +65,9 @@ public class GUIController {
 
     public static JButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
         JButton jb = new JButton(new ImageIcon(thumbnail));
+        jb.setText(valueOf(DocumentController.getPageNumber(p) + 1));
+        jb.setVerticalTextPosition(SwingConstants.BOTTOM);
+        jb.setHorizontalTextPosition(SwingConstants.CENTER);
         jb.addActionListener(e -> GUIController.openPage(p));
         return jb;
     }

@@ -88,4 +88,9 @@ public class DocumentController {
     public static Iterable<? extends Page> getAllPages() {
         return doc.getPages();
     }
+
+    public static int getPageNumber(Page p) {
+        if (!contains(p)) return -1;
+        else return doc.getPages().indexOf(p);
+    }
 }
