@@ -1,6 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
+import com.leoschulmann.podpishiplz.model.Overlay;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,16 +30,15 @@ public class MouseController extends MouseAdapter {
     @Override
     public void mouseDragged(MouseEvent e) {
         MainPanelController.getOverlays().stream()
-                .filter(overlay -> overlay.getBounds().contains(clickX, clickY))
+                .filter(Overlay::isSelected)
                 .findFirst()
                 .ifPresent(overlay -> {
                     int shiftX = e.getX() - clickX;
                     int shiftY = e.getY() - clickY;
-                    //todo fix snapping to overlay centre
-//                    int mouseClickToOverlayCenterX = clickX - (overlay.getBounds().width / 2);
-//                    int mouseClickToOverlayCenterY = clickY - (overlay.getBounds().height / 2);
-                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageStartX()) / MainPanelController.getPageWidth());
-                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageStartY()) / MainPanelController.getPageHeight());
+                    double mouseOffsetX = clickX - overlay.getBounds().getCenterX();
+                    double mouseOffsetY = clickY - overlay.getBounds().getCenterY();
+                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageStartX() - mouseOffsetX) / MainPanelController.getPageWidth());
+                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageStartY() - mouseOffsetY) / MainPanelController.getPageHeight());
                     clickX += shiftX;
                     clickY += shiftY;
                     panel.repaint();
