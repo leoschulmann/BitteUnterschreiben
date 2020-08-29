@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class DocumentController {
     private static Document doc;
@@ -73,6 +74,9 @@ public class DocumentController {
             p.setMediaHeight((int) (mediaBoxes[pg].getHeight()));
             p.setThumbnail(thumbnails[pg]);
             addPage(p);
+            if (getAllPages().size() == 1) {
+                EventController.notify(EventType.PAGES_ADDED, null);
+            }
             GUIController.placeButton(GUIController.generateThumbnailButton(thumbnails[pg], p));
         }
     }
@@ -85,7 +89,7 @@ public class DocumentController {
         return doc.getPages().contains(page);
     }
 
-    public static Iterable<? extends Page> getAllPages() {
+    public static List<Page> getAllPages() {
         return doc.getPages();
     }
 

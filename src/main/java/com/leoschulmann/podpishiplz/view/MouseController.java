@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.EventController;
+import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
 import com.leoschulmann.podpishiplz.model.Overlay;
 
@@ -22,6 +24,7 @@ public class MouseController extends MouseAdapter {
             clickX = e.getX();
             clickY = e.getY();
             MainPanelController.getOverlays().forEach(overlay -> overlay.setSelected(false));
+            EventController.notify(EventType.OVERLAY_DESELECTED, null);
             MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
                     .findFirst()
                     .ifPresent(o -> o.setSelected(true));

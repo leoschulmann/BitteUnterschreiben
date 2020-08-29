@@ -1,12 +1,14 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.EventController;
+import com.leoschulmann.podpishiplz.controller.EventListener;
+import com.leoschulmann.podpishiplz.controller.EventType;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
-public class MenuBar extends JMenuBar {
-    private List<JMenuItem> optionList;   // future use   // wtf?
+public class MenuBar extends JMenuBar implements EventListener {
     private final JMenuItem optionOpen;
     private final JMenuItem optionPlace;
     private final JMenuItem optionRemove;
@@ -24,7 +26,7 @@ public class MenuBar extends JMenuBar {
 
         menuFile.add(optionOpen);
         menuFile.add(optionSaveAs);
-        menuEdit.add(optionPlace);  // todo make disabled on empty window
+        menuEdit.add(optionPlace);
         menuEdit.add(optionRemove);
         menuEdit.addSeparator();
         menuEdit.add(optionSettings);
@@ -35,6 +37,12 @@ public class MenuBar extends JMenuBar {
         optionPlace.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
         optionRemove.setAccelerator(KeyStroke.getKeyStroke("BACK_SPACE"));
         optionSettings.setAccelerator(KeyStroke.getKeyStroke("F12"));
+        EventController.subscribe(EventType.MAIN_PANEL_EMPTY, this);
+        EventController.subscribe(EventType.MAIN_PANEL_FULL, this);
+        EventController.subscribe(EventType.PAGES_ADDED, this);
+        EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, this);
+        EventController.subscribe(EventType.OVERLAY_DESELECTED, this);
+        EventController.subscribe(EventType.OVERLAY_SELECTED, this);
     }
 
     public JMenuItem getOptionOpen() {
@@ -55,5 +63,32 @@ public class MenuBar extends JMenuBar {
 
     public JMenuItem getOptionSettings() {
         return optionSettings;
+    }
+
+    @Override
+    public void eventUpdate(EventType event, Object object) {
+        switch (event) {
+            case MAIN_PANEL_FULL:
+                optionPlace.setEnabled(true);
+                break;
+            case MAIN_PANEL_EMPTY:
+                optionPlace.setEnabled(false);
+                optionRemove.setEnabled(false);
+                break;
+            case PAGES_ADDED:
+                optionSaveAs.setEnabled(true);
+                break;
+            case NO_PAGES_IN_DOCUMENT:
+                optionSaveAs.setEnabled(false);
+                optionPlace.setEnabled(false);
+                optionRemove.setEnabled(false);
+                break;
+            case OVERLAY_SELECTED:
+                optionRemove.setEnabled(true);
+                break;
+            case OVERLAY_DESELECTED:
+                optionRemove.setEnabled(false);
+                break;
+        }
     }
 }

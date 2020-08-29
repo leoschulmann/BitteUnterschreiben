@@ -18,6 +18,33 @@ public class GUIController {
     private static MainPanel mainPanel;
     private static TopScrollerPanel topScrollerPanel;
     private static SettingsDialogue settingsDialogue;
+    private static final EventListener GUIControllerEventListener;
+    private static AppWindow window;
+
+    static {
+        GUIControllerEventListener = new EventListener() {
+            JButton welcomeBtn = new JButton("Открыть .pdf...");
+
+            @Override
+            public void eventUpdate(EventType event, Object object) {
+                welcomeBtn.addActionListener(e -> openOption(window));
+                switch (event) {
+                    case NO_PAGES_IN_DOCUMENT:
+                        placeButton(welcomeBtn);
+                        break;
+                    case PAGES_ADDED:
+                        remButton(welcomeBtn);
+                        break;
+                }
+            }
+        };
+        EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, GUIControllerEventListener);
+        EventController.subscribe(EventType.PAGES_ADDED, GUIControllerEventListener);
+    }
+
+    public static void setAppWindow(AppWindow window) {
+        GUIController.window = window;
+    }
 
     public static void openOption(AppWindow appWindow) {
         FileIOController.openPdfFile(appWindow);
@@ -41,6 +68,9 @@ public class GUIController {
         if (DocumentController.contains(page)) {
             DocumentController.setCurrentPage(page);
             mainPanel.repaint();
+            EventController.notify(EventType.MAIN_PANEL_FULL, null);
+            page.getOverlays().forEach(overlay -> overlay.setSelected(false));
+            EventController.notify(EventType.OVERLAY_DESELECTED, null);
         }
     }
 
@@ -72,15 +102,13 @@ public class GUIController {
     }
 
     public static void placeButton(JButton jb) {
-        topScrollerPanel.getPanel().add(jb);
+        topScrollerPanel.put(jb);
         topScrollerPanel.getPanel().revalidate();
         topScrollerPanel.getPanel().repaint();
     }
 
     public static void remButton(JButton jb) {
-        topScrollerPanel.getPanel().remove(jb);
-        topScrollerPanel.getPanel().revalidate();
-        topScrollerPanel.getPanel().repaint();
+        topScrollerPanel.rem(jb);
     }
 
     public static void openSettingsDialogue(AppWindow appWindow) {

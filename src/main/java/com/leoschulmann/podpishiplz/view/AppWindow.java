@@ -1,8 +1,6 @@
 package com.leoschulmann.podpishiplz.view;
 
-import com.leoschulmann.podpishiplz.controller.DocumentController;
-import com.leoschulmann.podpishiplz.controller.GUIController;
-import com.leoschulmann.podpishiplz.controller.MainPanelController;
+import com.leoschulmann.podpishiplz.controller.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,9 +43,12 @@ public class AppWindow extends JFrame {
         MainPanel mainPanel = new MainPanel();
         GUIController.setMainPanel(mainPanel);  //todo should switch to Spring...
         GUIController.setTopScrollerPanel(topScrollerPanel);
+        GUIController.setAppWindow(this);
         MainPanelController.setMainPanel(mainPanel);
         add(mainPanel, BorderLayout.CENTER);
 
         DocumentController.createDocument();
+        EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
+        EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
     }
 }

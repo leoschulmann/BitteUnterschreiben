@@ -1,5 +1,8 @@
 package com.leoschulmann.podpishiplz.model;
 
+import com.leoschulmann.podpishiplz.controller.EventController;
+import com.leoschulmann.podpishiplz.controller.EventType;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -26,6 +29,9 @@ public class Overlay {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+        if (this.selected) {
+            EventController.notify(EventType.OVERLAY_SELECTED, this);
+        }
     }
 
     public int getWidth() {
