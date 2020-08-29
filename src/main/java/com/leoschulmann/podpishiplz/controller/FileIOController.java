@@ -2,6 +2,7 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.view.AppWindow;
 import com.leoschulmann.podpishiplz.view.FilePicker;
+import com.leoschulmann.podpishiplz.worker.AbstractUnterschreibenWorker;
 import com.leoschulmann.podpishiplz.worker.OpeningWorker;
 import com.leoschulmann.podpishiplz.worker.SavingWorker;
 
@@ -33,10 +34,10 @@ public class FileIOController {
         }
     }
 
-    public static void savePdfFile(JFrame appWindow, float jpegQuality) {
+    public static void blendAndSavePdfFile(JFrame appWindow, float jpegQuality, Class<? extends CompositeContext> blender) {
         String file = FilePicker.savePDF(appWindow);
         if (file != null) {
-            SavingWorker worker = new SavingWorker(file, jpegQuality, appWindow);
+            SavingWorker worker = new SavingWorker(file, jpegQuality, appWindow, blender);
             worker.execute();
             worker.runDialog();
         }
@@ -45,7 +46,7 @@ public class FileIOController {
     public static void openPdfFile(AppWindow appWindow)  {
         String file = FilePicker.openPDF(appWindow);
         if (file != null) {
-            OpeningWorker worker = new OpeningWorker(file, appWindow);
+            AbstractUnterschreibenWorker worker = new OpeningWorker(appWindow, file);
             worker.execute();
             worker.runDialog();
         }
