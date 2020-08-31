@@ -34,19 +34,21 @@ public class MouseController extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        MainPanelController.getOverlays().stream()
-                .filter(Overlay::isSelected)
-                .findFirst()
-                .ifPresent(overlay -> {
-                    int shiftX = e.getX() - clickX;
-                    int shiftY = e.getY() - clickY;
-                    double mouseOffsetX = clickX - overlay.getBounds().getCenterX();
-                    double mouseOffsetY = clickY - overlay.getBounds().getCenterY();
-                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageStartX() - mouseOffsetX) / MainPanelController.getPageWidth());
-                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageStartY() - mouseOffsetY) / MainPanelController.getPageHeight());
-                    clickX += shiftX;
-                    clickY += shiftY;
-                    panel.repaint();
-                });
+        if (MainPanelController.getOverlays() != null) {
+            MainPanelController.getOverlays().stream()
+                    .filter(Overlay::isSelected)
+                    .findFirst()
+                    .ifPresent(overlay -> {
+                        int shiftX = e.getX() - clickX;
+                        int shiftY = e.getY() - clickY;
+                        double mouseOffsetX = clickX - overlay.getBounds().getCenterX();
+                        double mouseOffsetY = clickY - overlay.getBounds().getCenterY();
+                        overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageStartX() - mouseOffsetX) / MainPanelController.getPageWidth());
+                        overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageStartY() - mouseOffsetY) / MainPanelController.getPageHeight());
+                        clickX += shiftX;
+                        clickY += shiftY;
+                        panel.repaint();
+                    });
+        }
     }
 }

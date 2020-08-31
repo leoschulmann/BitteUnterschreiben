@@ -4,12 +4,18 @@ import com.leoschulmann.podpishiplz.graphics.BlenderComposite;
 import com.leoschulmann.podpishiplz.model.Document;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
+import com.leoschulmann.podpishiplz.view.ThumbButtonContextMenu;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
+
+import static java.lang.String.valueOf;
 
 public class DocumentController {
     private static Document doc;
@@ -77,7 +83,25 @@ public class DocumentController {
             if (getAllPages().size() == 1) {
                 EventController.notify(EventType.PAGES_ADDED, null);
             }
-            GUIController.placeButton(GUIController.generateThumbnailButton(thumbnails[pg], p));
+            JButton jb = GUIController.generateThumbnailButton(thumbnails[pg], p);
+            jb.setText(valueOf(getPageNumber(p) + 1));
+
+            jb.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {  //works on mac
+                    if (e.isPopupTrigger()) {
+                        new ThumbButtonContextMenu(p).show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) { // todo test on win
+                    if (e.isPopupTrigger()) {
+                        new ThumbButtonContextMenu(p).show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            });
+            GUIController.placeButton(jb);
         }
     }
 
@@ -96,5 +120,43 @@ public class DocumentController {
     public static int getPageNumber(Page p) {
         if (!contains(p)) return -1;
         else return doc.getPages().indexOf(p);
+    }
+
+    public static void movePageToFront(Page page) {
+        getAllPages().remove(page);
+        getAllPages().add(0, page);
+        EventController.notify(EventType.PAGES_REORDERED, null);
+    }
+
+    public static void movePageLeft(Page page) {
+        int idx = getPageNumber(page);
+        getAllPages().remove(page);
+        getAllPages().add(idx - 1, page);
+        EventController.notify(EventType.PAGES_REORDERED, null);
+    }
+
+    public static void movePageRight(Page page) {
+        int idx = getPageNumber(page);
+        getAllPages().remove(page);
+        getAllPages().add(idx + 1, page);
+        EventController.notify(EventType.PAGES_REORDERED, null);
+    }
+
+    public static void movePageToBack(Page page) {
+        int size = getAllPages().size();
+        getAllPages().remove(page);
+        getAllPages().add(size - 1, page);
+        EventController.notify(EventType.PAGES_REORDERED, null);
+    }
+
+    public static void deletePage(Page page) {
+        int idx = getPageNumber(page);
+        doc.remPage(getPageNumber(page));
+        EventController.notify(EventType.PAGES_REORDERED, page);
+        if (getAllPages().size() == 0) {
+            EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
+        } else if (idx >= getAllPages().size()) {
+            GUIController.openPage(getAllPages().get(getAllPages().size() - 1));  // get last
+        } else GUIController.openPage(getAllPages().get(idx));
     }
 }

@@ -4,8 +4,11 @@ package com.leoschulmann.podpishiplz.view;
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class MainPanel extends JPanel {
 
@@ -44,6 +47,16 @@ public class MainPanel extends JPanel {
                 g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
             });
+        }
+        else {
+            BufferedImage im = null;
+            try {
+                im = ImageIO.read(this.getClass().getClassLoader().getResource("pholder.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            g.drawImage(im, (this.getWidth() - im.getWidth())/2, (this.getHeight()-im.getHeight())/2,
+                    im.getWidth(), im.getHeight(), null);
         }
     }
 }
