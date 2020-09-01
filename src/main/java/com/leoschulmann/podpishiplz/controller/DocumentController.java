@@ -23,6 +23,9 @@ public class DocumentController {
     private static Page currentPage;
 
     public static void setCurrentPage(Page page) {
+        if (!contains(page)) {
+            throw new IllegalArgumentException();
+        }
         DocumentController.currentPage = page;
     }
 
@@ -105,7 +108,7 @@ public class DocumentController {
         }
     }
 
-    private static void addPage(Page p) {
+    public static void addPage(Page p) {
         doc.getPages().add(p);
     }
 
