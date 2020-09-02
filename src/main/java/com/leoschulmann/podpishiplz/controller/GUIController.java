@@ -12,35 +12,33 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GUIController {
-    private static final EventListener GUIControllerEventListener;
+    final static JButton welcomeBtn = new JButton("Открыть .pdf...");
 
     static {
-        GUIControllerEventListener = new EventListener() {
-            final JButton welcomeBtn = new JButton("Открыть .pdf...");
+        welcomeBtn.addActionListener(e -> openOption(BitteUnterschreiben.getApp()));
+    }
 
-            @Override
-            public void eventUpdate(EventType event, Object object) {
-                welcomeBtn.addActionListener(e -> openOption(BitteUnterschreiben.getApp()));
-                switch (event) {
-                    case NO_PAGES_IN_DOCUMENT:
-                        placeButton(welcomeBtn);
-                        openPage(null);
-                        break;
-                    case PAGES_ADDED:
-                        remButton(welcomeBtn);
-                        break;
-                    case PAGES_REORDERED:
-                        Page pageRemoved = (Page) object;
-                        TopPanelController.getButtons().remove(
-                                TopPanelController.getButtons().stream()
-                                .filter(b -> b.getPage() == pageRemoved)
-                                .findFirst()
-                                .orElse(null));
-                        TopPanelController.removeAll();
-                        TopPanelController.clearAndPlaceThumbnailsOrdered();
-                        TopPanelController.revalidateAndRepaint();
-                        break;
-                }
+    public static void initListener() {
+        EventListener GUIControllerEventListener = (event, object) -> {
+            switch (event) {
+                case NO_PAGES_IN_DOCUMENT:
+                    placeButton(welcomeBtn);
+                    openPage(null);
+                    break;
+                case PAGES_ADDED:
+                    remButton(welcomeBtn);
+                    break;
+                case PAGES_REORDERED:
+                    Page pageRemoved = (Page) object;
+                    TopPanelController.getButtons().remove(
+                            TopPanelController.getButtons().stream()
+                                    .filter(b -> b.getPage() == pageRemoved)
+                                    .findFirst()
+                                    .orElse(null));
+                    TopPanelController.removeAll();
+                    TopPanelController.clearAndPlaceThumbnailsOrdered();
+                    TopPanelController.revalidateAndRepaint();
+                    break;
             }
         };
         EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, GUIControllerEventListener);

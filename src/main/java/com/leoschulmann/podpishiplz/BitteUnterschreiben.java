@@ -18,6 +18,7 @@ public class BitteUnterschreiben {
         MainPanelController.setMainPanel(app.getMainPanel());
         TopPanelController.setTsp(app.getTopScrollerPanel());
         DocumentController.createDocument();
+        GUIController.initListener();
         EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
         EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
     }
