@@ -23,7 +23,7 @@ public class DocumentController {
     private static Page currentPage;
 
     public static void setCurrentPage(Page page) {
-        if (!contains(page)) {
+        if (page != null && !contains(page)) {
             throw new IllegalArgumentException();
         }
         DocumentController.currentPage = page;
