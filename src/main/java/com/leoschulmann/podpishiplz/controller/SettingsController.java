@@ -1,6 +1,10 @@
 package com.leoschulmann.podpishiplz.controller;
 
+import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.view.SettingsDialogue;
+
 public class SettingsController {
+    private static SettingsDialogue settingsDialogue;
     /*
     0: no-op blending mode
     1: Darken
@@ -32,5 +36,12 @@ public class SettingsController {
 
     public static void setResolutionMultiplier(float resolutionMultiplier) {
         SettingsController.resolutionMultiplier = resolutionMultiplier;
+    }
+
+    public static void openSettings() {
+        if (settingsDialogue == null) {
+            settingsDialogue = new SettingsDialogue(BitteUnterschreiben.getApp());
+        }
+        settingsDialogue.setVisible(true);
     }
 }

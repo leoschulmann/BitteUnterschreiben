@@ -1,31 +1,26 @@
 package com.leoschulmann.podpishiplz.controller;
 
+import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.graphics.BlenderDarken;
 import com.leoschulmann.podpishiplz.graphics.BlenderMultiply;
 import com.leoschulmann.podpishiplz.model.Page;
-import com.leoschulmann.podpishiplz.view.*;
+import com.leoschulmann.podpishiplz.view.AppWindow;
+import com.leoschulmann.podpishiplz.view.ThumbnailButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GUIController {
-    private static MainPanel mainPanel;
-    private static TopScrollerPanel topScrollerPanel;
-    private static SettingsDialogue settingsDialogue;
     private static final EventListener GUIControllerEventListener;
-    private static AppWindow window;
-    public static final List<ThumbnailButton> buttons = new ArrayList<>();
 
     static {
         GUIControllerEventListener = new EventListener() {
-            JButton welcomeBtn = new JButton("Открыть .pdf...");
+            final JButton welcomeBtn = new JButton("Открыть .pdf...");
 
             @Override
             public void eventUpdate(EventType event, Object object) {
-                welcomeBtn.addActionListener(e -> openOption(window));
+                welcomeBtn.addActionListener(e -> openOption(BitteUnterschreiben.getApp()));
                 switch (event) {
                     case NO_PAGES_IN_DOCUMENT:
                         placeButton(welcomeBtn);
@@ -36,12 +31,14 @@ public class GUIController {
                         break;
                     case PAGES_REORDERED:
                         Page pageRemoved = (Page) object;
-                        buttons.remove(buttons.stream()
+                        TopPanelController.getButtons().remove(
+                                TopPanelController.getButtons().stream()
                                 .filter(b -> b.getPage() == pageRemoved)
                                 .findFirst()
                                 .orElse(null));
-
-                        clearAndPlaceThumbnailsOrdered();
+                        TopPanelController.removeAll();
+                        TopPanelController.clearAndPlaceThumbnailsOrdered();
+                        TopPanelController.revalidateAndRepaint();
                         break;
                 }
             }
@@ -51,36 +48,28 @@ public class GUIController {
         EventController.subscribe(EventType.PAGES_REORDERED, GUIControllerEventListener);
     }
 
-    public static void setAppWindow(AppWindow window) {
-        GUIController.window = window;
-    }
-
     public static void openOption(AppWindow appWindow) {
         FileIOController.openPdfFile(appWindow);
     }
 
     public static void placeOption(JFrame appWindow) {
         FileIOController.loadOverlay(appWindow);
-        mainPanel.repaint();
+        MainPanelController.repaint();
     }
 
     public static void deleteSelectedOverlayOption() {
         DocumentController.removeSelectedOverlay();
-        mainPanel.repaint();
-    }
-
-    public static void setMainPanel(MainPanel mainPanel) {
-        GUIController.mainPanel = mainPanel;
+        MainPanelController.repaint();
     }
 
     public static void openPage(Page page) {
         if (page == null) {
             DocumentController.setCurrentPage(null);
-            mainPanel.repaint();
+            MainPanelController.repaint();
             EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
         } else if (DocumentController.contains(page)) {
             DocumentController.setCurrentPage(page);
-            mainPanel.repaint();
+            MainPanelController.repaint();
             EventController.notify(EventType.MAIN_PANEL_FULL, null);
             page.getOverlays().forEach(overlay -> overlay.setSelected(false));
             EventController.notify(EventType.OVERLAY_DESELECTED, null);
@@ -101,50 +90,26 @@ public class GUIController {
         FileIOController.blendAndSavePdfFile(appWindow, SettingsController.getJpegQuality(), blender);
     }
 
-    public static void setTopScrollerPanel(TopScrollerPanel topScrollerPanel) {
-        GUIController.topScrollerPanel = topScrollerPanel;
-    }
-
     public static ThumbnailButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
         ThumbnailButton jb = new ThumbnailButton(thumbnail, p);
         jb.setVerticalTextPosition(SwingConstants.BOTTOM);
         jb.setHorizontalTextPosition(SwingConstants.CENTER);
         jb.addActionListener(e -> GUIController.openPage(jb.getPage()));
-        buttons.add(jb);
+        TopPanelController.getButtons().add(jb);
         return jb;
     }
 
-    public static void clearAndPlaceThumbnailsOrdered() {
-        topScrollerPanel.getPanel().removeAll();
-        buttons.stream().sorted((o1, o2) -> {
-            if (DocumentController.getPageNumber(o1.getPage()) < DocumentController.getPageNumber(o2.getPage())) {
-                return -1;
-            } else return 1;
-        }).forEach(b -> {
-                    b.setText(String.valueOf(DocumentController.getPageNumber(b.getPage()) + 1));
-                    GUIController.placeButton(b);
-                }
-        );
-        topScrollerPanel.getPanel().revalidate();
-        topScrollerPanel.getPanel().repaint();
-    }
-
     public static void placeButton(JButton jb) {
-        topScrollerPanel.put(jb);
-        topScrollerPanel.getPanel().revalidate();
-        topScrollerPanel.getPanel().repaint();
+        TopPanelController.put(jb);
+        TopPanelController.revalidateAndRepaint();
     }
 
     public static void remButton(JButton jb) {
-        topScrollerPanel.getPanel().remove(jb);
-        topScrollerPanel.getPanel().revalidate();
-        topScrollerPanel.getPanel().repaint();
+        TopPanelController.remove(jb);
+        TopPanelController.revalidateAndRepaint();
     }
 
-    public static void openSettingsDialogue(AppWindow appWindow) {
-        if (settingsDialogue == null) {
-            settingsDialogue = new SettingsDialogue(appWindow);
-        }
-        settingsDialogue.setVisible(true);
+    public static void openSettingsDialogue() {
+        SettingsController.openSettings();
     }
 }

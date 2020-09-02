@@ -85,4 +85,12 @@ public class MainPanelController {
     public static void setMainPanel(MainPanel mainpanel) {
         panel = mainpanel;
     }
+
+    public static MainPanel getMainPanel() {
+        return panel;
+    }
+
+    public static void repaint() {
+        panel.repaint();
+    }
 }
