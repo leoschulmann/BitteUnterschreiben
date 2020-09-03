@@ -10,6 +10,7 @@ import com.leoschulmann.podpishiplz.view.ThumbnailButton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class GUIController {
     final static JButton welcomeBtn = new JButton("Открыть .pdf...");
@@ -107,7 +108,7 @@ public class GUIController {
         TopPanelController.revalidateAndRepaint();
     }
 
-    public static void openSettingsDialogue() {
+    public static void openSettingsDialogue() throws IOException {
         SettingsController.openSettings();
     }
 }

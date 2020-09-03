@@ -4,6 +4,7 @@ import com.leoschulmann.podpishiplz.controller.SettingsController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class SettingsDialogue extends JDialog {
     private static JRadioButton noopBlender;
@@ -12,9 +13,14 @@ public class SettingsDialogue extends JDialog {
     public static JRadioButton[] btns;
     public static JSlider jpegQltySlider;
     public static JSlider dpiSlider;
+    private int blendingMode;
+    private float jpgQuality;
+    private float resolution;
 
-
-    public SettingsDialogue(JFrame appWindow) {
+    public SettingsDialogue(JFrame appWindow, int blendingMode, float jpgQuality, float resolution) {
+        this.blendingMode = blendingMode;
+        this.jpgQuality = jpgQuality;
+        this.resolution = resolution;
         setTitle("Настройки");
         setModal(true);
         setResizable(false);
@@ -24,20 +30,20 @@ public class SettingsDialogue extends JDialog {
         getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //init components
-        ButtonGroup radioGroup = initRadios(SettingsController.getBlendingMode());
+        ButtonGroup radioGroup = initRadios(blendingMode);
         JButton ok = new JButton("OK");
         ok.addActionListener(e -> confirm());
         getRootPane().setDefaultButton(ok);
         JButton cancel = new JButton("cancel");
         cancel.addActionListener(e -> setVisible(false));
-        jpegQltySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, (int) (SettingsController.getJpegQuality()*100));
+        jpegQltySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, (int) (jpgQuality * 100));
         jpegQltySlider.setMajorTickSpacing(20);
         jpegQltySlider.setMinorTickSpacing(10);
         jpegQltySlider.setSnapToTicks(true);
         jpegQltySlider.setPaintTicks(true);
         jpegQltySlider.setPaintLabels(true);
 
-        dpiSlider = new JSlider(JSlider.HORIZONTAL, 100, 600, (int) (SettingsController.getJpegQuality()*300));
+        dpiSlider = new JSlider(JSlider.HORIZONTAL, 100, 600, (int) (resolution * 300));
         dpiSlider.setMajorTickSpacing(100);
         dpiSlider.setSnapToTicks(true);
         dpiSlider.setPaintTicks(true);
@@ -91,6 +97,18 @@ public class SettingsDialogue extends JDialog {
         setLocationRelativeTo(appWindow);
     }
 
+    public void setBlendingMode(int blendingMode) {
+        this.blendingMode = blendingMode;
+    }
+
+    public void setJpgQuality(float jpgQuality) {
+        this.jpgQuality = jpgQuality;
+    }
+
+    public void setResolution(float resolution) {
+        this.resolution = resolution;
+    }
+
     private JPanel wrapPanel(JButton ok, JButton cancel) {
         JPanel jp = new JPanel();
         jp.add(ok);
@@ -113,11 +131,16 @@ public class SettingsDialogue extends JDialog {
             }
         }
         SettingsController.setJpegQuality(1.0f * jpegQltySlider.getValue() / 100);
-        SettingsController.setResolutionMultiplier(1.0f * dpiSlider.getValue()/300);
+        SettingsController.setResolutionMultiplier(1.0f * dpiSlider.getValue() / 300);
+        try {
+            SettingsController.saveYML();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     private ButtonGroup initRadios(int i) {
-        //todo load from yml file
         ButtonGroup buttonGroup = new ButtonGroup();
         noopBlender = new JRadioButton("Без смешивания");
         darkenBlender = new JRadioButton("Смешивание с затемнением");

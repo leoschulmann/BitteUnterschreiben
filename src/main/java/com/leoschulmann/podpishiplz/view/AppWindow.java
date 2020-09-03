@@ -4,6 +4,7 @@ import com.leoschulmann.podpishiplz.controller.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class AppWindow extends JFrame {
     private final MainPanel mainPanel;
@@ -41,7 +42,14 @@ public class AppWindow extends JFrame {
         menuBar.getOptionPlace().addActionListener(e -> GUIController.placeOption(this));
         menuBar.getOptionRemove().addActionListener(e -> GUIController.deleteSelectedOverlayOption());
         menuBar.getOptionSaveAs().addActionListener(e -> GUIController.saveFile(this));
-        menuBar.getOptionSettings().addActionListener(e -> GUIController.openSettingsDialogue());
+        menuBar.getOptionSettings().addActionListener(e -> {
+            try {
+                GUIController.openSettingsDialogue();
+            } catch (IOException ioException) {
+                JOptionPane.showMessageDialog(this, ioException.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ioException.printStackTrace();
+            }
+        });
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
