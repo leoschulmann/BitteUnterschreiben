@@ -4,6 +4,7 @@ import com.leoschulmann.podpishiplz.controller.*;
 import com.leoschulmann.podpishiplz.view.AppWindow;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public class BitteUnterschreiben {
@@ -19,6 +20,11 @@ public class BitteUnterschreiben {
         TopPanelController.setTsp(app.getTopScrollerPanel());
         DocumentController.createDocument();
         GUIController.initListener();
+        try {
+            SettingsController.initSettings();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(app, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
         EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
         EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
     }

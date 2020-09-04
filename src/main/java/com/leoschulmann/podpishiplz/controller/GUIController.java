@@ -108,7 +108,7 @@ public class GUIController {
         TopPanelController.revalidateAndRepaint();
     }
 
-    public static void openSettingsDialogue() throws IOException {
+    public static void openSettingsDialogue() {
         SettingsController.openSettings();
     }
 }

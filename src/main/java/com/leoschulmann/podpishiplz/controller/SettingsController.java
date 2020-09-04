@@ -38,16 +38,8 @@ public class SettingsController {
         settings.setResolution(resolutionMultiplier);
     }
 
-    public static void openSettings() throws IOException {
+    public static void openSettings() {
         if (settingsDialogue == null) {
-            if (!settingsFile.exists()) {
-                // default values 'Darken', 50% quality, 200 ppi downsampling
-                settings = new Settings(1, 0.5f, 0.6666667f);
-                settingsFile.createNewFile();
-            } else {
-                ObjectMapper om = new ObjectMapper(new YAMLFactory());
-                settings = om.readValue(settingsFile, Settings.class);
-            }
             settingsDialogue = new SettingsDialogue(BitteUnterschreiben.getApp(),
                     settings.getBlendingMode(),
                     settings.getJpgQuality(),
@@ -59,6 +51,18 @@ public class SettingsController {
         settingsDialogue.setJpgQuality(settings.getJpgQuality());
         settingsDialogue.setResolution(settings.getResolution());
         settingsDialogue.setVisible(true);
+    }
+
+    public static void initSettings() throws IOException {
+        ObjectMapper om = new ObjectMapper(new YAMLFactory());
+        if (!settingsFile.exists()) {
+            // default values 'Darken', 50% quality, 200 ppi downsampling
+            settings = new Settings(1, 0.5f, 0.6666667f);
+            settingsFile.createNewFile();
+            om.writeValue(settingsFile, settings);
+        } else {
+            settings = om.readValue(settingsFile, Settings.class);
+        }
     }
 
     public static void saveYML() throws IOException {
