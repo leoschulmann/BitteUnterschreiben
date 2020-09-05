@@ -1,14 +1,14 @@
 package com.leoschulmann.podpishiplz.view;
 
-import com.leoschulmann.podpishiplz.controller.*;
+import com.leoschulmann.podpishiplz.controller.GUIController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 public class AppWindow extends JFrame {
     private final MainPanel mainPanel;
     private final TopScrollerPanel topScrollerPanel;
+    private final OverlayPanel overlayPanel;
 
     public AppWindow() throws HeadlessException {
 
@@ -34,6 +34,7 @@ public class AppWindow extends JFrame {
 
         mainPanel = new MainPanel();
         topScrollerPanel = new TopScrollerPanel();
+        overlayPanel = new OverlayPanel();
 
         MenuBar menuBar = new MenuBar();
         setJMenuBar(menuBar);
@@ -46,6 +47,7 @@ public class AppWindow extends JFrame {
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
+        add(overlayPanel, BorderLayout.SOUTH);
     }
 
     public MainPanel getMainPanel() {  // only for MainPanelController
@@ -54,5 +56,9 @@ public class AppWindow extends JFrame {
 
     public TopScrollerPanel getTopScrollerPanel() { // only for TopPanelController
         return topScrollerPanel;
+    }
+
+    public OverlayPanel getOverlayPanel() {  // only for OverlayPanelController         //todo fix this mess
+        return overlayPanel;
     }
 }

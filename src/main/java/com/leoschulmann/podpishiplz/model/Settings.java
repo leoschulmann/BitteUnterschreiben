@@ -1,13 +1,14 @@
 package com.leoschulmann.podpishiplz.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Settings {
     private int blendingMode;
     private float jpgQuality;
     private float resolution;
-    private List<FrequentFile> topFiles;
+    private Map<File, Integer> usedOverlays;
 
     public Settings(int blendingMode, float jpgQuality, float resolution) {
               /*
@@ -18,7 +19,7 @@ public class Settings {
         this.blendingMode = blendingMode;
         this.jpgQuality = jpgQuality;
         this.resolution = resolution;
-        topFiles = new ArrayList<>();
+        this.usedOverlays = new HashMap<>();
     }
 
     public Settings() {
@@ -48,41 +49,7 @@ public class Settings {
         this.resolution = resolution;
     }
 
-    public List<FrequentFile> getTopFiles() {
-        return topFiles;
-    }
-
-    public void setTopFiles(List<FrequentFile> topFiles) {
-        this.topFiles = topFiles;
-    }
-
-    @Override
-    public String toString() {
-        return "Settings{" +
-                "blendingMode=" + blendingMode +
-                ", jpgQuality=" + jpgQuality +
-                ", resolution=" + resolution +
-                '}';
-    }
-}
-
-class FrequentFile {    //todo implement
-    String path;
-    int count;
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
+    public Map<File, Integer> getUsedOverlays() {
+        return usedOverlays;
     }
 }

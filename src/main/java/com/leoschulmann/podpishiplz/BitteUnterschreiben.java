@@ -18,6 +18,7 @@ public class BitteUnterschreiben {
     private static void init() {
         MainPanelController.setMainPanel(app.getMainPanel());
         TopPanelController.setTsp(app.getTopScrollerPanel());
+        OverlaysPanelController.setPanel(app.getOverlayPanel());
         DocumentController.createDocument();
         GUIController.initListener();
         try {
@@ -25,6 +26,7 @@ public class BitteUnterschreiben {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(app, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        EventController.notify(EventType.REFRESH_OVERLAYS_PANEL, null);
         EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
         EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
     }
