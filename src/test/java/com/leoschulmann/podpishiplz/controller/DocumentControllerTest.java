@@ -2,15 +2,34 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.MainPanel;
+import com.leoschulmann.podpishiplz.view.OverlayPanel;
 import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
+import java.awt.*;
 
 class DocumentControllerTest {
+
+    @BeforeAll
+    static void sadfsdf() {
+        MainPanel mainPanelMock = Mockito.mock(MainPanel.class);
+        Mockito.doNothing().when(mainPanelMock).repaint();
+        MainPanelController.setMainPanel(mainPanelMock);
+        GUIController.initListener();
+        OverlayPanel overlayPanel = Mockito.mock(OverlayPanel.class);
+        Mockito.when(overlayPanel.getComponents()).thenReturn(new Component[0]);
+        OverlaysPanelController.setPanel(overlayPanel);
+        JPanel panelmock = Mockito.mock(JPanel.class);
+        Mockito.doNothing().when(panelmock).removeAll();
+        TopScrollerPanel tspmock = Mockito.mock(TopScrollerPanel.class);
+        Mockito.when(tspmock.getPanel()).thenReturn(panelmock);
+        TopPanelController.setTsp(tspmock);
+    }
 
     @BeforeEach
     void prepare() {
@@ -92,9 +111,6 @@ class DocumentControllerTest {
         DocumentController.addPage(p2);
         DocumentController.addPage(p3);
         DocumentController.setCurrentPage(p3);
-        MainPanel mainPanelMock = Mockito.mock(MainPanel.class);
-        Mockito.doNothing().when(mainPanelMock).repaint();
-        MainPanelController.setMainPanel(mainPanelMock);
         DocumentController.deletePage(p3);
         Assertions.assertEquals(p2, DocumentController.getCurrentPage());
     }
@@ -108,24 +124,12 @@ class DocumentControllerTest {
         DocumentController.addPage(p2);
         DocumentController.addPage(p3);
         DocumentController.setCurrentPage(p2);
-        MainPanel mainPanelMock = Mockito.mock(MainPanel.class);
-        Mockito.doNothing().when(mainPanelMock).repaint();
-        MainPanelController.setMainPanel(mainPanelMock);
         DocumentController.deletePage(p2);
         Assertions.assertEquals(p3, DocumentController.getCurrentPage());
     }
 
     @Test
     void openAndDeleteSingle() {
-        MainPanel mainPanelMock = Mockito.mock(MainPanel.class);
-        Mockito.doNothing().when(mainPanelMock).repaint();
-        MainPanelController.setMainPanel(mainPanelMock);
-        GUIController.initListener();
-        JPanel panelmock = Mockito.mock(JPanel.class);
-        Mockito.doNothing().when(panelmock).removeAll();
-        TopScrollerPanel tspmock = Mockito.mock(TopScrollerPanel.class);
-        Mockito.when(tspmock.getPanel()).thenReturn(panelmock);
-        TopPanelController.setTsp(tspmock);
         Page p = new Page("", 0);
         DocumentController.addPage(p);
         DocumentController.setCurrentPage(p);
