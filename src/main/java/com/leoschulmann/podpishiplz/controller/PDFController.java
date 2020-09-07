@@ -11,8 +11,8 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Properties;
 
 public class PDFController {
     public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument) {
@@ -56,7 +56,13 @@ public class PDFController {
     public static PDDocument buildPDF(float jpegQuality) throws IOException {
         LoggerFactory.getLogger(PDFController.class).debug("Initiating building PDF.");
         PDDocument pdf = new PDDocument();
-        pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
+        Properties prop = new Properties();
+        prop.load(PDFController.class.getClassLoader().getResourceAsStream("META-INF/app.properties"));
+        String creator = "BitteUnterschreiben";
+        if (prop.getProperty("app.version") != null) {
+            creator = creator + " v" + prop.getProperty("app.version");
+        } pdf.getDocumentInformation().setCreator(creator);
+        LoggerFactory.getLogger(PDFController.class).info("Creator field set to {}", creator);
         for (Page pg : DocumentController.getAllPages()) {
             int width = pg.getMediaWidth();
             int height = pg.getMediaHeight();
