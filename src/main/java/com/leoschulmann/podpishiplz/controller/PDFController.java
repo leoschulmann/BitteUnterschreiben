@@ -8,13 +8,15 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class PDFController {
-    public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument)  {
+    public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument) {
+        LoggerFactory.getLogger(PDFController.class).debug("Building thumbnails.");
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
         try {
             PDFRenderer renderer = new PDFRenderer(pdDocument);
@@ -36,7 +38,8 @@ public class PDFController {
         return boxes;
     }
 
-    public static BufferedImage get300dpiPage(File file, int page)  {
+    public static BufferedImage get300dpiPage(File file, int page) {
+        LoggerFactory.getLogger(PDFController.class).debug("Rendering 300dpi image of {}({}).", file.getName(), page);
         PDDocument pdDocument;
         BufferedImage bufferedImage = null;
         try {
@@ -51,6 +54,7 @@ public class PDFController {
     }
 
     public static PDDocument buildPDF(float jpegQuality) throws IOException {
+        LoggerFactory.getLogger(PDFController.class).debug("Initiating building PDF.");
         PDDocument pdf = new PDDocument();
         pdf.getDocumentInformation().setCreator("BitteUnterschreiben v 0.1");
         for (Page pg : DocumentController.getAllPages()) {
@@ -63,6 +67,7 @@ public class PDFController {
             contentStream.drawImage(imXObj, 0, 0, width, height);
             contentStream.close();
         }
+        LoggerFactory.getLogger(PDFController.class).info("Finished building PDF.");
         return pdf;
     }
 }

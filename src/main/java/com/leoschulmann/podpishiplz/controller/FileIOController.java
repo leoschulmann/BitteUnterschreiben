@@ -6,6 +6,7 @@ import com.leoschulmann.podpishiplz.view.FilePicker;
 import com.leoschulmann.podpishiplz.worker.AbstractUnterschreibenWorker;
 import com.leoschulmann.podpishiplz.worker.OpeningWorker;
 import com.leoschulmann.podpishiplz.worker.SavingWorker;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 public class FileIOController {
     public static void loadOverlay(String file) {
+        LoggerFactory.getLogger(FileIOController.class).info("Loading overlay {}", file);
         try {
             BufferedImage im = ImageIO.read(new File(file));
             if (im.getType() != BufferedImage.TYPE_INT_ARGB) {  // converting to int raster. byte raster won't work
@@ -32,7 +34,7 @@ public class FileIOController {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            LoggerFactory.getLogger(FileIOController.class).error(e.getMessage(), e);
         }
     }
 
@@ -56,6 +58,7 @@ public class FileIOController {
     }
 
     public static BufferedImage getOverlayThumb(File f) {
+        LoggerFactory.getLogger(FileIOController.class).info("Loading thumbnail for {}", f.getName());
         try {
             BufferedImage temp = ImageIO.read(f);
             BufferedImage im = new BufferedImage(50 * temp.getWidth() / temp.getHeight(),
@@ -65,7 +68,7 @@ public class FileIOController {
             g.dispose();
             return im;
         } catch (IOException e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(FileIOController.class).error(e.getMessage(), e);
             return null;
         }
     }

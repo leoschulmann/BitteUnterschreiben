@@ -7,6 +7,7 @@ import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.ThumbButtonContextMenu;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,6 +53,7 @@ public class DocumentController {
     }
 
     public static void renderAllPages(Class<? extends CompositeContext> blender) {  //todo add proper interpolation
+        LoggerFactory.getLogger(DocumentController.class).debug("Initiating rendering pages.");
         for (Page p : doc.getPages()) {
             BufferedImage im = p.getImage();
             int imWidth = (int) (im.getWidth() * SettingsController.getResolutionMultiplier());
@@ -71,6 +73,7 @@ public class DocumentController {
             g2d.dispose();
             p.setRenderedImage(render);
         }
+        LoggerFactory.getLogger(DocumentController.class).info("Finished rendering pages.");
     }
 
     public static void addFileToDocument(PDDocument pdDocument, String filename) {

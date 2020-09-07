@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.model.Settings;
 import com.leoschulmann.podpishiplz.view.SettingsDialogue;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,19 +61,21 @@ public class SettingsController {
     public static void initSettings() throws IOException {
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
         if (!settingsFile.exists()) {
+            LoggerFactory.getLogger(SettingsController.class).info("{} file not found.", settingsFile.getName());
             // default values 'Darken', 50% quality, 200 ppi downsampling
             settings = new Settings(1, 0.5f, 0.6666667f);
             settingsFile.createNewFile();
             om.writeValue(settingsFile, settings);
+            LoggerFactory.getLogger(SettingsController.class).info("New file with default settings created.");
         } else {
+            LoggerFactory.getLogger(SettingsController.class).info("File {} exists, reading settings."
+                    , settingsFile.getName());
             settings = om.readValue(settingsFile, Settings.class);
         }
 
         EventListener settingsEventListener = (event, object) -> {
-            switch (event) {
-                case OVERLAY_LOADED_FROM_DISK:
-                    addToUsedOverlays((File) object);
-                    break;
+            if (event == EventType.OVERLAY_LOADED_FROM_DISK) {
+                addToUsedOverlays((File) object);
             }
         };
         EventController.subscribe(EventType.OVERLAY_LOADED_FROM_DISK, settingsEventListener);
@@ -81,12 +84,20 @@ public class SettingsController {
     public static void saveYML() throws IOException {
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
         om.writeValue(settingsFile, settings);
+        LoggerFactory.getLogger(SettingsController.class).info("{} file saved.", settingsFile.getName());
     }
 
     public static void addToUsedOverlays(File file) {
         settings.getUsedOverlays().compute(file, (file1, integer) -> {
-            if (integer == null) return 1;
-            return integer + 1;
+            if (integer == null) {
+                LoggerFactory.getLogger(SettingsController.class)
+                        .debug("{} added to used overlays list first time.", file.getName());
+                return 1;
+            }
+            int counter = integer + 1;
+            LoggerFactory.getLogger(SettingsController.class)
+                    .debug("{} added to used overlays list {} time.", file.getName(), counter);
+            return counter;
         });
         try {
             saveYML();
@@ -105,6 +116,9 @@ public class SettingsController {
     }
 
     public static void removeOverlayFromList(File file) {
+        LoggerFactory.getLogger(SettingsController.class)
+                .debug("Removing overlay from list {}.", file.getName());
+
         settings.getUsedOverlays().remove(file);
     }
 }

@@ -3,6 +3,7 @@ package com.leoschulmann.podpishiplz.worker;
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.PDFController;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,9 +29,10 @@ public class SavingWorker extends AbstractUnterschreibenWorker {
         try {
             pdf = PDFController.buildPDF(jpgQ);
             pdf.save(file);
+            LoggerFactory.getLogger(SavingWorker.class).info("File {} saved.", file);
             pdf.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(SavingWorker.class).error(e.getMessage(), e);
         }
         diag.dispose();
         return null;

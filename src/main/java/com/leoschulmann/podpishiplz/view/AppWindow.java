@@ -1,6 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.GUIController;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,12 +17,13 @@ public class AppWindow extends JFrame {
         try {
             UIManager.setLookAndFeel(OSDesign);  //sets OS-specific Look and Feel
             if (OSDesign.contains("apple")) {
-                System.setProperty("apple.laf.useScreenMenuBar", "true");  // sets MacOS-specific top menu bar
+                LoggerFactory.getLogger(AppWindow.class).info("Creating MacOS interface look and feel.");
+                System.setProperty("apple.laf.useScreenMenuBar", "true");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getClass().toString()
                     + " " + e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            LoggerFactory.getLogger(AppWindow.class).error(e.getMessage(), e);
         }
 
         setTitle("Bitte Unterschreiben");
@@ -48,6 +50,7 @@ public class AppWindow extends JFrame {
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
         add(overlayPanel, BorderLayout.SOUTH);
+        LoggerFactory.getLogger(AppWindow.class).debug("Finished building {}", this.getClass().getSimpleName());
     }
 
     public MainPanel getMainPanel() {  // only for MainPanelController
