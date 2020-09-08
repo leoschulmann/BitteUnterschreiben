@@ -50,19 +50,21 @@ public class SettingsDialogue extends JDialog {
         dpiSlider.setPaintLabels(true);
 
         //placeholder
-        ImageIcon icon = new ImageIcon(appWindow.getClass().getClassLoader().getResource("pholder.png"));
+        ImageIcon noBlendingIcon = new ImageIcon(appWindow.getClass().getClassLoader().getResource("no_blending.png"));
+        ImageIcon darkenBlendingIcon = new ImageIcon(appWindow.getClass().getClassLoader().getResource("darken_blending.png"));
+        ImageIcon multiplyBlendingIcon = new ImageIcon(appWindow.getClass().getClassLoader().getResource("multiply_blending.png"));
 
         //draw components
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        add(wrapPanel(new JLabel(null, icon, JLabel.CENTER)), gbc); //todo implement clickable
+        add(wrapPanel(new JLabel(null, noBlendingIcon, JLabel.CENTER)), gbc); //todo implement clickable
 
         gbc.gridx++;
-        add(wrapPanel(new JLabel(null, icon, JLabel.CENTER)), gbc);
+        add(wrapPanel(new JLabel(null, darkenBlendingIcon, JLabel.CENTER)), gbc);
 
         gbc.gridx++;
-        add(wrapPanel(new JLabel(null, icon, JLabel.CENTER)), gbc);
+        add(wrapPanel(new JLabel(null, multiplyBlendingIcon, JLabel.CENTER)), gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
