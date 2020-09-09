@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.controller;
 
+import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.ThumbnailButton;
 import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
 
@@ -11,7 +13,11 @@ import java.util.List;
 public class TopPanelController {
     private static TopScrollerPanel tsp;
     public static final List<ThumbnailButton> buttons = new ArrayList<>();
+    final static JButton welcomeBtn = new JButton("Открыть .pdf...");
 
+    static {
+        welcomeBtn.addActionListener(e -> GUIController.openOption(BitteUnterschreiben.getApp()));
+    }
 
     public static TopScrollerPanel getTsp() {
         return tsp;
@@ -57,5 +63,35 @@ public class TopPanelController {
                     GUIController.placeButton(b);
                 }
         );
+    }
+
+    public static void initListener() {
+        EventListener el = (event, object) -> {
+            switch (event) {
+                case PAGES_REORDERED:
+                    Page pageRemoved = (Page) object;
+                    getButtons().remove(
+                            getButtons().stream()
+                                    .filter(b -> b.getPage() == pageRemoved)
+                                    .findFirst()
+                                    .orElse(null));
+                    removeAll();
+                    clearAndPlaceThumbnailsOrdered();
+                    revalidateAndRepaint();
+                    break;
+                case NO_PAGES_IN_DOCUMENT:
+                    TopPanelController.put(welcomeBtn);
+                    TopPanelController.revalidateAndRepaint();
+                    GUIController.openPage(null);
+                    break;
+                case PAGES_ADDED:
+                    TopPanelController.remove(welcomeBtn);
+                    TopPanelController.revalidateAndRepaint();
+                    break;
+            }
+        };
+        EventController.subscribe(EventType.PAGES_REORDERED, el);
+        EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, el);
+        EventController.subscribe(EventType.PAGES_ADDED, el);
     }
 }

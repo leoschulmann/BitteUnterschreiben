@@ -38,7 +38,8 @@ public class BitteUnterschreiben {
         TopPanelController.setTsp(app.getTopScrollerPanel());
         OverlaysPanelController.setPanel(app.getOverlayPanel());
         DocumentController.createDocument();
-        GUIController.initListener();
+        OverlaysPanelController.initListener();
+        TopPanelController.initListener();
         try {
             SettingsController.initSettings();
         } catch (IOException e) {

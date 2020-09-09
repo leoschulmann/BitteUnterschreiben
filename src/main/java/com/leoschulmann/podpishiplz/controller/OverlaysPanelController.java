@@ -52,4 +52,29 @@ public class OverlaysPanelController {
     public static void enableAll() {
         Arrays.stream(panel.getComponents()).forEach(component -> component.setEnabled(true));
     }
+
+    public static void initListener() {
+        EventListener el = (event, object) -> {
+            switch (event) {
+                case MAIN_PANEL_FULL:
+                    enableAll();
+                    break;
+                case MAIN_PANEL_EMPTY:
+                    disableAll();
+                    break;
+                case NO_PAGES_IN_DOCUMENT:
+                    disableAll();
+                    break;
+                case REFRESH_OVERLAYS_PANEL:
+                    removeAll();
+                    loadThumbs(SettingsController.getUsedOverlays());
+                    revalidateAndRepaint();
+                    break;
+            }
+        };
+        EventController.subscribe(EventType.REFRESH_OVERLAYS_PANEL, el);
+        EventController.subscribe(EventType.MAIN_PANEL_FULL, el);
+        EventController.subscribe(EventType.MAIN_PANEL_EMPTY, el);
+        EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, el);
+    }
 }

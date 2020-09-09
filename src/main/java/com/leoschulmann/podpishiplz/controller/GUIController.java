@@ -1,6 +1,5 @@
 package com.leoschulmann.podpishiplz.controller;
 
-import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.graphics.BlenderDarken;
 import com.leoschulmann.podpishiplz.graphics.BlenderMultiply;
 import com.leoschulmann.podpishiplz.model.Page;
@@ -13,54 +12,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GUIController {
-    final static JButton welcomeBtn = new JButton("Открыть .pdf...");
-
-    static {
-        welcomeBtn.addActionListener(e -> openOption(BitteUnterschreiben.getApp()));
-    }
-
-    public static void initListener() {
-        EventListener GUIControllerEventListener = (event, object) -> {
-            switch (event) {  //todo rework. listeners should be in respective controllers
-                case NO_PAGES_IN_DOCUMENT:
-                    placeButton(welcomeBtn);
-                    openPage(null);
-                    OverlaysPanelController.disableAll();
-                    break;
-                case MAIN_PANEL_EMPTY:
-                    OverlaysPanelController.disableAll();
-                    break;
-                case MAIN_PANEL_FULL:
-                    OverlaysPanelController.enableAll();
-                    break;
-                case PAGES_ADDED:
-                    remButton(welcomeBtn);
-                    break;
-                case PAGES_REORDERED:
-                    Page pageRemoved = (Page) object;
-                    TopPanelController.getButtons().remove(
-                            TopPanelController.getButtons().stream()
-                                    .filter(b -> b.getPage() == pageRemoved)
-                                    .findFirst()
-                                    .orElse(null));
-                    TopPanelController.removeAll();
-                    TopPanelController.clearAndPlaceThumbnailsOrdered();
-                    TopPanelController.revalidateAndRepaint();
-                    break;
-                case REFRESH_OVERLAYS_PANEL:
-                    OverlaysPanelController.removeAll();
-                    OverlaysPanelController.loadThumbs(SettingsController.getUsedOverlays());
-                    OverlaysPanelController.revalidateAndRepaint();
-                    break;
-            }
-        };
-        EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, GUIControllerEventListener);
-        EventController.subscribe(EventType.PAGES_ADDED, GUIControllerEventListener);
-        EventController.subscribe(EventType.PAGES_REORDERED, GUIControllerEventListener);
-        EventController.subscribe(EventType.REFRESH_OVERLAYS_PANEL, GUIControllerEventListener);
-        EventController.subscribe(EventType.MAIN_PANEL_EMPTY, GUIControllerEventListener);
-        EventController.subscribe(EventType.MAIN_PANEL_FULL, GUIControllerEventListener);
-    }
 
     public static void openOption(AppWindow appWindow) {
         FileIOController.openPdfFile(appWindow);
@@ -118,11 +69,6 @@ public class GUIController {
 
     public static void placeButton(JButton jb) {
         TopPanelController.put(jb);
-        TopPanelController.revalidateAndRepaint();
-    }
-
-    public static void remButton(JButton jb) {
-        TopPanelController.remove(jb);
         TopPanelController.revalidateAndRepaint();
     }
 

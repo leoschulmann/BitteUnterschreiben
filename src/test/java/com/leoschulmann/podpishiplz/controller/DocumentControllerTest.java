@@ -20,7 +20,7 @@ class DocumentControllerTest {
         MainPanel mainPanelMock = Mockito.mock(MainPanel.class);
         Mockito.doNothing().when(mainPanelMock).repaint();
         MainPanelController.setMainPanel(mainPanelMock);
-        GUIController.initListener();
+        TopPanelController.initListener();
         OverlayPanel overlayPanel = Mockito.mock(OverlayPanel.class);
         Mockito.when(overlayPanel.getComponents()).thenReturn(new Component[0]);
         OverlaysPanelController.setPanel(overlayPanel);
