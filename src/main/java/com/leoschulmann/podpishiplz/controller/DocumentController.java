@@ -79,9 +79,10 @@ public class DocumentController {
     public static void addFileToDocument(PDDocument pdDocument, String filename) {
         BufferedImage[] thumbnails = PDFController.generatePageThumbnails(pdDocument);
         PDRectangle[] mediaBoxes = PDFController.getMediaBoxes(pdDocument);
-
+        Page firstPage = null;
         for (int pg = 0; pg < pdDocument.getNumberOfPages(); pg++) {
             Page p = new Page(filename, pg);
+            if (firstPage == null) firstPage = p;
             p.setMediaWidth((int) (mediaBoxes[pg].getWidth()));
             p.setMediaHeight((int) (mediaBoxes[pg].getHeight()));
             addPage(p);
@@ -108,6 +109,7 @@ public class DocumentController {
             });
             GUIController.placeButton(jb);
         }
+        GUIController.openPage(firstPage);
     }
 
     public static void addPage(Page p) {
