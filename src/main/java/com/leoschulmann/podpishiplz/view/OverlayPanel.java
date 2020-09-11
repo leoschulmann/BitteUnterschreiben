@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.OverlaysPanelController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,6 +9,7 @@ public class OverlayPanel extends JPanel {
     private final GridBagConstraints gbc;
 
     public OverlayPanel() {
+        OverlaysPanelController.setPanel(this);
         setPreferredSize(new Dimension(100, 70));
 
         gbc = new GridBagConstraints();

@@ -63,7 +63,7 @@ public class GUIController {
         jb.setVerticalTextPosition(SwingConstants.BOTTOM);
         jb.setHorizontalTextPosition(SwingConstants.CENTER);
         jb.addActionListener(e -> GUIController.openPage(jb.getPage()));
-        TopPanelController.getButtons().add(jb);
+        TopPanelController.BUTTONS.add(jb);
         return jb;
     }
 

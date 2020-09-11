@@ -57,7 +57,6 @@ public class MainPanelController {
     }
 
     public static List<Overlay> getOverlays() {
-        if (DocumentController.getCurrentPage() == null) return null;
         return DocumentController.getCurrentPage().getOverlays();
     }
 
@@ -84,10 +83,6 @@ public class MainPanelController {
 
     public static void setMainPanel(MainPanel mainpanel) {
         panel = mainpanel;
-    }
-
-    public static MainPanel getMainPanel() {
-        return panel;
     }
 
     public static void repaint() {

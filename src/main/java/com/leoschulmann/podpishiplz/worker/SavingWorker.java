@@ -12,7 +12,7 @@ import java.io.IOException;
 public class SavingWorker extends AbstractUnterschreibenWorker {
     private final String file;
     private final float jpgQ;
-    Class<? extends CompositeContext> blender;
+    private final Class<? extends CompositeContext> blender;
 
     public SavingWorker(String file, float jpegQuality, JFrame owner, Class<? extends CompositeContext> blender) {
         super(owner, "Рендеринг...");

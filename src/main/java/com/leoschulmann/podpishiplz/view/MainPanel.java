@@ -1,18 +1,20 @@
 package com.leoschulmann.podpishiplz.view;
 
 
+import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class MainPanel extends JPanel {
 
     public MainPanel() {
+        MainPanelController.setMainPanel(this);
         MouseController mouse = new MouseController(this);
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
@@ -49,11 +51,17 @@ public class MainPanel extends JPanel {
             });
         }
         else {
-            BufferedImage im = null;
+            BufferedImage im;
             try {
                 im = ImageIO.read(this.getClass().getClassLoader().getResource("pholder.png"));
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                LoggerFactory.getLogger(MainPanel.class).error(e.getMessage(), e);
+                JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                im = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+                Graphics gr = im.createGraphics();
+                gr.setColor(Color.red);
+                gr.drawString("Error", 5, 50);
+                gr.dispose();
             }
             g.drawImage(im, (this.getWidth() - im.getWidth())/2, (this.getHeight()-im.getHeight())/2,
                     im.getWidth(), im.getHeight(), null);

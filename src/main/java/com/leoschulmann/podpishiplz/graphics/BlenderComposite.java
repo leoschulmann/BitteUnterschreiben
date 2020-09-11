@@ -9,7 +9,7 @@ public class BlenderComposite implements Composite {
         this.contextClass = contextClass;
     }
 
-    Class<? extends CompositeContext> contextClass;
+    final Class<? extends CompositeContext> contextClass;
 
     @Override
     public CompositeContext createContext(ColorModel srcColorModel, ColorModel dstColorModel, RenderingHints hints) {

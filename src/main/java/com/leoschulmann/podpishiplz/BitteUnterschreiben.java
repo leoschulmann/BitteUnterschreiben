@@ -34,9 +34,6 @@ public class BitteUnterschreiben {
     }
 
     private static void init() {
-        MainPanelController.setMainPanel(app.getMainPanel());
-        TopPanelController.setTsp(app.getTopScrollerPanel());
-        OverlaysPanelController.setPanel(app.getOverlayPanel());
         DocumentController.createDocument();
         OverlaysPanelController.initListener();
         TopPanelController.initListener();

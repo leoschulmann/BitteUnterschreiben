@@ -84,7 +84,6 @@ public class DocumentController {
             Page p = new Page(filename, pg);
             p.setMediaWidth((int) (mediaBoxes[pg].getWidth()));
             p.setMediaHeight((int) (mediaBoxes[pg].getHeight()));
-            p.setThumbnail(thumbnails[pg]);
             addPage(p);
             if (getAllPages().size() == 1) {
                 EventController.notify(EventType.PAGES_ADDED, null);

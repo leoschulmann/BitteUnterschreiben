@@ -16,6 +16,7 @@ public class WorkerDialog extends JDialog {
         setLocationRelativeTo(owner);
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void setText(String text) {
         remove(label);
         label.setText(text);

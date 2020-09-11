@@ -24,9 +24,6 @@ public class SettingsDialogue extends JDialog {
 
 
     public SettingsDialogue(JFrame appWindow, int blendingMode, float jpgQuality, float resolution) {
-        this.blendingMode = blendingMode;
-        this.jpgQuality = jpgQuality;
-        this.resolution = resolution;
         setTitle("Настройки");
         setModal(true);
         setResizable(false);
@@ -36,7 +33,7 @@ public class SettingsDialogue extends JDialog {
         getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         //init components
-        ButtonGroup radioGroup = initRadios(blendingMode);
+        initRadios(blendingMode);
         JButton ok = new JButton("OK");
         ok.addActionListener(e -> confirm());
         getRootPane().setDefaultButton(ok);
@@ -150,7 +147,7 @@ public class SettingsDialogue extends JDialog {
         }
     }
 
-    private ButtonGroup initRadios(int i) {
+    private void initRadios(int i) {
         ButtonGroup buttonGroup = new ButtonGroup();
         noopBlender = new JRadioButton("Без смешения");
         darkenBlender = new JRadioButton("Смешение с затемнением");
@@ -161,6 +158,5 @@ public class SettingsDialogue extends JDialog {
         buttonGroup.add(multiplyBlender);
         buttonGroup.clearSelection();
         btns[i].setSelected(true);
-        return buttonGroup;
     }
 }

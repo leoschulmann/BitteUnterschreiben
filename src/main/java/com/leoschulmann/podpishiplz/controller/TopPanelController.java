@@ -12,23 +12,15 @@ import java.util.List;
 
 public class TopPanelController {
     private static TopScrollerPanel tsp;
-    public static final List<ThumbnailButton> buttons = new ArrayList<>();
+    public static final List<ThumbnailButton> BUTTONS = new ArrayList<>();
     final static JButton welcomeBtn = new JButton("Открыть .pdf...");
 
     static {
         welcomeBtn.addActionListener(e -> GUIController.openOption(BitteUnterschreiben.getApp()));
     }
 
-    public static TopScrollerPanel getTsp() {
-        return tsp;
-    }
-
     public static void setTsp(TopScrollerPanel tsp) {
         TopPanelController.tsp = tsp;
-    }
-
-    public static JScrollPane getWrapper() {
-        return tsp.getWrapper();
     }
 
     public static void removeAll() {
@@ -49,13 +41,10 @@ public class TopPanelController {
         tsp.rem(c);
     }
 
-    public static List<ThumbnailButton> getButtons() {
-        return buttons;
-    }
-
     public static void clearAndPlaceThumbnailsOrdered() {
-        buttons.stream().sorted((o1, o2) -> {
-            if (DocumentController.getPageNumber(o1.getPage()) < DocumentController.getPageNumber(o2.getPage())) {
+        BUTTONS.stream().sorted((o1, o2) -> {
+            if (o1.equals(o2)) return 0;
+            else if (DocumentController.getPageNumber(o1.getPage()) < DocumentController.getPageNumber(o2.getPage())) {
                 return -1;
             } else return 1;
         }).forEach(b -> {
@@ -70,8 +59,8 @@ public class TopPanelController {
             switch (event) {
                 case PAGES_REORDERED:
                     Page pageRemoved = (Page) object;
-                    getButtons().remove(
-                            getButtons().stream()
+                    TopPanelController.BUTTONS.remove(
+                            TopPanelController.BUTTONS.stream()
                                     .filter(b -> b.getPage() == pageRemoved)
                                     .findFirst()
                                     .orElse(null));

@@ -52,16 +52,4 @@ public class AppWindow extends JFrame {
         add(overlayPanel, BorderLayout.SOUTH);
         LoggerFactory.getLogger(AppWindow.class).debug("Finished building {}", this.getClass().getSimpleName());
     }
-
-    public MainPanel getMainPanel() {  // only for MainPanelController
-        return mainPanel;
-    }
-
-    public TopScrollerPanel getTopScrollerPanel() { // only for TopPanelController
-        return topScrollerPanel;
-    }
-
-    public OverlayPanel getOverlayPanel() {  // only for OverlayPanelController         //todo fix this mess
-        return overlayPanel;
-    }
 }

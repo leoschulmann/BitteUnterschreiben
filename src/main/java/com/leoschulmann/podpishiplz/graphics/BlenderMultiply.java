@@ -21,7 +21,7 @@ public class BlenderMultiply implements CompositeContext {
         int compHeight = Math.min(src.getHeight(), dstIn.getHeight());
         int[] srcPixels = new int[compWidth];
         int[] dstPixels = new int[compWidth];
-        int pixel = 0;
+        int pixel;
         int pixelRow = 0;
         while (pixelRow < compHeight) {
             src.getDataElements(0, pixelRow, compWidth, 1, srcPixels);

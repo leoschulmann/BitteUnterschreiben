@@ -11,7 +11,6 @@ public class Page {
     private final File originalFile;
     private final int originalFilePageNumber;
     private BufferedImage image;
-    private BufferedImage thumbnail;
     private List<Overlay> overlays;
     private int mediaWidth;  // in px @ 72 dpi
     private int mediaHeight;
@@ -24,30 +23,11 @@ public class Page {
         originalFilePageNumber = number;
     }
 
-    public void addOverlay(BufferedImage im, double x, double y) {
-        Overlay o = new Overlay(im);
-        o.setRelCentX(x);
-        o.setRelCentY(y);
-        overlays.add(o);
-    }
-
-    public void remOverlay(Overlay o) {
-        overlays.remove(o);
-    }
-
-    public File getOriginalFile() {
-        return originalFile;
-    }
-
     public BufferedImage getImage() {
         if (image == null) {
             image = PDFController.get300dpiPage(originalFile, originalFilePageNumber);
         }
         return image;
-    }
-
-    public BufferedImage getThumbnail() {
-        return thumbnail;
     }
 
     public List<Overlay> getOverlays() {
@@ -58,15 +38,12 @@ public class Page {
         this.image = image;
     }
 
-    public void setThumbnail(BufferedImage thumbnail) {
-        this.thumbnail = thumbnail;
-    }
 
     public void setOverlays(List<Overlay> overlays) {
         this.overlays = overlays;
     }
 
-    public int getMediaWidth() {  // todo refactor
+    public int getMediaWidth() {
         return mediaWidth;
     }
 

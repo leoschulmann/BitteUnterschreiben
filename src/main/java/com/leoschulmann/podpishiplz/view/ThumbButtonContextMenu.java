@@ -6,10 +6,8 @@ import com.leoschulmann.podpishiplz.model.Page;
 import javax.swing.*;
 
 public class ThumbButtonContextMenu extends JPopupMenu {
-    private Page page;
 
     public ThumbButtonContextMenu(Page page) {
-        this.page = page;
 
         JMenuItem toFront = new JMenuItem("Переместить в начало");
         JMenuItem left = new JMenuItem("Переместить левее");

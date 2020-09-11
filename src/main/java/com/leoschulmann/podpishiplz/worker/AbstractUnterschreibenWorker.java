@@ -6,7 +6,7 @@ public abstract class AbstractUnterschreibenWorker extends SwingWorker<Object, O
     @Override
     abstract protected Object doInBackground();
 
-    protected WorkerDialog diag;
+    protected final WorkerDialog diag;
 
     public AbstractUnterschreibenWorker(JFrame owner, String text) {
         this.diag = new WorkerDialog(owner, text);

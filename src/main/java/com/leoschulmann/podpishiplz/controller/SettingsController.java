@@ -60,11 +60,10 @@ public class SettingsController {
 
     public static void initSettings() throws IOException {
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
-        if (!settingsFile.exists()) {
+        if (settingsFile.createNewFile()) {
             LoggerFactory.getLogger(SettingsController.class).info("{} file not found.", settingsFile.getName());
             // default values 'Darken', 50% quality, 200 ppi downsampling
             settings = new Settings(1, 0.5f, 0.6666667f);
-            settingsFile.createNewFile();
             om.writeValue(settingsFile, settings);
             LoggerFactory.getLogger(SettingsController.class).info("New file with default settings created.");
         } else {

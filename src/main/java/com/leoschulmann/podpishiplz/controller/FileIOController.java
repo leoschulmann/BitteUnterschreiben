@@ -68,8 +68,15 @@ public class FileIOController {
             g.dispose();
             return im;
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             LoggerFactory.getLogger(FileIOController.class).error(e.getMessage(), e);
-            return null;
+            BufferedImage im = new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB);
+            Graphics g = im.createGraphics();
+            g.setColor(Color.RED);
+            g.drawString("ERROR", 1, 25);
+            g.dispose();
+            return im;
         }
     }
 }

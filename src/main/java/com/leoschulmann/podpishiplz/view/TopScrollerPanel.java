@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.TopPanelController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,6 +11,7 @@ public class TopScrollerPanel {
     private final GridBagConstraints gbc;
 
     public TopScrollerPanel() {
+        TopPanelController.setTsp(this);
         panel = new JPanel(new GridBagLayout());
         wrapper = new JScrollPane(panel);
         wrapper.setPreferredSize(new Dimension(100, 120));

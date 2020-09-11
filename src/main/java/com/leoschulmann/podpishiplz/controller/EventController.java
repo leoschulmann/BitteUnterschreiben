@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class EventController {
-    private static Map<EventType, List<EventListener>> listeners = new HashMap<>();
+    private static final Map<EventType, List<EventListener>> listeners = new HashMap<>();
 
     static {
         Arrays.stream(EventType.values()).forEach(et -> listeners.put(et, new ArrayList<>()));
