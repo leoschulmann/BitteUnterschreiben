@@ -24,7 +24,7 @@ public class SettingsDialogue extends JDialog {
 
 
     public SettingsDialogue(JFrame appWindow, int blendingMode, float jpgQuality, float resolution) {
-        setTitle("Настройки");
+        setTitle("Settings");
         setModal(true);
         setResizable(false);
 
@@ -37,7 +37,7 @@ public class SettingsDialogue extends JDialog {
         JButton ok = new JButton("OK");
         ok.addActionListener(e -> confirm());
         getRootPane().setDefaultButton(ok);
-        JButton cancel = new JButton("Отмена");
+        JButton cancel = new JButton("Cancel");
         cancel.addActionListener(e -> setVisible(false));
         jpegQltySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, (int) (jpgQuality * 100));
         jpegQltySlider.setMajorTickSpacing(20);
@@ -69,10 +69,10 @@ public class SettingsDialogue extends JDialog {
         add(wrapPanel(true, drawBlendingRadio()), gbc);
 
         gbc.gridy++;
-        add(wrapPanel(true, new JLabel("Степень сжатия JPEG"), dummy, jpegQltySlider), gbc);
+        add(wrapPanel(true, new JLabel("JPEG compression"), dummy, jpegQltySlider), gbc);
 
         gbc.gridy++;
-        add(wrapPanel(true, new JLabel("Разрешение изображений, dpi"), dpiSlider), gbc);
+        add(wrapPanel(true, new JLabel("Resolution, dpi"), dpiSlider), gbc);
 
         gbc.gridy++;
         gbc.anchor = GridBagConstraints.LINE_END;
@@ -149,9 +149,9 @@ public class SettingsDialogue extends JDialog {
 
     private void initRadios(int i) {
         ButtonGroup buttonGroup = new ButtonGroup();
-        noopBlender = new JRadioButton("Без смешения");
-        darkenBlender = new JRadioButton("Смешение с затемнением");
-        multiplyBlender = new JRadioButton("Смешение с умножением");
+        noopBlender = new JRadioButton("No blending");
+        darkenBlender = new JRadioButton("Darken");
+        multiplyBlender = new JRadioButton("Multiply");
         btns = new JRadioButton[]{noopBlender, darkenBlender, multiplyBlender};
         buttonGroup.add(noopBlender);
         buttonGroup.add(darkenBlender);

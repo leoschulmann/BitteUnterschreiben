@@ -15,7 +15,7 @@ public class SavingWorker extends AbstractUnterschreibenWorker {
     private final Class<? extends CompositeContext> blender;
 
     public SavingWorker(String file, float jpegQuality, JFrame owner, Class<? extends CompositeContext> blender) {
-        super(owner, "Рендеринг...");
+        super(owner, "Rendering...");
         this.file = file;
         this.jpgQ = jpegQuality;
         this.blender = blender;
@@ -24,7 +24,7 @@ public class SavingWorker extends AbstractUnterschreibenWorker {
     @Override
     protected Void doInBackground() {
         DocumentController.renderAllPages(blender);
-        diag.setText("Сохранение...");
+        diag.setText("Saving...");
         PDDocument pdf;
         try {
             pdf = PDFController.buildPDF(jpgQ);

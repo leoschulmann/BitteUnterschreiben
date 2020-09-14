@@ -9,11 +9,11 @@ public class ThumbButtonContextMenu extends JPopupMenu {
 
     public ThumbButtonContextMenu(Page page) {
 
-        JMenuItem toFront = new JMenuItem("Переместить в начало");
-        JMenuItem left = new JMenuItem("Переместить левее");
-        JMenuItem right = new JMenuItem("Переместить правее");
-        JMenuItem toBack = new JMenuItem("Переместить в конец");
-        JMenuItem delete = new JMenuItem("Удалить");
+        JMenuItem toFront = new JMenuItem("Make first");
+        JMenuItem left = new JMenuItem("Move left");
+        JMenuItem right = new JMenuItem("Move right");
+        JMenuItem toBack = new JMenuItem("Make last");
+        JMenuItem delete = new JMenuItem("Delete");
 
         if (DocumentController.getPageNumber(page) == 0) {
             toFront.setEnabled(false);

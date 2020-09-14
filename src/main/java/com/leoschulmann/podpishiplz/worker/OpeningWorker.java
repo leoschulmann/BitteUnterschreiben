@@ -12,7 +12,7 @@ public class OpeningWorker extends AbstractUnterschreibenWorker {
     private final String file;
 
     public OpeningWorker(JFrame owner, String file) {
-        super(owner, "Файл открывается...");
+        super(owner, "Opening...");
         this.file = file;
     }
 
