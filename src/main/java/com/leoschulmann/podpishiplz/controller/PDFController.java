@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.controller;
 
+import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.model.Page;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -11,7 +12,8 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 public class PDFController {
@@ -20,8 +22,14 @@ public class PDFController {
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
         try {
             PDFRenderer renderer = new PDFRenderer(pdDocument);
+//            setting rendering hints in PDFBox yields ugly results :(
+//            renderer.setRenderingHints(new RenderingHints(RenderingHints.KEY_INTERPOLATION,
+//            RenderingHints.VALUE_INTERPOLATION_BILINEAR));
             for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
-                images[i] = renderer.renderImageWithDPI(i, 6.4f);    // for 75 px ..?
+                //setup intermediate image height (appr 585 px for A4)
+                //might lower the init render size to cut some rescaling passes
+                BufferedImage raw = renderer.renderImageWithDPI(i, 50f);
+                images[i] = Resizer.resize(raw, 75);  // input image and desired thumbnail height
             }
             pdDocument.close();
         } catch (IOException e) {
@@ -61,7 +69,8 @@ public class PDFController {
         String creator = "BitteUnterschreiben";
         if (prop.getProperty("app.version") != null) {
             creator = creator + " v" + prop.getProperty("app.version");
-        } pdf.getDocumentInformation().setCreator(creator);
+        }
+        pdf.getDocumentInformation().setCreator(creator);
         LoggerFactory.getLogger(PDFController.class).info("Creator field set to {}", creator);
         for (Page pg : DocumentController.getAllPages()) {
             int width = pg.getMediaWidth();
