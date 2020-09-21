@@ -1,7 +1,6 @@
 package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.GUIController;
-import com.leoschulmann.podpishiplz.controller.PDFController;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -32,7 +31,7 @@ public class AppWindow extends JFrame {
         String title = "BitteUnterschreiben";
         Properties prop = new Properties();
         try {
-            prop.load(PDFController.class.getClassLoader().getResourceAsStream("META-INF/app.properties"));
+            prop.load(AppWindow.class.getClassLoader().getResourceAsStream("META-INF/app.properties"));
         } catch (IOException e) {
             e.printStackTrace();
             LoggerFactory.getLogger(AppWindow.class).warn("Can't load app.properties");

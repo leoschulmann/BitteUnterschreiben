@@ -16,4 +16,8 @@ public class ThumbnailButton extends JButton {
     public Page getPage() {
         return page;
     }
+
+    public void setThumbnailImage(BufferedImage image) {
+        this.setIcon(new ImageIcon(image));
+    }
 }

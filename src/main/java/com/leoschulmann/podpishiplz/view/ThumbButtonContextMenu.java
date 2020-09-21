@@ -13,6 +13,8 @@ public class ThumbButtonContextMenu extends JPopupMenu {
         JMenuItem left = new JMenuItem("Move left");
         JMenuItem right = new JMenuItem("Move right");
         JMenuItem toBack = new JMenuItem("Make last");
+        JMenuItem rotLeft = new JMenuItem("Rotate left");
+        JMenuItem rotRight = new JMenuItem("Rotate right");
         JMenuItem delete = new JMenuItem("Delete");
 
         if (DocumentController.getPageNumber(page) == 0) {
@@ -29,11 +31,16 @@ public class ThumbButtonContextMenu extends JPopupMenu {
         right.addActionListener(e -> DocumentController.movePageRight(page));
         toBack.addActionListener(e -> DocumentController.movePageToBack(page));
         delete.addActionListener(e -> DocumentController.deletePage(page));
+        rotLeft.addActionListener(e -> DocumentController.rotateLeft(page, true));
+        rotRight.addActionListener(e -> DocumentController.rotateLeft(page, false));
 
         add(toFront);
         add(left);
         add(right);
         add(toBack);
+        addSeparator();
+        add(rotLeft);
+        add(rotRight);
         addSeparator();
         add(delete);
     }

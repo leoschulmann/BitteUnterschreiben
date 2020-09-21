@@ -88,4 +88,13 @@ public class MainPanelController {
     public static void repaint() {
         panel.repaint();
     }
+
+    public static void initListener() {
+        EventListener el = (event, object) -> {
+            if (event == EventType.PAGE_ROTATED) {
+                panel.repaint();
+            }
+        };
+        EventController.subscribe(EventType.PAGE_ROTATED, el);
+    }
 }

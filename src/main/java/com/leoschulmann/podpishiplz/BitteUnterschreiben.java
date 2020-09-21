@@ -18,7 +18,7 @@ public class BitteUnterschreiben {
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
 
         //default behavior: only write errors to err.log
-        Logger root = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         Appender<ILoggingEvent> consoleLogger = root.getAppender("STDOUT");
         root.detachAppender(consoleLogger);
         root.setLevel(Level.WARN);
@@ -37,6 +37,7 @@ public class BitteUnterschreiben {
         DocumentController.createDocument();
         OverlaysPanelController.initListener();
         TopPanelController.initListener();
+        MainPanelController.initListener();
         try {
             SettingsController.initSettings();
         } catch (IOException e) {

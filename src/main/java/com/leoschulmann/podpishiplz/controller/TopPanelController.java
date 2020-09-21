@@ -1,6 +1,8 @@
 package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.graphics.Resizer;
+import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.ThumbnailButton;
 import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
@@ -77,10 +79,21 @@ public class TopPanelController {
                     TopPanelController.remove(welcomeBtn);
                     TopPanelController.revalidateAndRepaint();
                     break;
+                case PAGE_ROTATED:
+                    Page pageRotated = (Page) object;
+                    ThumbnailButton butt = BUTTONS.stream()
+                            .filter(b -> b.getPage() == pageRotated)
+                            .findFirst()
+                            .orElse(null);
+                    butt.setThumbnailImage(Resizer.resize(pageRotated.getImage(), 75));
+                    butt.repaint();
+                    break;
             }
         };
         EventController.subscribe(EventType.PAGES_REORDERED, el);
         EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, el);
         EventController.subscribe(EventType.PAGES_ADDED, el);
+        EventController.subscribe(EventType.PAGE_ROTATED, el);
+//        EventController.subscribe(EventType.OVERLAY_SELECTED, el);
     }
 }

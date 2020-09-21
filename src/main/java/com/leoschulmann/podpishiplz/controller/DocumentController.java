@@ -1,6 +1,7 @@
 package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.graphics.BlenderComposite;
+import com.leoschulmann.podpishiplz.graphics.Rotater;
 import com.leoschulmann.podpishiplz.model.Document;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
@@ -165,5 +166,12 @@ public class DocumentController {
         } else if (idx >= getAllPages().size()) {
             GUIController.openPage(getAllPages().get(getAllPages().size() - 1));  // get last
         } else GUIController.openPage(getAllPages().get(idx));
+    }
+
+    public static void rotateLeft(Page page, boolean toLeft) {
+        BufferedImage image = page.getImage();
+        BufferedImage rotated = Rotater.rotate(image, toLeft);
+        page.setImage(rotated);
+        EventController.notify(EventType.PAGE_ROTATED, page);
     }
 }
