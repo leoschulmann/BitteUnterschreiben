@@ -88,12 +88,17 @@ public class TopPanelController {
                     butt.setThumbnailImage(Resizer.resize(pageRotated.getImage(), 75));
                     butt.repaint();
                     break;
+                case MAIN_PANEL_FULL:
+                    Page page = (Page) object;
+                    BUTTONS.forEach(ThumbnailButton::unmarkLabel);
+                    BUTTONS.stream().filter(b -> b.getPage() == page)
+                            .findFirst().ifPresent(ThumbnailButton::markLabel);
             }
         };
         EventController.subscribe(EventType.PAGES_REORDERED, el);
         EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, el);
         EventController.subscribe(EventType.PAGES_ADDED, el);
         EventController.subscribe(EventType.PAGE_ROTATED, el);
-//        EventController.subscribe(EventType.OVERLAY_SELECTED, el);
+        EventController.subscribe(EventType.MAIN_PANEL_FULL, el);
     }
 }

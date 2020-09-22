@@ -38,7 +38,7 @@ public class GUIController {
         } else if (DocumentController.contains(page)) {
             DocumentController.setCurrentPage(page);
             MainPanelController.repaint();
-            EventController.notify(EventType.MAIN_PANEL_FULL, null);
+            EventController.notify(EventType.MAIN_PANEL_FULL, page);
             page.getOverlays().forEach(overlay -> overlay.setSelected(false));
             EventController.notify(EventType.OVERLAY_DESELECTED, null);
         }

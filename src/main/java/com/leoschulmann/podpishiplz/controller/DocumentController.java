@@ -110,7 +110,7 @@ public class DocumentController {
             });
             GUIController.placeButton(jb);
         }
-        GUIController.openPage(firstPage);
+        if (currentPage == null) GUIController.openPage(firstPage);
     }
 
     public static void addPage(Page p) {
