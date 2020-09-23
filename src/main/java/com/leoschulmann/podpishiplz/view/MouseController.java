@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.EventController;
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
@@ -20,7 +21,7 @@ public class MouseController extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (MainPanelController.getOverlays() != null) {
+        if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
             clickX = e.getX();
             clickY = e.getY();
             MainPanelController.getOverlays().forEach(overlay -> overlay.setSelected(false));
@@ -34,7 +35,7 @@ public class MouseController extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (MainPanelController.getOverlays() != null) {
+        if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
             MainPanelController.getOverlays().stream()
                     .filter(Overlay::isSelected)
                     .findFirst()

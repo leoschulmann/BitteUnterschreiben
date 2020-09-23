@@ -66,12 +66,12 @@ public class PDFController {
         PDDocument pdf = new PDDocument();
         Properties prop = new Properties();
         prop.load(PDFController.class.getClassLoader().getResourceAsStream("META-INF/app.properties"));
-        String creator = "BitteUnterschreiben";
+        String producer = "BitteUnterschreiben";
         if (prop.getProperty("app.version") != null) {
-            creator = creator + " v" + prop.getProperty("app.version");
+            producer = producer + " v" + prop.getProperty("app.version");
         }
-        pdf.getDocumentInformation().setCreator(creator);
-        LoggerFactory.getLogger(PDFController.class).info("Creator field set to {}", creator);
+        pdf.getDocumentInformation().setProducer(producer);
+        LoggerFactory.getLogger(PDFController.class).info("Creator field set to {}", producer);
         for (Page pg : DocumentController.getAllPages()) {
             int width = pg.getMediaWidth();
             int height = pg.getMediaHeight();

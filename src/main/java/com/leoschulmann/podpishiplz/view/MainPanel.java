@@ -53,7 +53,7 @@ public class MainPanel extends JPanel {
         else {
             BufferedImage im;
             try {
-                im = ImageIO.read(this.getClass().getClassLoader().getResource("pholder.png"));
+                im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png"));
             } catch (Exception e) {
                 LoggerFactory.getLogger(MainPanel.class).error(e.getMessage(), e);
                 JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

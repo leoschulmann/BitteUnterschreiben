@@ -17,13 +17,17 @@ public class FilePicker {
 
     public static String savePDF(JFrame parent) {
         FileDialog fileDialog = new FileDialog(parent, "Save as...", FileDialog.SAVE);
-        fileDialog.setFile("*.pdf");   //for Win
-        fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".pdf"));  // for Mac
+        fileDialog.setFile("New PDF Document.pdf");
         fileDialog.setMultipleMode(false);
         fileDialog.setVisible(true);
+        String filename;
         if (fileDialog.getFile() == null) {
             return null;
-        } else return fileDialog.getDirectory() + fileDialog.getFile();
+        } else {
+            filename = fileDialog.getFile();
+            if (!filename.endsWith(".pdf")) filename = filename + ".pdf";
+            return fileDialog.getDirectory() + filename;
+        }
     }
 
     public static String openOverlay(JFrame appWindow) {
