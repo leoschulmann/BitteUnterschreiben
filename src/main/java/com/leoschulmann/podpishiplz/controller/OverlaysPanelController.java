@@ -2,14 +2,18 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.view.OverlayPanel;
+import com.leoschulmann.podpishiplz.view.OverlayThumbButtonContextMenu;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 public class OverlaysPanelController {
     private static OverlayPanel panel;
+    private static boolean disabled;
 
     public static void removeAll() {
         panel.removeAll();
@@ -25,6 +29,22 @@ public class OverlaysPanelController {
                     FileIOController.loadOverlay(f.toString());
                     MainPanelController.repaint();
                 });
+                jb.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {  //works on mac
+                        if (e.isPopupTrigger()) {
+                            new OverlayThumbButtonContextMenu(f).show(e.getComponent(), e.getX(), e.getY());
+                        }
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) { // todo test on win
+                        if (e.isPopupTrigger()) {
+                            new OverlayThumbButtonContextMenu(f).show(e.getComponent(), e.getX(), e.getY());
+                        }
+                    }
+                });
+
                 panel.put(jb);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
@@ -58,17 +78,18 @@ public class OverlaysPanelController {
             switch (event) {
                 case MAIN_PANEL_FULL:
                     enableAll();
+                    disabled = false;
                     break;
                 case MAIN_PANEL_EMPTY:
-                    disableAll();
-                    break;
                 case NO_PAGES_IN_DOCUMENT:
                     disableAll();
+                    disabled = true;
                     break;
                 case REFRESH_OVERLAYS_PANEL:
                     removeAll();
                     loadThumbs(SettingsController.getUsedOverlays());
                     revalidateAndRepaint();
+                    if (disabled) disableAll();
                     break;
             }
         };

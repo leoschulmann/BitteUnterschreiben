@@ -119,5 +119,6 @@ public class SettingsController {
                 .debug("Removing overlay from list {}.", file.getName());
 
         settings.getUsedOverlays().remove(file);
+        EventController.notify(EventType.REFRESH_OVERLAYS_PANEL, null);
     }
 }
