@@ -14,7 +14,8 @@ public class TopScrollerPanel {
         TopPanelController.setTsp(this);
         panel = new JPanel(new GridBagLayout());
         wrapper = new JScrollPane(panel);
-        wrapper.setPreferredSize(new Dimension(100, 120));
+        wrapper.setPreferredSize(new Dimension(1, 130));
+        wrapper.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 0;

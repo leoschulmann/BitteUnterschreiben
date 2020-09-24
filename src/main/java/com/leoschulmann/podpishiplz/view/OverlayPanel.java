@@ -5,12 +5,18 @@ import com.leoschulmann.podpishiplz.controller.OverlaysPanelController;
 import javax.swing.*;
 import java.awt.*;
 
-public class OverlayPanel extends JPanel {
+public class OverlayPanel {
     private final GridBagConstraints gbc;
+    private final JPanel panel;
+    private final JScrollPane wrapper;
 
     public OverlayPanel() {
+        panel = new JPanel(new GridBagLayout());
+        wrapper = new JScrollPane(panel);
+        wrapper.setPreferredSize(new Dimension(1, 80));
+        wrapper.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+
         OverlaysPanelController.setPanel(this);
-        setPreferredSize(new Dimension(100, 70));
 
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -19,7 +25,27 @@ public class OverlayPanel extends JPanel {
     }
 
     public void put(Component c) {
-        add(c, gbc);
+        panel.add(c, gbc);
         gbc.gridx++;
+    }
+
+    public JScrollPane getWrapper() {
+        return wrapper;
+    }
+
+    public void revalidate() {
+        panel.revalidate();
+    }
+
+    public void repaint() {
+        panel.repaint();
+    }
+
+    public void removeAll() {
+        panel.removeAll();
+    }
+
+    public Component[] getComponents() {
+       return panel.getComponents();
     }
 }

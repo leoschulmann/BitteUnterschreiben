@@ -63,7 +63,7 @@ public class AppWindow extends JFrame {
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
-        add(overlayPanel, BorderLayout.SOUTH);
+        add(overlayPanel.getWrapper(), BorderLayout.SOUTH);
         LoggerFactory.getLogger(AppWindow.class).debug("Finished building {}", this.getClass().getSimpleName());
     }
 }
