@@ -11,6 +11,8 @@ import java.util.Optional;
 public class MainPanelController {
     private static MainPanel panel;
     private static final int INSET = 10;  // margin (px)
+    private static int pageX0;
+    private static int pageY0;
 
     public static int getOverlayResizeWidth(Overlay o) {
         return (int) (o.getWidth() * getResizeRatio());
@@ -38,13 +40,13 @@ public class MainPanelController {
     }
 
     // resized page top left coords
-    public static int getPageStartX() {
+    private static int getPageStartX() {
         if (isVertical()) {
             return (panel.getWidth() - getPageWidth()) / 2;
         } else return INSET;
     }
 
-    public static int getPageStartY() {
+    private static int getPageStartY() {
         if (isVertical()) {
             return INSET;
         } else {
@@ -70,11 +72,11 @@ public class MainPanelController {
     }
 
     public static int getOverlayX(Overlay o) {
-        return getPageStartX() + (int) (o.getRelCentX() * getPageWidth()) - getOverlayResizeWidth(o) / 2;
+        return getPageX0() + (int) (o.getRelCentX() * getPageWidth()) - getOverlayResizeWidth(o) / 2;
     }
 
     public static int getOverlayY(Overlay o) {
-        return getPageStartY() + (int) (o.getRelCentY() * getPageHeight()) - getOverlayResizeHeight(o) / 2;
+        return getPageY0() + (int) (o.getRelCentY() * getPageHeight()) - getOverlayResizeHeight(o) / 2;
     }
 
     public static Optional<Rectangle> getSelectedOverlayBounds() {
@@ -96,5 +98,26 @@ public class MainPanelController {
             }
         };
         EventController.subscribe(EventType.PAGE_ROTATED, el);
+    }
+
+    public static void resetPosition() {
+        pageX0 = getPageStartX();
+        pageY0 = getPageStartY();
+    }
+
+    public static int getPageX0() {
+        return pageX0;
+    }
+
+    public static void setPageX0(int pageX0) {
+        MainPanelController.pageX0 = pageX0;
+    }
+
+    public static int getPageY0() {
+        return pageY0;
+    }
+
+    public static void setPageY0(int pageY0) {
+        MainPanelController.pageY0 = pageY0;
     }
 }

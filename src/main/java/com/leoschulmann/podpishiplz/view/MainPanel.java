@@ -12,12 +12,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class MainPanel extends JPanel {
+    private final JScrollPane mainPanelWrapper;
 
     public MainPanel() {
+        mainPanelWrapper = new JScrollPane(this);
         MainPanelController.setMainPanel(this);
         MouseController mouse = new MouseController(this);
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
+        addMouseWheelListener(mouse);
     }
 
     @Override
@@ -26,8 +29,8 @@ public class MainPanel extends JPanel {
 
             int pageHeight = MainPanelController.getPageHeight();
             int pageWidth = MainPanelController.getPageWidth();
-            int pageX0 = MainPanelController.getPageStartX();
-            int pageY0 = MainPanelController.getPageStartY();
+            int pageX0 = MainPanelController.getPageX0();
+            int pageY0 = MainPanelController.getPageY0();
 
             g.drawImage(MainPanelController.getImage(), pageX0, pageY0, pageWidth, pageHeight, null);
 
@@ -65,6 +68,11 @@ public class MainPanel extends JPanel {
             }
             g.drawImage(im, (this.getWidth() - im.getWidth())/2, (this.getHeight()-im.getHeight())/2,
                     im.getWidth(), im.getHeight(), null);
+            setPreferredSize(new Dimension(im.getWidth(),im.getHeight()));
         }
+    }
+
+    public JScrollPane getMainPanelWrapper() {
+        return mainPanelWrapper;
     }
 }

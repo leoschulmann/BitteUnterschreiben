@@ -62,7 +62,7 @@ public class AppWindow extends JFrame {
         menuBar.getOptionSettings().addActionListener(e -> GUIController.openSettingsDialogue());
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
-        add(mainPanel, BorderLayout.CENTER);
+        add(mainPanel.getMainPanelWrapper(), BorderLayout.CENTER);
         add(overlayPanel.getWrapper(), BorderLayout.SOUTH);
         LoggerFactory.getLogger(AppWindow.class).debug("Finished building {}", this.getClass().getSimpleName());
     }
