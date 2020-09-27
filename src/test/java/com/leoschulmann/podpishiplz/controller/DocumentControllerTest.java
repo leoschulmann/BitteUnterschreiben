@@ -12,12 +12,17 @@ import org.mockito.Mockito;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 class DocumentControllerTest {
 
     @BeforeAll
     static void sadfsdf() {
         MainPanel mainPanelMock = Mockito.mock(MainPanel.class);
+        JScrollPane jspMock = Mockito.mock(JScrollPane.class);
+        Mockito.when(mainPanelMock.getMainPanelWrapper()).thenReturn(jspMock);
+        Mockito.when(jspMock.getWidth()).thenReturn(10);
+        Mockito.when(jspMock.getHeight()).thenReturn(20);
         Mockito.doNothing().when(mainPanelMock).repaint();
         MainPanelController.setMainPanel(mainPanelMock);
         TopPanelController.initListener();
@@ -41,7 +46,7 @@ class DocumentControllerTest {
         Page goodPage = new Page("", 0);
         Page badPage = new Page("", 0);
         DocumentController.addPage(goodPage);
-        Assertions.assertThrows(IllegalArgumentException.class, ()-> DocumentController.setCurrentPage(badPage));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> DocumentController.setCurrentPage(badPage));
     }
 
     @Test
@@ -99,7 +104,7 @@ class DocumentControllerTest {
         Page page = new Page("", 0);
         DocumentController.addPage(page);
         DocumentController.deletePage(page);
-        Assertions.assertThrows(IllegalArgumentException.class, ()-> DocumentController.setCurrentPage(page));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> DocumentController.setCurrentPage(page));
     }
 
     @Test
@@ -107,6 +112,9 @@ class DocumentControllerTest {
         Page p1 = new Page("", 0);
         Page p2 = new Page("", 0);
         Page p3 = new Page("", 0);
+        p1.setImage(new BufferedImage(10,20, BufferedImage.TYPE_INT_ARGB));
+        p2.setImage(new BufferedImage(10,20, BufferedImage.TYPE_INT_ARGB));
+        p3.setImage(new BufferedImage(10,20, BufferedImage.TYPE_INT_ARGB));
         DocumentController.addPage(p1);
         DocumentController.addPage(p2);
         DocumentController.addPage(p3);
@@ -120,6 +128,9 @@ class DocumentControllerTest {
         Page p1 = new Page("", 0);
         Page p2 = new Page("", 0);
         Page p3 = new Page("", 0);
+        p1.setImage(new BufferedImage(10,20, BufferedImage.TYPE_INT_ARGB));
+        p2.setImage(new BufferedImage(10,20, BufferedImage.TYPE_INT_ARGB));
+        p3.setImage(new BufferedImage(10,20, BufferedImage.TYPE_INT_ARGB));
         DocumentController.addPage(p1);
         DocumentController.addPage(p2);
         DocumentController.addPage(p3);
