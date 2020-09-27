@@ -6,7 +6,7 @@
 
     <groupId>com.leoschulmann</groupId>
     <artifactId>BitteUnterschreiben</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

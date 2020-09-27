@@ -12,10 +12,12 @@ import java.util.Optional;
 public class MainPanelController {
     private static MainPanel panel;
     private static final int INSET = 10;  // margin (px)
+    public static final int MIN_ZOOM_SIZE = 10;
     private static int pageX0;
     private static int pageY0;
     private static int pageHeight;
     private static int pageWidth;
+    private static double aspectRatio;
 
     public static int getOverlayResizeWidth(Overlay o) {
         return (int) (o.getWidth() * getResizeRatio());
@@ -97,6 +99,7 @@ public class MainPanelController {
     public static void initListener() {
         EventListener el = (event, object) -> {
             if (event == EventType.PAGE_ROTATED) {
+                resetPosition();
                 panel.repaint();
             }
         };
@@ -108,6 +111,7 @@ public class MainPanelController {
         pageY0 = getPageStartY();
         pageWidth = getPageStartWidth();
         pageHeight = getPageStartHeight();
+        aspectRatio = 1.0 * pageWidth / pageHeight;
         LoggerFactory.getLogger(MainPanelController.class)
                 .debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
     }
@@ -128,19 +132,19 @@ public class MainPanelController {
         MainPanelController.pageY0 = pageY0;
     }
 
-    public static void setPageHeight(int pageHeight) {
-        MainPanelController.pageHeight = pageHeight;
-    }
-
-    public static void setPageWidth(int pageWidth) {
-        MainPanelController.pageWidth = pageWidth;
-    }
-
     public static int getPageHeight() {
         return pageHeight;
     }
 
     public static int getPageWidth() {
         return pageWidth;
+    }
+
+    public static void zoom(double zoomAmount) {
+        double modifier = Math.pow(1.02, zoomAmount);
+        if ((pageHeight >= MIN_ZOOM_SIZE && pageWidth >= MIN_ZOOM_SIZE) || modifier > 1.0) {
+            pageHeight *= modifier;
+            pageWidth = (int) (aspectRatio * pageHeight);
+        }
     }
 }

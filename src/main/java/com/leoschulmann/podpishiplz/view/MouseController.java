@@ -66,9 +66,11 @@ public class MouseController extends MouseAdapter {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        super.mouseWheelMoved(e);
-//        panel.getMainPanelWrapper().setViewportView(panel);
-        LoggerFactory.getLogger(MouseController.class).debug("Mouse wheel : {}", e.getWheelRotation());
+        if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
+            MainPanelController.zoom(e.getPreciseWheelRotation());
+            panel.getMainPanelWrapper().setViewportView(panel);
+            panel.repaint();
+        }
     }
 
     @Override
