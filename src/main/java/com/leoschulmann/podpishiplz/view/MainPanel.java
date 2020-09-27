@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
 public class MainPanel extends JPanel {
@@ -21,6 +23,12 @@ public class MainPanel extends JPanel {
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                repaint();
+            }
+        });
     }
 
     @Override
@@ -31,7 +39,7 @@ public class MainPanel extends JPanel {
             int pageWidth = MainPanelController.getPageWidth();
             int pageX0 = MainPanelController.getPageX0();
             int pageY0 = MainPanelController.getPageY0();
-
+            setPreferredSize(new Dimension(pageX0 + pageWidth, pageY0 + pageHeight));
             g.drawImage(MainPanelController.getImage(), pageX0, pageY0, pageWidth, pageHeight, null);
 
             if (MainPanelController.getOverlays().size() > 0) {
@@ -66,8 +74,10 @@ public class MainPanel extends JPanel {
                 gr.drawString("Error", 5, 50);
                 gr.dispose();
             }
-            g.drawImage(im, (this.getWidth() - im.getWidth())/2, (this.getHeight()-im.getHeight())/2,
-                    im.getWidth(), im.getHeight(), null);
+            int imX0 = (mainPanelWrapper.getWidth()  - im.getWidth()) / 2;
+            int imY0 = (mainPanelWrapper.getHeight() - im.getHeight()) / 2;
+
+            g.drawImage(im, imX0, imY0, im.getWidth(), im.getHeight(), null);
             setPreferredSize(new Dimension(im.getWidth(),im.getHeight()));
         }
     }

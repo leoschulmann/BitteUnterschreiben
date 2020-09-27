@@ -31,7 +31,6 @@ public class MouseController extends MouseAdapter {
             MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
                     .findFirst()
                     .ifPresent(o -> o.setSelected(true));
-            panel.repaint();
         }
     }
 
@@ -60,6 +59,7 @@ public class MouseController extends MouseAdapter {
                                 panel.repaint();
                                 clickX += deltax;
                                 clickY += deltay;
+                                panel.getMainPanelWrapper().setViewportView(panel);
                             });
         }
     }
@@ -69,5 +69,10 @@ public class MouseController extends MouseAdapter {
         super.mouseWheelMoved(e);
 //        panel.getMainPanelWrapper().setViewportView(panel);
         LoggerFactory.getLogger(MouseController.class).debug("Mouse wheel : {}", e.getWheelRotation());
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        panel.repaint();
     }
 }

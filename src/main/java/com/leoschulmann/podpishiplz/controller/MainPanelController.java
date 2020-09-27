@@ -2,6 +2,7 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.view.MainPanel;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,6 +14,8 @@ public class MainPanelController {
     private static final int INSET = 10;  // margin (px)
     private static int pageX0;
     private static int pageY0;
+    private static int pageHeight;
+    private static int pageWidth;
 
     public static int getOverlayResizeWidth(Overlay o) {
         return (int) (o.getWidth() * getResizeRatio());
@@ -23,19 +26,19 @@ public class MainPanelController {
     }
 
     // resized page size
-    public static int getPageHeight() {
+    private static int getPageStartHeight() {
         if (isVertical()) {
-            return panel.getHeight() - (INSET * 2);
+            return panel.getMainPanelWrapper().getHeight() - (INSET * 2);
         } else {
-            return getPageWidth() * getImage().getHeight() / getImage().getWidth();
+            return getPageStartWidth() * getImage().getHeight() / getImage().getWidth();
         }
     }
 
-    public static int getPageWidth() {
+    private static int getPageStartWidth() {
         if (isVertical()) {
-            return getPageHeight() * getImage().getWidth() / getImage().getHeight();
+            return getPageStartHeight() * getImage().getWidth() / getImage().getHeight();
         } else {
-            return panel.getWidth() - (INSET * 2);
+            return panel.getMainPanelWrapper().getWidth() - (INSET * 2);
         }
     }
 
@@ -103,6 +106,10 @@ public class MainPanelController {
     public static void resetPosition() {
         pageX0 = getPageStartX();
         pageY0 = getPageStartY();
+        pageWidth = getPageStartWidth();
+        pageHeight = getPageStartHeight();
+        LoggerFactory.getLogger(MainPanelController.class)
+                .debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
     }
 
     public static int getPageX0() {
@@ -119,5 +126,21 @@ public class MainPanelController {
 
     public static void setPageY0(int pageY0) {
         MainPanelController.pageY0 = pageY0;
+    }
+
+    public static void setPageHeight(int pageHeight) {
+        MainPanelController.pageHeight = pageHeight;
+    }
+
+    public static void setPageWidth(int pageWidth) {
+        MainPanelController.pageWidth = pageWidth;
+    }
+
+    public static int getPageHeight() {
+        return pageHeight;
+    }
+
+    public static int getPageWidth() {
+        return pageWidth;
     }
 }
