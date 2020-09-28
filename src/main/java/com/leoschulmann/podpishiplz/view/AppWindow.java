@@ -1,12 +1,11 @@
 package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.GUIController;
+import com.leoschulmann.podpishiplz.controller.SettingsController;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.Properties;
 
 public class AppWindow extends JFrame {
     private final MainPanel mainPanel;
@@ -28,17 +27,7 @@ public class AppWindow extends JFrame {
             LoggerFactory.getLogger(AppWindow.class).error(e.getMessage(), e);
         }
 
-        String title = "BitteUnterschreiben";
-        Properties prop = new Properties();
-        try {
-            prop.load(AppWindow.class.getClassLoader().getResourceAsStream("META-INF/app.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            LoggerFactory.getLogger(AppWindow.class).warn("Can't load app.properties");
-        }
-        if (prop.getProperty("app.version") != null) {
-            title = title + " v" + prop.getProperty("app.version");
-        }
+        String title = SettingsController.getDefaultProducer();
 
         setTitle(title);
         setSize(new Dimension(850, 600));
