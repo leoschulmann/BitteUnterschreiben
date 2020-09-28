@@ -141,7 +141,8 @@ public class MainPanelController {
     }
 
     public static void zoom(double zoomAmount) {
-        double modifier = Math.pow(1.02, zoomAmount);
+        double modifier = Math.pow(SettingsController.getZoomSpeed(),
+                SettingsController.isInvertZoom() ? -zoomAmount : zoomAmount);
         if ((pageHeight >= MIN_ZOOM_SIZE && pageWidth >= MIN_ZOOM_SIZE) || modifier > 1.0) {
             pageHeight *= modifier;
             pageWidth = (int) (aspectRatio * pageHeight);

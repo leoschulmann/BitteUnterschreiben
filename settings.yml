@@ -2,6 +2,12 @@
 blendingMode: 1
 jpgQuality: 0.5
 resolution: 0.6666667
+producer: null
+creator: ""
+producerOverriden: false
+zoomSpeed: 1.01
+invertZoom: false
+selectionColor: null
 usedOverlays:
   png/paid_stamp.png: 5
   png/coffee-stains_1.png: 1

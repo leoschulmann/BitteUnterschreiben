@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class SettingsController {
@@ -45,16 +46,8 @@ public class SettingsController {
 
     public static void openSettings() {
         if (settingsDialogue == null) {
-            settingsDialogue = new SettingsDialogue(BitteUnterschreiben.getApp(),
-                    settings.getBlendingMode(),
-                    settings.getJpgQuality(),
-                    settings.getResolution()
-            );
+            settingsDialogue = new SettingsDialogue(BitteUnterschreiben.getApp());
         }
-        //update sliders and radios if the .yml was modified externally
-        settingsDialogue.setBlendingMode(settings.getBlendingMode());
-        settingsDialogue.setJpgQuality(settings.getJpgQuality());
-        settingsDialogue.setResolution(settings.getResolution());
         settingsDialogue.setVisible(true);
     }
 
@@ -121,4 +114,69 @@ public class SettingsController {
         settings.getUsedOverlays().remove(file);
         EventController.notify(EventType.REFRESH_OVERLAYS_PANEL, null);
     }
+
+    public static void setCreator(String creator) {
+        settings.setCreator(creator);
+    }
+
+    public static String getCreator() {
+        return settings.getCreator();
+    }
+
+    public static String getDefaultProducer() {
+        Properties prop = new Properties();
+        String producer = "BitteUnterschreiben";
+        try {
+            prop.load(PDFController.class.getClassLoader().getResourceAsStream("META-INF/app.properties"));
+            if (prop.getProperty("app.version") != null) {
+                producer = producer + " v" + prop.getProperty("app.version");
+            }
+        } catch (IOException e) {
+            LoggerFactory.getLogger(SettingsController.class).error(e.getMessage(), e);
+        }
+        return producer;
+    }
+
+    public static void setProducerOverride(boolean b) {
+        settings.setProducerOverridden(b);
+    }
+
+    public static boolean isProducerOverride() {
+        return settings.isProducerOverridden();
+    }
+
+    public static void setProducer(String producer) {
+        settings.setProducer(producer);
+    }
+
+    public static String getProducer() {
+        return settings.getProducer();
+    }
+
+    public static float getZoomSpeed() {
+        float f = settings.getZoomSpeed();
+        if (f < 1.01 || f > 1.1) f = 1.01f;
+        return f;
+    }
+
+    public static void setZoomSpeed(float speed) {
+        settings.setZoomSpeed(speed);
+    }
+
+    public static boolean isInvertZoom() {
+        return settings.isInvertZoom();
+    }
+
+    public static void setInvertZoom(boolean b) {
+        settings.setInvertZoom(b);
+    }
+
+    public static String getSelectionColor() {
+        return settings.getSelectionColor();
+    }
+
+    public static void setSelectionColor(String color) {
+        settings.setSelectionColor(color);
+    }
+
 }

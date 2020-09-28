@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 
 public class PDFController {
     public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument) {
@@ -64,13 +63,10 @@ public class PDFController {
     public static PDDocument buildPDF(float jpegQuality) throws IOException {
         LoggerFactory.getLogger(PDFController.class).debug("Initiating building PDF.");
         PDDocument pdf = new PDDocument();
-        Properties prop = new Properties();
-        prop.load(PDFController.class.getClassLoader().getResourceAsStream("META-INF/app.properties"));
-        String producer = "BitteUnterschreiben";
-        if (prop.getProperty("app.version") != null) {
-            producer = producer + " v" + prop.getProperty("app.version");
-        }
+        String producer = SettingsController.isProducerOverride() ?
+                SettingsController.getProducer() : SettingsController.getDefaultProducer();
         pdf.getDocumentInformation().setProducer(producer);
+        pdf.getDocumentInformation().setCreator(SettingsController.getCreator());
         LoggerFactory.getLogger(PDFController.class).info("Creator field set to {}", producer);
         for (Page pg : DocumentController.getAllPages()) {
             int width = pg.getMediaWidth();
