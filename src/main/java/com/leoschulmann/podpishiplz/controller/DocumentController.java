@@ -172,6 +172,9 @@ public class DocumentController {
         BufferedImage image = page.getImage();
         BufferedImage rotated = Rotater.rotate(image, toLeft);
         page.setImage(rotated);
+        int temp = page.getMediaHeight();
+        page.setMediaHeight(page.getMediaWidth());
+        page.setMediaWidth(temp);
         EventController.notify(EventType.PAGE_ROTATED, page);
     }
 }
