@@ -10,6 +10,7 @@ import com.leoschulmann.podpishiplz.view.ThumbnailButton;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class GUIController {
 
@@ -20,7 +21,7 @@ public class GUIController {
     public static void placeOption(JFrame appWindow) {
         String file = FilePicker.openOverlay(appWindow);
         if (file != null) {
-            FileIOController.loadOverlay(file);
+            FileIOController.loadOverlay(new File(file));
             MainPanelController.repaint();
         }
     }

@@ -1,58 +1,66 @@
 package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.view.OverlayPanel;
+import com.leoschulmann.podpishiplz.view.OverlayThumbButton;
 import com.leoschulmann.podpishiplz.view.OverlayThumbButtonContextMenu;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class OverlaysPanelController {
     private static OverlayPanel panel;
     private static boolean disabled;
+    private static final List<OverlayThumbButton> BUTTONS = new ArrayList<>();
 
     public static void removeAll() {
         panel.removeAll();
     }
 
-    public static void loadThumbs(List<File> files) {
-        for (File f : files) {
-            try {
-                JButton jb = new JButton(new ImageIcon(FileIOController.getOverlayThumb(f)));
-                jb.setToolTipText(f.toString());
-                jb.setVerticalTextPosition(SwingConstants.BOTTOM);
-                jb.addActionListener(e -> {
-                    FileIOController.loadOverlay(f.toString());
-                    MainPanelController.repaint();
-                });
-                jb.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {  //works on mac
-                        if (e.isPopupTrigger()) {
-                            new OverlayThumbButtonContextMenu(f).show(e.getComponent(), e.getX(), e.getY());
-                        }
+    public static void loadThumb(File f) {
+        try {
+            BufferedImage raw = FileIOController.getOverlayIm(f);
+            BufferedImage thumbnail = Resizer.resize(raw, 50);
+            OverlayThumbButton butt = new OverlayThumbButton(thumbnail, f.toString(), f);
+            butt.setVerticalTextPosition(SwingConstants.BOTTOM);
+            butt.addActionListener(e -> {
+                FileIOController.loadOverlay(butt.getFile());
+                MainPanelController.repaint();
+            });
+            butt.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {  //works on mac
+                    if (e.isPopupTrigger()) {
+                        new OverlayThumbButtonContextMenu(f).show(e.getComponent(), e.getX(), e.getY());
                     }
+                }
 
-                    @Override
-                    public void mouseReleased(MouseEvent e) { // todo test on win
-                        if (e.isPopupTrigger()) {
-                            new OverlayThumbButtonContextMenu(f).show(e.getComponent(), e.getX(), e.getY());
-                        }
+                @Override
+                public void mouseReleased(MouseEvent e) { // todo test on win
+                    if (e.isPopupTrigger()) {
+                        new OverlayThumbButtonContextMenu(f).show(e.getComponent(), e.getX(), e.getY());
                     }
-                });
+                }
+            });
 
-                panel.put(jb);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
-                        "Can't find file\n" + f.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-                SettingsController.removeOverlayFromList(f);
-                e.printStackTrace();
-            }
+            BUTTONS.add(butt);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
+                    "Can't find file\n" + f.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            SettingsController.removeOverlayFromList(f);
+            e.printStackTrace();
         }
+    }
+
+    public static void placeButtons() {
+        BUTTONS.forEach(panel::put);
     }
 
     public static void revalidateAndRepaint() {
@@ -87,7 +95,20 @@ public class OverlaysPanelController {
                     break;
                 case REFRESH_OVERLAYS_PANEL:
                     removeAll();
-                    loadThumbs(SettingsController.getUsedOverlays());
+
+                    List<File> settingsData = SettingsController.getUsedOverlays();
+                    for (int i = 0; i < settingsData.size(); i++) {
+                        File f = settingsData.get(i);
+                        OverlayThumbButton butt = BUTTONS.stream().filter(otb -> otb.getFile().equals(f))
+                                .findFirst().orElse(null);
+                        if (butt != null) {
+                            BUTTONS.remove(butt);
+                            BUTTONS.add(i, butt);
+                        } else {
+                            loadThumb(f);
+                        }
+                    }
+                    placeButtons();
                     revalidateAndRepaint();
                     if (disabled) disableAll();
                     break;
