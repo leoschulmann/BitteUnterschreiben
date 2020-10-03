@@ -7,6 +7,7 @@ import com.leoschulmann.podpishiplz.model.Settings;
 import com.leoschulmann.podpishiplz.view.SettingsDialogue;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
@@ -16,6 +17,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class SettingsController {
+    public static final String DEFAULT_COLOR = "00ff00";  //default is green
     private static SettingsDialogue settingsDialogue;
     private static final File settingsFile = new File("./settings.yml");
     private static Settings settings;
@@ -172,11 +174,21 @@ public class SettingsController {
     }
 
     public static String getSelectionColor() {
-        return settings.getSelectionColor();
+        if (colorVerify(settings.getSelectionColor())) {
+            return settings.getSelectionColor();
+        } else return DEFAULT_COLOR;
     }
 
     public static void setSelectionColor(String color) {
         settings.setSelectionColor(color);
     }
 
+    public static boolean colorVerify(String text) {
+        try {
+            Color.decode('#' + text);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

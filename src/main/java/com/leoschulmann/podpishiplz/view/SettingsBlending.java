@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.stream.IntStream;
 
-public class SettingsBlending extends JPanel {
+public class SettingsBlending extends JPanel implements SettingsTab {
     private static ImageIcon noBlendingIcon;
     private static ImageIcon darkenBlendingIcon;
     private static ImageIcon multiplyBlendingIcon;
@@ -49,7 +49,8 @@ public class SettingsBlending extends JPanel {
         add(multiplyBlender, g);
     }
 
-    private void init() {
+    @Override
+    public void init() {
         noBlendingIcon = new ImageIcon(BitteUnterschreiben.getApp().getClass().getClassLoader()
                 .getResource("no_blending.png"));
         darkenBlendingIcon = new ImageIcon(BitteUnterschreiben.getApp().getClass().getClassLoader()
@@ -76,6 +77,7 @@ public class SettingsBlending extends JPanel {
         dummy2.setSize(10, 10);
     }
 
+    @Override
     public void saveState() {
         int mode = IntStream.range(0, btns.length).filter(i -> btns[i].isSelected()).findFirst().orElse(-1);
         SettingsController.setBlendingMode(mode);

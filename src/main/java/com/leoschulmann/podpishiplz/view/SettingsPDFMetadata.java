@@ -6,10 +6,10 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 
-public class SettingsPDFMetadata extends JPanel {
-    private JTextField producerField;
-    private JTextField creatorField;
-    private JCheckBox producerOverrideCB;
+public class SettingsPDFMetadata extends JPanel implements SettingsTab{
+    private static JTextField producerField;
+    private static JTextField creatorField;
+    private static JCheckBox producerOverrideCB;
 
     public SettingsPDFMetadata() {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -29,18 +29,18 @@ public class SettingsPDFMetadata extends JPanel {
         add(producerField, g);
         g.gridx = 0;
         g.gridy++;
-        add(new JLabel("Override creator"), g);
+        add(new JLabel("Override 'Producer'"), g);
         g.gridx++;
         add(producerOverrideCB, g);
     }
 
-    private void init() {
+    public void init() {
 
-        creatorField = new JTextField(20);
+        creatorField = new JTextField(25);
         creatorField.setText(SettingsController.getCreator());
 
         boolean overriding = SettingsController.isProducerOverride();
-        producerField = new JTextField(20);
+        producerField = new JTextField(25);
         producerOverrideCB = new JCheckBox();
 
         if (overriding) {

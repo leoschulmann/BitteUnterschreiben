@@ -4,6 +4,7 @@ package com.leoschulmann.podpishiplz.view;
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
+import com.leoschulmann.podpishiplz.controller.SettingsController;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
@@ -55,7 +56,7 @@ public class MainPanel extends JPanel {
 
             MainPanelController.getSelectedOverlayBounds().ifPresent(bounds -> {
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setColor(Color.GREEN);
+                g2.setColor(Color.decode('#' + SettingsController.getSelectionColor()));
                 g2.setStroke(new BasicStroke(2));
                 g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 

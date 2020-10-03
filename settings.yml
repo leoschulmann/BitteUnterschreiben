@@ -7,7 +7,7 @@ creator: ""
 producerOverridden: false
 zoomSpeed: 1.01
 invertZoom: false
-selectionColor: null
+selectionColor: "FF00FF"
 usedOverlays:
   png/paid_stamp.png: 5
   png/coffee-stains_1.png: 1

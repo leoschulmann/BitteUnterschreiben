@@ -6,11 +6,14 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SettingsDialogue extends JDialog {
     private final SettingsGraphics graphicsSettings;
     private final SettingsPDFMetadata pdfMetadataSettings;
     private final SettingsBlending blendingSettings;
+    private final SettingsUI userInterfaceSettings;
+    private final java.util.List<SettingsTab> tabs;
 
     public SettingsDialogue(Frame owner) {
         super(owner);
@@ -18,12 +21,16 @@ public class SettingsDialogue extends JDialog {
         setModal(true);
         setResizable(false);
 
-        graphicsSettings = new SettingsGraphics();
-        blendingSettings = new SettingsBlending();
-        pdfMetadataSettings = new SettingsPDFMetadata();
+        tabs = new ArrayList<>();
+
+        tabs.add(graphicsSettings = new SettingsGraphics());
+        tabs.add(userInterfaceSettings = new SettingsUI());
+        tabs.add(blendingSettings = new SettingsBlending());
+        tabs.add(pdfMetadataSettings = new SettingsPDFMetadata());
 
         JTabbedPane tabs = new JTabbedPane();
         tabs.add("Graphics", graphicsSettings);
+        tabs.add("Interface", userInterfaceSettings);
         tabs.add("PDF Metadata", pdfMetadataSettings);
         tabs.add("Blending", blendingSettings);
 
@@ -43,9 +50,7 @@ public class SettingsDialogue extends JDialog {
     }
 
     private void confirm() {
-        pdfMetadataSettings.saveState();
-        graphicsSettings.saveState();
-        blendingSettings.saveState();
+        tabs.forEach(SettingsTab::saveState);
 
         try {
             SettingsController.saveYML();
