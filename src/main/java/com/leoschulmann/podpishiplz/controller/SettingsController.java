@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class SettingsController {
     public static final String DEFAULT_COLOR = "00ff00";  //default is green
+    public static final int DEFAULT_MAX_OVERLAYS = 20;  //default is 20
     private static SettingsDialogue settingsDialogue;
     private static final File settingsFile = new File("./settings.yml");
     private static Settings settings;
@@ -105,6 +106,7 @@ public class SettingsController {
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(getMaxOverlays())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
@@ -181,6 +183,16 @@ public class SettingsController {
 
     public static void setSelectionColor(String color) {
         settings.setSelectionColor(color);
+    }
+
+    public static int getMaxOverlays() {
+        int i = settings.getMaxOverlays();
+        if (i < 1) return DEFAULT_MAX_OVERLAYS;
+        else return i;
+    }
+
+    public static void setMaxOverlays(int maxOverlays) {
+        settings.setMaxOverlays(maxOverlays);
     }
 
     public static boolean colorVerify(String text) {

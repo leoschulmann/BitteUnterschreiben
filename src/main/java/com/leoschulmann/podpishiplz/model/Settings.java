@@ -14,6 +14,7 @@ public class Settings {
     private float zoomSpeed;
     private boolean invertZoom;
     private String selectionColor;
+    private int maxOverlays;
 
     private Map<File, Integer> usedOverlays;
 
@@ -106,5 +107,13 @@ public class Settings {
 
     public void setSelectionColor(String selectionColor) {
         this.selectionColor = selectionColor;
+    }
+
+    public int getMaxOverlays() {
+        return maxOverlays;
+    }
+
+    public void setMaxOverlays(int maxOverlays) {
+        this.maxOverlays = maxOverlays;
     }
 }

@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.EventController;
+import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,7 @@ public class SettingsUI extends JPanel implements SettingsTab {
     private static JSlider zoomMultiplier;
     private static JCheckBox invertZoom;
     private static JTextField color;
+    private static JSpinner maxOverlays;
 
     public SettingsUI() {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -21,7 +24,13 @@ public class SettingsUI extends JPanel implements SettingsTab {
         g.gridy = 0;
         g.anchor = GridBagConstraints.LINE_START;
         init();
-
+        add(new JLabel("Max overlays in panel"), g);
+        g.gridx++;
+        g.gridwidth = 2;
+        add(maxOverlays, g);
+        g.gridx = 0;
+        g.gridy++;
+        g.gridwidth = 1;
         add(new JLabel("Invert mouse wheel zoom"), g);
         g.gridx++;
         g.gridwidth = 2;
@@ -69,16 +78,25 @@ public class SettingsUI extends JPanel implements SettingsTab {
         });
         color.setToolTipText("Color of selection frame in hexadecimal format. " +
                 "000000 - black, FFFFFF - white, FF00FF - magenta, etc");
+
+        maxOverlays = new JSpinner();
+        maxOverlays.setModel(new SpinnerNumberModel(20, 1, 100, 1));
+        maxOverlays.setValue(SettingsController.getMaxOverlays());
     }
 
     @Override
     public void saveState() {
         float z = (zoomMultiplier.getValue() + 100) / 100f;
+        int mo = (int) maxOverlays.getValue();
+        if (SettingsController.getMaxOverlays() != mo) {
+            SettingsController.setMaxOverlays(mo);
+            EventController.notify(EventType.REFRESH_OVERLAYS_PANEL, null); //no reason to refresh if unchanged
+        }
         SettingsController.setZoomSpeed(z);
         SettingsController.setInvertZoom(invertZoom.isSelected());
         SettingsController.setSelectionColor(color.getText());
         LoggerFactory.getLogger(SettingsGraphics.class).debug(
-                "Saving data: zoom {}, invert '{}', color #{}", z, invertZoom.isSelected(), color.getText());
-
+                "Saving data: max overlays {}, zoom {}, invert '{}', color #{}.",
+                mo, z, invertZoom.isSelected(), color.getText());
     }
 }

@@ -8,6 +8,7 @@ producerOverridden: false
 zoomSpeed: 1.01
 invertZoom: false
 selectionColor: "FF00FF"
+maxOverlays: 5
 usedOverlays:
   png/paid_stamp.png: 5
   png/coffee-stains_1.png: 1
