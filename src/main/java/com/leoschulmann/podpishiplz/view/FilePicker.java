@@ -2,11 +2,14 @@ package com.leoschulmann.podpishiplz.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ResourceBundle;
 
 public class FilePicker {
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang");
+
 
     public static String openPDF(JFrame parent) {
-        FileDialog fileDialog = new FileDialog(parent, "Open file", FileDialog.LOAD);
+        FileDialog fileDialog = new FileDialog(parent, bundle.getString("open.file"), FileDialog.LOAD);
         fileDialog.setFile("*.pdf");   //for Win
         fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".pdf"));  // for Mac
         fileDialog.setMultipleMode(false);
@@ -16,7 +19,7 @@ public class FilePicker {
     }
 
     public static String savePDF(JFrame parent) {
-        FileDialog fileDialog = new FileDialog(parent, "Save as...", FileDialog.SAVE);
+        FileDialog fileDialog = new FileDialog(parent, bundle.getString("save.as"), FileDialog.SAVE);
         fileDialog.setFile("New PDF Document.pdf");
         fileDialog.setMultipleMode(false);
         fileDialog.setVisible(true);
@@ -31,7 +34,7 @@ public class FilePicker {
     }
 
     public static String openOverlay(JFrame appWindow) {
-        FileDialog fileDialog = new FileDialog(appWindow, "Open overlay", FileDialog.LOAD);
+        FileDialog fileDialog = new FileDialog(appWindow, bundle.getString("open.overlay"), FileDialog.LOAD);
         fileDialog.setFile("*.png");   //for Win
         fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".png"));  // for Mac
         fileDialog.setMultipleMode(false);

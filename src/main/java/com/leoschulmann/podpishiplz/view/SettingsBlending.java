@@ -1,14 +1,18 @@
 package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.controller.EventListener;
+import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
-public class SettingsBlending extends JPanel implements SettingsTab {
+public class SettingsBlending extends JPanel implements SettingsTab, EventListener {
     private static ImageIcon noBlendingIcon;
     private static ImageIcon darkenBlendingIcon;
     private static ImageIcon multiplyBlendingIcon;
@@ -18,6 +22,7 @@ public class SettingsBlending extends JPanel implements SettingsTab {
     public static JRadioButton[] btns;
     private static JPanel dummy1;
     private static JPanel dummy2;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
 
     public SettingsBlending() {
@@ -59,9 +64,9 @@ public class SettingsBlending extends JPanel implements SettingsTab {
                 .getResource("multiply_blending.png"));
 
         ButtonGroup buttonGroup = new ButtonGroup();
-        noopBlender = new JRadioButton("No blending");
-        darkenBlender = new JRadioButton("Darken");
-        multiplyBlender = new JRadioButton("Multiply");
+        noopBlender = new JRadioButton(bundle.getString("no.blending"));
+        darkenBlender = new JRadioButton(bundle.getString("darken"));
+        multiplyBlender = new JRadioButton(bundle.getString("multiply"));
         btns = new JRadioButton[]{noopBlender, darkenBlender, multiplyBlender};
         buttonGroup.add(noopBlender);
         buttonGroup.add(darkenBlender);
@@ -83,5 +88,20 @@ public class SettingsBlending extends JPanel implements SettingsTab {
         SettingsController.setBlendingMode(mode);
         LoggerFactory.getLogger(SettingsBlending.class).debug(
                 "Saving data: blending mode {}", mode);
+    }
+
+    @Override
+    public String getTitle() {
+        return bundle.getString("blending");
+    }
+
+    @Override
+    public void eventUpdate(EventType event, Object object) {
+        if (event == EventType.LOCALE_CHANGED) {
+            bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+            noopBlender.setText("no.blending");
+            darkenBlender.setText("darken");
+            multiplyBlender.setText("multiply");
+        }
     }
 }

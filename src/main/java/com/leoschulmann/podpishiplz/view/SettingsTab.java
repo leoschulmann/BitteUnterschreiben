@@ -1,6 +1,9 @@
 package com.leoschulmann.podpishiplz.view;
 
-public interface SettingsTab {
+import com.leoschulmann.podpishiplz.controller.EventListener;
+
+public interface SettingsTab extends EventListener {
     void init();
     void saveState();
+    String getTitle();
 }

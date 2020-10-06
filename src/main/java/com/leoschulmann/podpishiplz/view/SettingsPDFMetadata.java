@@ -1,15 +1,22 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-public class SettingsPDFMetadata extends JPanel implements SettingsTab{
+public class SettingsPDFMetadata extends JPanel implements SettingsTab {
     private static JTextField producerField;
     private static JTextField creatorField;
     private static JCheckBox producerOverrideCB;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+    private static JLabel pdfCreatorLabel = new JLabel(bundle.getString("pdf.creator"));
+    private static JLabel pdfProducerLabel = new JLabel(bundle.getString("pdf.producer"));
+    private static JLabel overrideProducerLabel = new JLabel(bundle.getString("override.producer"));
 
     public SettingsPDFMetadata() {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -19,17 +26,17 @@ public class SettingsPDFMetadata extends JPanel implements SettingsTab{
         g.gridy = 0;
         g.anchor = GridBagConstraints.LINE_START;
         init();
-        add(new JLabel("PDF Creator"), g);
+        add(pdfCreatorLabel, g);
         g.gridx++;
         add(creatorField, g);
         g.gridx = 0;
         g.gridy++;
-        add(new JLabel("PDF Producer"), g);
+        add(pdfProducerLabel, g);
         g.gridx++;
         add(producerField, g);
         g.gridx = 0;
         g.gridy++;
-        add(new JLabel("Override 'Producer'"), g);
+        add(overrideProducerLabel, g);
         g.gridx++;
         add(producerOverrideCB, g);
     }
@@ -73,5 +80,21 @@ public class SettingsPDFMetadata extends JPanel implements SettingsTab{
         SettingsController.setCreator(c);
         LoggerFactory.getLogger(SettingsPDFMetadata.class).debug(
                 "Saving data: creator '{}', producer '{}', producer override '{}'", c, p, producerOverrideCB.isSelected());
+    }
+
+    @Override
+    public String getTitle() {
+        return bundle.getString("pdf.metadata");
+    }
+
+    @Override
+    public void eventUpdate(EventType event, Object object) {
+        if (event == EventType.LOCALE_CHANGED) {
+            bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+            pdfCreatorLabel.setText(bundle.getString("pdf.creator"));
+            pdfProducerLabel.setText(bundle.getString("pdf.producer"));
+            overrideProducerLabel.setText(bundle.getString("override.producer"));
+
+        }
     }
 }

@@ -15,6 +15,7 @@ public class Settings {
     private boolean invertZoom;
     private String selectionColor;
     private int maxOverlays;
+    private String language;
 
     private Map<File, Integer> usedOverlays;
 
@@ -115,5 +116,13 @@ public class Settings {
 
     public void setMaxOverlays(int maxOverlays) {
         this.maxOverlays = maxOverlays;
+    }
+
+    public void setLanguage(String lang) {
+        this.language = lang;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 }

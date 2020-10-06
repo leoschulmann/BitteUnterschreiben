@@ -4,18 +4,20 @@ import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.model.Page;
 
 import javax.swing.*;
+import java.util.ResourceBundle;
 
 public class ThumbButtonContextMenu extends JPopupMenu {
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang");
 
     public ThumbButtonContextMenu(Page page) {
 
-        JMenuItem toFront = new JMenuItem("Make first");
-        JMenuItem left = new JMenuItem("Move left");
-        JMenuItem right = new JMenuItem("Move right");
-        JMenuItem toBack = new JMenuItem("Make last");
-        JMenuItem rotLeft = new JMenuItem("Rotate left");
-        JMenuItem rotRight = new JMenuItem("Rotate right");
-        JMenuItem delete = new JMenuItem("Delete");
+        JMenuItem toFront = new JMenuItem(bundle.getString("make.first"));
+        JMenuItem left = new JMenuItem(bundle.getString("move.left"));
+        JMenuItem right = new JMenuItem(bundle.getString("move.right"));
+        JMenuItem toBack = new JMenuItem(bundle.getString("make.last"));
+        JMenuItem rotLeft = new JMenuItem(bundle.getString("rotate.left"));
+        JMenuItem rotRight = new JMenuItem(bundle.getString("rotate.right"));
+        JMenuItem delete = new JMenuItem(bundle.getString("delete"));
 
         if (DocumentController.getPageNumber(page) == 0) {
             toFront.setEnabled(false);

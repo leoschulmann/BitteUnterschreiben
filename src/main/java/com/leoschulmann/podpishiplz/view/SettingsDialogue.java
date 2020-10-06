@@ -1,5 +1,8 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.EventController;
+import com.leoschulmann.podpishiplz.controller.EventListener;
+import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
 import org.slf4j.LoggerFactory;
 
@@ -7,36 +10,41 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-public class SettingsDialogue extends JDialog {
+public class SettingsDialogue extends JDialog implements EventListener {
     private final SettingsGraphics graphicsSettings;
     private final SettingsPDFMetadata pdfMetadataSettings;
     private final SettingsBlending blendingSettings;
     private final SettingsUI userInterfaceSettings;
-    private final java.util.List<SettingsTab> tabs;
+    private final java.util.List<SettingsTab> tabList;
+    private final JButton cancel;
+    private final JButton ok;
+    private final JTabbedPane tabs;
+
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
     public SettingsDialogue(Frame owner) {
         super(owner);
-        setName("Settings");
+        setName(bundle.getString("settings"));
         setModal(true);
         setResizable(false);
 
-        tabs = new ArrayList<>();
+        tabList = new ArrayList<>();
 
-        tabs.add(graphicsSettings = new SettingsGraphics());
-        tabs.add(userInterfaceSettings = new SettingsUI());
-        tabs.add(blendingSettings = new SettingsBlending());
-        tabs.add(pdfMetadataSettings = new SettingsPDFMetadata());
+        tabList.add(graphicsSettings = new SettingsGraphics());
+        tabList.add(userInterfaceSettings = new SettingsUI());
+        tabList.add(blendingSettings = new SettingsBlending());
+        tabList.add(pdfMetadataSettings = new SettingsPDFMetadata());
 
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.add("Graphics", graphicsSettings);
-        tabs.add("Interface", userInterfaceSettings);
-        tabs.add("PDF Metadata", pdfMetadataSettings);
-        tabs.add("Blending", blendingSettings);
+        tabs = new JTabbedPane();
+        manageTabs(tabList);
 
         JPanel okCancel = new JPanel();
-        JButton cancel = new JButton("Cancel");
-        JButton ok = new JButton("OK");
+        cancel = new JButton(bundle.getString("cancel"));
+        ok = new JButton(bundle.getString("ok"));
         getRootPane().setDefaultButton(ok);
         cancel.addActionListener(e -> this.setVisible(false));
         ok.addActionListener(e -> confirm());
@@ -47,10 +55,23 @@ public class SettingsDialogue extends JDialog {
         add(okCancel, BorderLayout.SOUTH);
         pack();
         setLocationRelativeTo(owner);
+
+        EventController.subscribe(EventType.LOCALE_CHANGED, this);
+        for (SettingsTab st : tabList) {
+            EventController.subscribe(EventType.LOCALE_CHANGED, st);
+        }
+    }
+
+    private void manageTabs(List<SettingsTab> tabList) {
+        tabs.removeAll();
+        for (SettingsTab st : tabList) {
+            LoggerFactory.getLogger(SettingsDialogue.class).debug("Adding {}", st.getTitle());
+            tabs.add(st.getTitle(), (JPanel) st);
+        }
     }
 
     private void confirm() {
-        tabs.forEach(SettingsTab::saveState);
+        tabList.forEach(SettingsTab::saveState);
 
         try {
             SettingsController.saveYML();
@@ -59,5 +80,17 @@ public class SettingsDialogue extends JDialog {
             LoggerFactory.getLogger(SettingsDialogue.class).error(e.getMessage(), e);
         }
         setVisible(false);
+    }
+
+    @Override
+    public void eventUpdate(EventType event, Object object) {
+        if (event == EventType.LOCALE_CHANGED) {
+            bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+            setName(bundle.getString("settings"));
+            cancel.setText(bundle.getString("cancel"));
+            ok.setText(bundle.getString("ok"));
+
+            manageTabs(tabList);
+        }
     }
 }

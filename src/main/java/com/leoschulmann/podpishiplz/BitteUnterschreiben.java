@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
 
 public class BitteUnterschreiben {
     static AppWindow app;
@@ -43,6 +44,9 @@ public class BitteUnterschreiben {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(app, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        Locale.setDefault(new Locale(SettingsController.getLanguage()));
+
+        EventController.notify(EventType.LOCALE_CHANGED, null);
         EventController.notify(EventType.REFRESH_OVERLAYS_PANEL, null);
         EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
         EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);

@@ -2,7 +2,6 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.graphics.Resizer;
-import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.ThumbnailButton;
 import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
@@ -11,11 +10,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class TopPanelController {
     private static TopScrollerPanel tsp;
     public static final List<ThumbnailButton> BUTTONS = new ArrayList<>();
-    final static JButton welcomeBtn = new JButton("Открыть .pdf...");
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang");
+    final static JButton welcomeBtn = new JButton(bundle.getString("open.pdf"));
 
     static {
         welcomeBtn.addActionListener(e -> GUIController.openOption(BitteUnterschreiben.getApp()));

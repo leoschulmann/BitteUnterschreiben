@@ -7,6 +7,8 @@ import com.leoschulmann.podpishiplz.controller.EventType;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class MenuBar extends JMenuBar implements EventListener {
     private final JMenuItem optionOpen;
@@ -14,15 +16,20 @@ public class MenuBar extends JMenuBar implements EventListener {
     private final JMenuItem optionRemove;
     private final JMenuItem optionSaveAs;
     private final JMenuItem optionSettings;
+    private final JMenu menuEdit;
+    private final JMenu menuFile;
+
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+
 
     public MenuBar() {
-        JMenu menuFile = new JMenu("File");
-        JMenu menuEdit = new JMenu("Edit");
-        optionOpen = new JMenuItem("Open");
-        optionPlace = new JMenuItem("Place");
-        optionRemove = new JMenuItem("Remove selected");
-        optionSaveAs = new JMenuItem("Save As...");
-        optionSettings = new JMenuItem("Settings...");
+        menuFile = new JMenu(bundle.getString("file"));
+        menuEdit = new JMenu(bundle.getString("edit"));
+        optionOpen = new JMenuItem(bundle.getString("open"));
+        optionPlace = new JMenuItem(bundle.getString("place"));
+        optionRemove = new JMenuItem(bundle.getString("remove.selected"));
+        optionSaveAs = new JMenuItem(bundle.getString("save.as"));
+        optionSettings = new JMenuItem(bundle.getString("settings"));
 
         menuFile.add(optionOpen);
         menuFile.add(optionSaveAs);
@@ -43,6 +50,7 @@ public class MenuBar extends JMenuBar implements EventListener {
         EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, this);
         EventController.subscribe(EventType.OVERLAY_DESELECTED, this);
         EventController.subscribe(EventType.OVERLAY_SELECTED, this);
+        EventController.subscribe(EventType.LOCALE_CHANGED, this);
     }
 
     public JMenuItem getOptionOpen() {
@@ -88,6 +96,16 @@ public class MenuBar extends JMenuBar implements EventListener {
                 break;
             case OVERLAY_DESELECTED:
                 optionRemove.setEnabled(false);
+                break;
+            case LOCALE_CHANGED:
+                bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+                menuFile.setText(bundle.getString("file"));
+                menuEdit.setText(bundle.getString("edit"));
+                optionOpen.setText(bundle.getString("open"));
+                optionPlace.setText(bundle.getString("place"));
+                optionRemove.setText(bundle.getString("remove.selected"));
+                optionSaveAs.setText(bundle.getString("save.as"));
+                optionSettings.setText(bundle.getString("settings"));
                 break;
         }
     }

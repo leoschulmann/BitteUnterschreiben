@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class SettingsController {
@@ -202,5 +200,16 @@ public class SettingsController {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static void setLanguage(String lang) {
+        Locale.setDefault(new Locale(lang));
+        settings.setLanguage(lang);
+        EventController.notify(EventType.LOCALE_CHANGED, null);
+    }
+
+    public static String getLanguage() {
+        if (settings.getLanguage() == null) return "en";
+        else return settings.getLanguage();
     }
 }
