@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.graphics;
 
+import org.slf4j.LoggerFactory;
+
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -10,6 +12,7 @@ public class Resizer {
             AffineTransformOp.TYPE_BILINEAR);
 
     public static BufferedImage resize(BufferedImage im, int desiredHeight) {
+        LoggerFactory.getLogger(Resizer.class).debug("Resizing image : {}px -> {}px", im.getHeight(), desiredHeight);
         while (getRatio(im.getHeight(), desiredHeight) < 0.5) {
             im = reduceImageInHalf(im);
         }

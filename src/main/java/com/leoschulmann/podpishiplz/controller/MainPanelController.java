@@ -12,7 +12,7 @@ import java.util.Optional;
 public class MainPanelController {
     private static MainPanel panel;
     private static final int INSET = 10;  // margin (px)
-    public static final int MIN_ZOOM_SIZE = 10;
+    private static final int MIN_ZOOM_SIZE = 10;
     private static int pageX0;
     private static int pageY0;
     private static int pageHeight;
@@ -121,7 +121,7 @@ public class MainPanelController {
     }
 
     public static void setPageX0(int pageX0) {
-        MainPanelController.pageX0 = pageX0;
+      if (pageX0>=0) MainPanelController.pageX0 = pageX0;
     }
 
     public static int getPageY0() {
@@ -129,7 +129,7 @@ public class MainPanelController {
     }
 
     public static void setPageY0(int pageY0) {
-        MainPanelController.pageY0 = pageY0;
+       if (pageY0>=0) MainPanelController.pageY0 = pageY0;
     }
 
     public static int getPageHeight() {

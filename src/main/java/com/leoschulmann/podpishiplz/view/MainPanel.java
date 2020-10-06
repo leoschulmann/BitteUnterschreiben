@@ -61,8 +61,7 @@ public class MainPanel extends JPanel {
                 g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
             });
-        }
-        else {
+        } else {
             BufferedImage im;
             try {
                 im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png"));
@@ -75,11 +74,11 @@ public class MainPanel extends JPanel {
                 gr.drawString("Error", 5, 50);
                 gr.dispose();
             }
-            int imX0 = (mainPanelWrapper.getWidth()  - im.getWidth()) / 2;
+            int imX0 = (mainPanelWrapper.getWidth() - im.getWidth()) / 2;
             int imY0 = (mainPanelWrapper.getHeight() - im.getHeight()) / 2;
 
             g.drawImage(im, imX0, imY0, im.getWidth(), im.getHeight(), null);
-            setPreferredSize(new Dimension(im.getWidth(),im.getHeight()));
+            setPreferredSize(new Dimension(im.getWidth(), im.getHeight()));
         }
     }
 
