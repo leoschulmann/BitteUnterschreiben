@@ -4,12 +4,17 @@ import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.model.Page;
 
 import javax.swing.*;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ThumbButtonContextMenu extends JPopupMenu {
-    private static ResourceBundle bundle = ResourceBundle.getBundle("lang");
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
     public ThumbButtonContextMenu(Page page) {
+        if (!bundle.getLocale().getLanguage().equals(Locale.getDefault().getLanguage())) {
+            bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+        }
+
 
         JMenuItem toFront = new JMenuItem(bundle.getString("make.first"));
         JMenuItem left = new JMenuItem(bundle.getString("move.left"));

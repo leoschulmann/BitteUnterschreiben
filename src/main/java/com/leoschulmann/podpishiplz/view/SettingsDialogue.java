@@ -56,10 +56,11 @@ public class SettingsDialogue extends JDialog implements EventListener {
         pack();
         setLocationRelativeTo(owner);
 
-        EventController.subscribe(EventType.LOCALE_CHANGED, this);
+        //tabs should subscribe first since they should be refreshed (notified) earlier
         for (SettingsTab st : tabList) {
             EventController.subscribe(EventType.LOCALE_CHANGED, st);
         }
+        EventController.subscribe(EventType.LOCALE_CHANGED, this);
     }
 
     private void manageTabs(List<SettingsTab> tabList) {

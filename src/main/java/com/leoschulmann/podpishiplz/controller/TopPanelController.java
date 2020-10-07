@@ -10,13 +10,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class TopPanelController {
     private static TopScrollerPanel tsp;
     public static final List<ThumbnailButton> BUTTONS = new ArrayList<>();
-    private static ResourceBundle bundle = ResourceBundle.getBundle("lang");
-    final static JButton welcomeBtn = new JButton(bundle.getString("open.pdf"));
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+    private final static JButton welcomeBtn = new JButton(bundle.getString("open.pdf"));
 
     static {
         welcomeBtn.addActionListener(e -> GUIController.openOption(BitteUnterschreiben.getApp()));
@@ -94,6 +95,9 @@ public class TopPanelController {
                     BUTTONS.forEach(ThumbnailButton::unmarkLabel);
                     BUTTONS.stream().filter(b -> b.getPage() == page)
                             .findFirst().ifPresent(ThumbnailButton::markLabel);
+                case LOCALE_CHANGED:
+                    bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+                    welcomeBtn.setText(bundle.getString("open.pdf"));
             }
         };
         EventController.subscribe(EventType.PAGES_REORDERED, el);
@@ -101,5 +105,6 @@ public class TopPanelController {
         EventController.subscribe(EventType.PAGES_ADDED, el);
         EventController.subscribe(EventType.PAGE_ROTATED, el);
         EventController.subscribe(EventType.MAIN_PANEL_FULL, el);
+        EventController.subscribe(EventType.LOCALE_CHANGED, el);
     }
 }

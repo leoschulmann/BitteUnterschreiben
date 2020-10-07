@@ -1,11 +1,15 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.controller.EventListener;
+import com.leoschulmann.podpishiplz.controller.EventType;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class FilePicker {
-    private static ResourceBundle bundle = ResourceBundle.getBundle("lang");
+public class FilePicker implements EventListener {
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
 
     public static String openPDF(JFrame parent) {
@@ -41,5 +45,12 @@ public class FilePicker {
         fileDialog.setVisible(true);
         if (fileDialog.getFile() == null) return null;
         return fileDialog.getDirectory() + fileDialog.getFile();
+    }
+
+    @Override
+    public void eventUpdate(EventType event, Object object) {
+        if (event == EventType.LOCALE_CHANGED) {
+            bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
+        }
     }
 }
