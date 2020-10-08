@@ -47,7 +47,10 @@ public class AppWindow extends JFrame {
         menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption(this));
         menuBar.getOptionPlace().addActionListener(e -> GUIController.placeOption(this));
         menuBar.getOptionRemove().addActionListener(e -> GUIController.deleteSelectedOverlayOption());
-        menuBar.getOptionSaveAs().addActionListener(e -> GUIController.saveFile(this));
+        menuBar.getOptionSaveAs().addActionListener(e -> GUIController.saveFileAs());
+        menuBar.getOptionSave().addActionListener(e -> GUIController.saveFile());
+        menuBar.getOptionExit().addActionListener(e -> GUIController.quit());
+        menuBar.getOptionClose().addActionListener(e -> GUIController.closeDocument());
         menuBar.getOptionSettings().addActionListener(e -> GUIController.openSettingsDialogue());
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);

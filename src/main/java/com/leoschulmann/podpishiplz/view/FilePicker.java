@@ -22,7 +22,7 @@ public class FilePicker implements EventListener {
         return fileDialog.getDirectory() + fileDialog.getFile();
     }
 
-    public static String savePDF(JFrame parent) {
+    public static String savePdfDialog(JFrame parent) {
         FileDialog fileDialog = new FileDialog(parent, bundle.getString("save.as"), FileDialog.SAVE);
         fileDialog.setFile("New PDF Document.pdf");
         fileDialog.setMultipleMode(false);

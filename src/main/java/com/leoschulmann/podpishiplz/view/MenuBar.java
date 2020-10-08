@@ -14,6 +14,9 @@ public class MenuBar extends JMenuBar implements EventListener {
     private final JMenuItem optionOpen;
     private final JMenuItem optionPlace;
     private final JMenuItem optionRemove;
+    private final JMenuItem optionSave;
+    private final JMenuItem optionClose;
+    private final JMenuItem optionExit;
     private final JMenuItem optionSaveAs;
     private final JMenuItem optionSettings;
     private final JMenu menuEdit;
@@ -28,11 +31,17 @@ public class MenuBar extends JMenuBar implements EventListener {
         optionOpen = new JMenuItem(bundle.getString("open"));
         optionPlace = new JMenuItem(bundle.getString("place"));
         optionRemove = new JMenuItem(bundle.getString("remove.selected"));
+        optionSave = new JMenuItem(bundle.getString("save"));
         optionSaveAs = new JMenuItem(bundle.getString("save.as"));
+        optionClose = new JMenuItem(bundle.getString("close.document"));
+        optionExit = new JMenuItem(bundle.getString("quit"));
         optionSettings = new JMenuItem(bundle.getString("settings"));
 
         menuFile.add(optionOpen);
+        menuFile.add(optionSave);
         menuFile.add(optionSaveAs);
+        menuFile.add(optionClose);
+        menuFile.add(optionExit);
         menuEdit.add(optionPlace);
         menuEdit.add(optionRemove);
         menuEdit.addSeparator();
@@ -40,7 +49,8 @@ public class MenuBar extends JMenuBar implements EventListener {
         add(menuFile);
         add(menuEdit);
         optionOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
-        optionSaveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+        optionSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+        optionSaveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK));
         optionPlace.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
         optionRemove.setAccelerator(KeyStroke.getKeyStroke("BACK_SPACE"));
         optionSettings.setAccelerator(KeyStroke.getKeyStroke("F12"));
@@ -73,6 +83,17 @@ public class MenuBar extends JMenuBar implements EventListener {
         return optionSettings;
     }
 
+    public JMenuItem getOptionSave() {
+        return optionSave;
+    }
+
+    public JMenuItem getOptionClose() {
+        return optionClose;
+    }
+
+    public JMenuItem getOptionExit() {
+        return optionExit;
+    }
     @Override
     public void eventUpdate(EventType event, Object object) {
         switch (event) {
@@ -85,9 +106,13 @@ public class MenuBar extends JMenuBar implements EventListener {
                 break;
             case PAGES_ADDED:
                 optionSaveAs.setEnabled(true);
+                optionSave.setEnabled(true);
+                optionClose.setEnabled(true);
                 break;
             case NO_PAGES_IN_DOCUMENT:
                 optionSaveAs.setEnabled(false);
+                optionSave.setEnabled(false);
+                optionClose.setEnabled(false);
                 optionPlace.setEnabled(false);
                 optionRemove.setEnabled(false);
                 break;
@@ -105,6 +130,9 @@ public class MenuBar extends JMenuBar implements EventListener {
                 optionPlace.setText(bundle.getString("place"));
                 optionRemove.setText(bundle.getString("remove.selected"));
                 optionSaveAs.setText(bundle.getString("save.as"));
+                optionClose.setText(bundle.getString("close.document"));
+                optionExit.setText(bundle.getString("quit"));
+                optionSave.setText(bundle.getString("save"));
                 optionSettings.setText(bundle.getString("settings"));
                 break;
         }

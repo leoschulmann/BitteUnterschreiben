@@ -39,13 +39,10 @@ public class FileIOController {
     }
 
 
-    public static void blendAndSavePdfFile(JFrame appWindow, float jpegQuality, Class<? extends CompositeContext> blender) {
-        String file = FilePicker.savePDF(appWindow);
-        if (file != null) {
-            SavingWorker worker = new SavingWorker(file, jpegQuality, appWindow, blender);
+    public static void blendAndSavePdfFile(float jpegQuality, Class<? extends CompositeContext> blender, String file) {
+            SavingWorker worker = new SavingWorker(file, jpegQuality, BitteUnterschreiben.getApp(), blender);
             worker.execute();
             worker.runDialog();
-        }
     }
 
     public static void openPdfFile(AppWindow appWindow) {

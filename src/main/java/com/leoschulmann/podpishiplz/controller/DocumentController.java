@@ -21,8 +21,9 @@ import static java.lang.String.valueOf;
 
 public class DocumentController {
     private static Document doc;
-
+    private static String filename;
     private static Page currentPage;
+    private static boolean changed;
 
     public static void setCurrentPage(Page page) {
         if (page != null && !contains(page)) {
@@ -81,6 +82,10 @@ public class DocumentController {
         BufferedImage[] thumbnails = PDFController.generatePageThumbnails(pdDocument);
         PDRectangle[] mediaBoxes = PDFController.getMediaBoxes(pdDocument);
         Page firstPage = null;
+        if (getFileName() == null) { //new document
+            setFilename(filename);
+            setChanged(false);
+        }
         for (int pg = 0; pg < pdDocument.getNumberOfPages(); pg++) {
             Page p = new Page(filename, pg);
             if (firstPage == null) firstPage = p;
@@ -134,6 +139,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(0, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
+        DocumentController.setChanged(true);
     }
 
     public static void movePageLeft(Page page) {
@@ -141,6 +147,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(idx - 1, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
+        DocumentController.setChanged(true);
     }
 
     public static void movePageRight(Page page) {
@@ -148,6 +155,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(idx + 1, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
+        DocumentController.setChanged(true);
     }
 
     public static void movePageToBack(Page page) {
@@ -155,6 +163,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(size - 1, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
+        DocumentController.setChanged(true);
     }
 
     public static void deletePage(Page page) {
@@ -166,6 +175,7 @@ public class DocumentController {
         } else if (idx >= getAllPages().size()) {
             GUIController.openPage(getAllPages().get(getAllPages().size() - 1));  // get last
         } else GUIController.openPage(getAllPages().get(idx));
+        DocumentController.setChanged(true);
     }
 
     public static void rotateLeft(Page page, boolean toLeft) {
@@ -176,5 +186,22 @@ public class DocumentController {
         page.setMediaHeight(page.getMediaWidth());
         page.setMediaWidth(temp);
         EventController.notify(EventType.PAGE_ROTATED, page);
+        DocumentController.setChanged(true);
+    }
+
+    public static String getFileName() {
+        return filename;
+    }
+
+    public static void setFilename(String filename) {
+        DocumentController.filename = filename;
+    }
+
+    public static boolean isChanged() {
+        return changed;
+    }
+
+    public static void setChanged(boolean changed) {
+        DocumentController.changed = changed;
     }
 }

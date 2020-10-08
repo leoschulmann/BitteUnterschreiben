@@ -1,18 +1,20 @@
 package com.leoschulmann.podpishiplz.controller;
 
-import com.leoschulmann.podpishiplz.graphics.BlenderDarken;
-import com.leoschulmann.podpishiplz.graphics.BlenderMultiply;
+import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.AppWindow;
 import com.leoschulmann.podpishiplz.view.FilePicker;
 import com.leoschulmann.podpishiplz.view.ThumbnailButton;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class GUIController {
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
     public static void openOption(AppWindow appWindow) {
         FileIOController.openPdfFile(appWindow);
@@ -23,6 +25,7 @@ public class GUIController {
         if (file != null) {
             FileIOController.loadOverlay(new File(file));
             MainPanelController.repaint();
+            DocumentController.setChanged(true);
         }
     }
 
@@ -46,18 +49,17 @@ public class GUIController {
         }
     }
 
-    public static void saveFile(JFrame appWindow) {
-        Class<? extends CompositeContext> blender = null;
-        switch (SettingsController.getBlendingMode()) {
-            case (1):
-                blender = BlenderDarken.class;
-                break;
-            case (2):
-                blender = BlenderMultiply.class;
-                break;
-            default:
+    public static void saveFile() {
+        FileIOController.blendAndSavePdfFile(SettingsController.getJpegQuality(),
+                SettingsController.getBlender(), DocumentController.getFileName());
+    }
+
+    public static void saveFileAs() {
+        String file = FilePicker.savePdfDialog(BitteUnterschreiben.getApp());
+        if (file != null) {
+            FileIOController.blendAndSavePdfFile(SettingsController.getJpegQuality(),
+                    SettingsController.getBlender(), file);
         }
-        FileIOController.blendAndSavePdfFile(appWindow, SettingsController.getJpegQuality(), blender);
     }
 
     public static ThumbnailButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
@@ -76,5 +78,32 @@ public class GUIController {
 
     public static void openSettingsDialogue() {
         SettingsController.openSettings();
+    }
+
+    public static void quit() {
+        if (mundaneCheck(bundle.getString("exit.message"))) {
+            LoggerFactory.getLogger(GUIController.class).debug("Quitting");
+            System.exit(0);
+        }
+    }
+
+    public static void closeDocument() {
+        if (mundaneCheck(bundle.getString("close.message"))) {
+            LoggerFactory.getLogger(GUIController.class).debug("Closing document");
+            while (DocumentController.getCurrentPage() != null) {
+                DocumentController.deletePage(DocumentController.getCurrentPage());  //todo write simple method
+            }
+            DocumentController.setFilename(null);
+            DocumentController.setChanged(false);
+        }
+    }
+
+    private static boolean mundaneCheck(String message) {
+        int answer = 0;
+        if (DocumentController.isChanged()) {
+            answer = JOptionPane.showConfirmDialog(BitteUnterschreiben.getApp(), message,
+                    bundle.getString("message"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        }
+        return answer == 0;  //JOptionPane 'OK' == 0, 'Cancel' == 2
     }
 }

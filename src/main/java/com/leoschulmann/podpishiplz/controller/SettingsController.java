@@ -3,6 +3,8 @@ package com.leoschulmann.podpishiplz.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.graphics.BlenderDarken;
+import com.leoschulmann.podpishiplz.graphics.BlenderMultiply;
 import com.leoschulmann.podpishiplz.model.Settings;
 import com.leoschulmann.podpishiplz.view.SettingsDialogue;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,20 @@ public class SettingsController {
 
     public static int getBlendingMode() {
         return settings.getBlendingMode();
+    }
+
+    public static Class<? extends CompositeContext> getBlender() {
+        Class<? extends CompositeContext> blender = null;
+        switch (getBlendingMode()) {
+            case (1):
+                blender = BlenderDarken.class;
+                break;
+            case (2):
+                blender = BlenderMultiply.class;
+                break;
+            default:
+        }
+        return blender;
     }
 
     public static void setBlendingMode(int blendingMode) {
