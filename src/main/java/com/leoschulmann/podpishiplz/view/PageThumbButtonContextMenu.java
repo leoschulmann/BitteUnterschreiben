@@ -7,10 +7,10 @@ import javax.swing.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class ThumbButtonContextMenu extends JPopupMenu {
+public class PageThumbButtonContextMenu extends JPopupMenu {
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
-    public ThumbButtonContextMenu(Page page) {
+    public PageThumbButtonContextMenu(Page page) {
         if (!bundle.getLocale().getLanguage().equals(Locale.getDefault().getLanguage())) {
             bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
         }

@@ -5,11 +5,11 @@ import com.leoschulmann.podpishiplz.model.Page;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
-public class ThumbnailButton extends JButton {
+public class PageThumbnailButton extends JButton {
     private final Page page;
     private boolean marked = false;
 
-    public ThumbnailButton(BufferedImage thumbnail, Page page) {
+    public PageThumbnailButton(BufferedImage thumbnail, Page page) {
         super(new ImageIcon(thumbnail));
         this.page = page;
     }

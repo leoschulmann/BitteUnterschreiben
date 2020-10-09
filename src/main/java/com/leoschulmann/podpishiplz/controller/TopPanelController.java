@@ -3,7 +3,7 @@ package com.leoschulmann.podpishiplz.controller;
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.model.Page;
-import com.leoschulmann.podpishiplz.view.ThumbnailButton;
+import com.leoschulmann.podpishiplz.view.PageThumbnailButton;
 import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 
 public class TopPanelController {
     private static TopScrollerPanel tsp;
-    public static final List<ThumbnailButton> BUTTONS = new ArrayList<>();
+    public static final List<PageThumbnailButton> BUTTONS = new ArrayList<>();
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
     private final static JButton welcomeBtn = new JButton(bundle.getString("open.pdf"));
 
@@ -83,7 +83,7 @@ public class TopPanelController {
                     break;
                 case PAGE_ROTATED:
                     Page pageRotated = (Page) object;
-                    ThumbnailButton butt = BUTTONS.stream()
+                    PageThumbnailButton butt = BUTTONS.stream()
                             .filter(b -> b.getPage() == pageRotated)
                             .findFirst()
                             .orElse(null);
@@ -92,9 +92,9 @@ public class TopPanelController {
                     break;
                 case MAIN_PANEL_FULL:
                     Page page = (Page) object;
-                    BUTTONS.forEach(ThumbnailButton::unmarkLabel);
+                    BUTTONS.forEach(PageThumbnailButton::unmarkLabel);
                     BUTTONS.stream().filter(b -> b.getPage() == page)
-                            .findFirst().ifPresent(ThumbnailButton::markLabel);
+                            .findFirst().ifPresent(PageThumbnailButton::markLabel);
                 case LOCALE_CHANGED:
                     bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
                     welcomeBtn.setText(bundle.getString("open.pdf"));

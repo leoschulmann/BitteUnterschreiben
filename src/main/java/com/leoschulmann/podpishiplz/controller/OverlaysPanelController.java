@@ -30,10 +30,7 @@ public class OverlaysPanelController {
             BufferedImage thumbnail = Resizer.resize(raw, 50);
             OverlayThumbButton butt = new OverlayThumbButton(thumbnail, f.toString(), f);
             butt.setVerticalTextPosition(SwingConstants.BOTTOM);
-            butt.addActionListener(e -> {
-                FileIOController.loadOverlay(butt.getFile());
-                MainPanelController.repaint();
-            });
+            butt.addActionListener(e -> GUIController.overlayThumbnailButtonOnClickAction(butt.getFile()));
             butt.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {  //works on mac

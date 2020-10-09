@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.GUIController;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
 import org.slf4j.LoggerFactory;
@@ -52,6 +54,30 @@ public class AppWindow extends JFrame {
         menuBar.getOptionExit().addActionListener(e -> GUIController.quit());
         menuBar.getOptionClose().addActionListener(e -> GUIController.closeDocument());
         menuBar.getOptionSettings().addActionListener(e -> GUIController.openSettingsDialogue());
+
+
+
+        menuBar.getOptionPageToFront().addActionListener(
+                e -> DocumentController.movePageToFront(DocumentController.getCurrentPage()));
+        menuBar.getOptionPageToLeft().addActionListener(
+                e -> DocumentController.movePageLeft(DocumentController.getCurrentPage()));
+        menuBar.getOptionPageToRight().addActionListener(
+                e -> DocumentController.movePageRight(DocumentController.getCurrentPage()));
+        menuBar.getOptionPageToBack().addActionListener(
+                e -> DocumentController.movePageToBack(DocumentController.getCurrentPage()));
+        menuBar.getOptionRemovePage().addActionListener(
+                e -> DocumentController.deletePage(DocumentController.getCurrentPage()));
+
+        menuBar.getOptionRotLeft().addActionListener(
+                e -> DocumentController.rotateLeft(DocumentController.getCurrentPage(), true));
+        menuBar.getOptionRotRight().addActionListener(
+                e -> DocumentController.rotateLeft(DocumentController.getCurrentPage(), false));
+
+        //todo implement
+        menuBar.getOptionAddPages().addActionListener(e -> JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
+                "Under construction", "Message", JOptionPane.INFORMATION_MESSAGE));
+        menuBar.getOptionRemAllOverlays().addActionListener(e -> JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
+                "Under construction", "Message", JOptionPane.INFORMATION_MESSAGE));
 
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         add(mainPanel.getMainPanelWrapper(), BorderLayout.CENTER);

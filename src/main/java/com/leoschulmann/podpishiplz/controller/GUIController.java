@@ -4,7 +4,7 @@ import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.AppWindow;
 import com.leoschulmann.podpishiplz.view.FilePicker;
-import com.leoschulmann.podpishiplz.view.ThumbnailButton;
+import com.leoschulmann.podpishiplz.view.PageThumbnailButton;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -23,10 +23,14 @@ public class GUIController {
     public static void placeOption(JFrame appWindow) {
         String file = FilePicker.openOverlay(appWindow);
         if (file != null) {
-            FileIOController.loadOverlay(new File(file));
-            MainPanelController.repaint();
-            DocumentController.setChanged(true);
+            overlayThumbnailButtonOnClickAction(new File(file));
         }
+    }
+
+    public static void overlayThumbnailButtonOnClickAction(File file) {
+        FileIOController.loadOverlay(file);
+        MainPanelController.repaint();
+        EventController.notify(EventType.FILE_MODIFIED, null);
     }
 
     public static void deleteSelectedOverlayOption() {
@@ -62,8 +66,8 @@ public class GUIController {
         }
     }
 
-    public static ThumbnailButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
-        ThumbnailButton jb = new ThumbnailButton(thumbnail, p);
+    public static PageThumbnailButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
+        PageThumbnailButton jb = new PageThumbnailButton(thumbnail, p);
         jb.setVerticalTextPosition(SwingConstants.BOTTOM);
         jb.setHorizontalTextPosition(SwingConstants.CENTER);
         jb.addActionListener(e -> GUIController.openPage(jb.getPage()));
@@ -81,24 +85,23 @@ public class GUIController {
     }
 
     public static void quit() {
-        if (mundaneCheck(bundle.getString("exit.message"))) {
+        if (mundaneCheckIfDocumentChanged(bundle.getString("exit.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Quitting");
             System.exit(0);
         }
     }
 
     public static void closeDocument() {
-        if (mundaneCheck(bundle.getString("close.message"))) {
+        if (mundaneCheckIfDocumentChanged(bundle.getString("close.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Closing document");
             while (DocumentController.getCurrentPage() != null) {
                 DocumentController.deletePage(DocumentController.getCurrentPage());  //todo write simple method
             }
-            DocumentController.setFilename(null);
-            DocumentController.setChanged(false);
+            EventController.notify(EventType.FILE_UNMODIFIED, null);
         }
     }
 
-    private static boolean mundaneCheck(String message) {
+    private static boolean mundaneCheckIfDocumentChanged(String message) {
         int answer = 0;
         if (DocumentController.isChanged()) {
             answer = JOptionPane.showConfirmDialog(BitteUnterschreiben.getApp(), message,

@@ -36,6 +36,7 @@ public class BitteUnterschreiben {
 
     private static void init() {
         DocumentController.createDocument();
+        DocumentController.initListener();
         OverlaysPanelController.initListener();
         TopPanelController.initListener();
         MainPanelController.initListener();

@@ -5,7 +5,7 @@ import com.leoschulmann.podpishiplz.graphics.Rotater;
 import com.leoschulmann.podpishiplz.model.Document;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
-import com.leoschulmann.podpishiplz.view.ThumbButtonContextMenu;
+import com.leoschulmann.podpishiplz.view.PageThumbButtonContextMenu;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.slf4j.LoggerFactory;
@@ -38,6 +38,7 @@ public class DocumentController {
 
     public static void createDocument() {
         doc = new Document();
+        changed = false;
     }
 
     public static void addNewOverlay(BufferedImage image) {
@@ -84,7 +85,6 @@ public class DocumentController {
         Page firstPage = null;
         if (getFileName() == null) { //new document
             setFilename(filename);
-            setChanged(false);
         }
         for (int pg = 0; pg < pdDocument.getNumberOfPages(); pg++) {
             Page p = new Page(filename, pg);
@@ -102,14 +102,14 @@ public class DocumentController {
                 @Override
                 public void mousePressed(MouseEvent e) {  //works on mac
                     if (e.isPopupTrigger()) {
-                        new ThumbButtonContextMenu(p).show(e.getComponent(), e.getX(), e.getY());
+                        new PageThumbButtonContextMenu(p).show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) { // todo test on win
                     if (e.isPopupTrigger()) {
-                        new ThumbButtonContextMenu(p).show(e.getComponent(), e.getX(), e.getY());
+                        new PageThumbButtonContextMenu(p).show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
             });
@@ -139,7 +139,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(0, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
-        DocumentController.setChanged(true);
+        EventController.notify(EventType.FILE_MODIFIED, true);
     }
 
     public static void movePageLeft(Page page) {
@@ -147,7 +147,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(idx - 1, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
-        DocumentController.setChanged(true);
+        EventController.notify(EventType.FILE_MODIFIED, true);
     }
 
     public static void movePageRight(Page page) {
@@ -155,7 +155,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(idx + 1, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
-        DocumentController.setChanged(true);
+        EventController.notify(EventType.FILE_MODIFIED, true);
     }
 
     public static void movePageToBack(Page page) {
@@ -163,7 +163,7 @@ public class DocumentController {
         getAllPages().remove(page);
         getAllPages().add(size - 1, page);
         EventController.notify(EventType.PAGES_REORDERED, null);
-        DocumentController.setChanged(true);
+        EventController.notify(EventType.FILE_MODIFIED, true);
     }
 
     public static void deletePage(Page page) {
@@ -174,8 +174,11 @@ public class DocumentController {
             EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
         } else if (idx >= getAllPages().size()) {
             GUIController.openPage(getAllPages().get(getAllPages().size() - 1));  // get last
-        } else GUIController.openPage(getAllPages().get(idx));
-        DocumentController.setChanged(true);
+            EventController.notify(EventType.FILE_MODIFIED, true);
+        } else {
+            GUIController.openPage(getAllPages().get(idx));
+            EventController.notify(EventType.FILE_MODIFIED, true);
+        }
     }
 
     public static void rotateLeft(Page page, boolean toLeft) {
@@ -186,7 +189,7 @@ public class DocumentController {
         page.setMediaHeight(page.getMediaWidth());
         page.setMediaWidth(temp);
         EventController.notify(EventType.PAGE_ROTATED, page);
-        DocumentController.setChanged(true);
+        EventController.notify(EventType.FILE_MODIFIED, true);
     }
 
     public static String getFileName() {
@@ -201,7 +204,22 @@ public class DocumentController {
         return changed;
     }
 
-    public static void setChanged(boolean changed) {
-        DocumentController.changed = changed;
+
+    public static void initListener() {
+        EventListener el = (event, object) -> {
+            switch (event) {
+                case FILE_MODIFIED:
+                    changed = true;
+                    break;
+                case NO_PAGES_IN_DOCUMENT:
+                case FILE_UNMODIFIED:
+                    changed = false;
+                    filename = null;
+                    break;
+            }
+        };
+        EventController.subscribe(EventType.FILE_MODIFIED, el);
+        EventController.subscribe(EventType.FILE_UNMODIFIED, el);
+        EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, el);
     }
 }
