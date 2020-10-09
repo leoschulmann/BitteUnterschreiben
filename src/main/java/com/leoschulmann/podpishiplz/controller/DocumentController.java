@@ -136,34 +136,44 @@ public class DocumentController {
     }
 
     public static void movePageToFront(Page page) {
-        getAllPages().remove(page);
-        getAllPages().add(0, page);
-        EventController.notify(EventType.PAGES_REORDERED, null);
-        EventController.notify(EventType.FILE_MODIFIED, true);
+        int idx = getPageNumber(page);
+        if (idx > 0) {
+            getAllPages().remove(page);
+            getAllPages().add(0, page);
+            EventController.notify(EventType.PAGES_REORDERED, null);
+            EventController.notify(EventType.FILE_MODIFIED, true);
+        }
     }
 
     public static void movePageLeft(Page page) {
         int idx = getPageNumber(page);
-        getAllPages().remove(page);
-        getAllPages().add(idx - 1, page);
-        EventController.notify(EventType.PAGES_REORDERED, null);
-        EventController.notify(EventType.FILE_MODIFIED, true);
+        if (idx > 0) {
+            getAllPages().remove(page);
+            getAllPages().add(idx - 1, page);
+            EventController.notify(EventType.PAGES_REORDERED, null);
+            EventController.notify(EventType.FILE_MODIFIED, true);
+        }
     }
 
     public static void movePageRight(Page page) {
         int idx = getPageNumber(page);
-        getAllPages().remove(page);
-        getAllPages().add(idx + 1, page);
-        EventController.notify(EventType.PAGES_REORDERED, null);
-        EventController.notify(EventType.FILE_MODIFIED, true);
+        if (idx < doc.getPages().size() - 1) {
+            getAllPages().remove(page);
+            getAllPages().add(idx + 1, page);
+            EventController.notify(EventType.PAGES_REORDERED, null);
+            EventController.notify(EventType.FILE_MODIFIED, true);
+        }
     }
 
     public static void movePageToBack(Page page) {
-        int size = getAllPages().size();
-        getAllPages().remove(page);
-        getAllPages().add(size - 1, page);
-        EventController.notify(EventType.PAGES_REORDERED, null);
-        EventController.notify(EventType.FILE_MODIFIED, true);
+        int idx = getPageNumber(page);
+        if (idx < doc.getPages().size() - 1) {
+            int size = getAllPages().size();
+            getAllPages().remove(page);
+            getAllPages().add(size - 1, page);
+            EventController.notify(EventType.PAGES_REORDERED, null);
+            EventController.notify(EventType.FILE_MODIFIED, true);
+        }
     }
 
     public static void deletePage(Page page) {
