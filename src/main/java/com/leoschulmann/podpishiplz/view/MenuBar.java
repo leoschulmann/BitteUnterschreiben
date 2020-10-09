@@ -49,15 +49,15 @@ public class MenuBar extends JMenuBar implements EventListener {
         optionClose = new JMenuItem(bundle.getString("close.document"));
         optionExit = new JMenuItem(bundle.getString("quit"));
         optionSettings = new JMenuItem(bundle.getString("settings"));
-        pageSubmenu = new JMenu("Page");
-        overlaySubmenu = new JMenu("Overlay");
+        pageSubmenu = new JMenu(bundle.getString("page"));
+        overlaySubmenu = new JMenu(bundle.getString("overlay"));
         overlayOptions = new HashSet<>();
         overlayOptions.add(optionPlace = new JMenuItem(bundle.getString("place")));
         overlayOptions.add(optionRemove = new JMenuItem(bundle.getString("remove.selected")));
-        overlayOptions.add(optionRemAllOverlays = new JMenuItem("Remove all overlays"));
+        overlayOptions.add(optionRemAllOverlays = new JMenuItem(bundle.getString("remove.all.overlays")));
 
         pageOptions = new HashSet<>();
-        pageOptions.add(optionAddPages = new JMenuItem("Add pages..."));
+        pageOptions.add(optionAddPages = new JMenuItem(bundle.getString("add.pages")));
         pageOptions.add(optionRemovePage = new JMenuItem(bundle.getString("delete")));
         pageOptions.add(optionPageToFront = new JMenuItem(bundle.getString("make.first")));
         pageOptions.add(optionPageToLeft = new JMenuItem(bundle.getString("move.left")));
@@ -223,6 +223,19 @@ public class MenuBar extends JMenuBar implements EventListener {
                 optionExit.setText(bundle.getString("quit"));
                 optionSave.setText(bundle.getString("save"));
                 optionSettings.setText(bundle.getString("settings"));
+                pageSubmenu.setText(bundle.getString("page"));
+                overlaySubmenu.setText(bundle.getString("overlay"));
+                optionPlace.setText(bundle.getString("place"));
+                optionRemove.setText(bundle.getString("remove.selected"));
+                optionRemAllOverlays.setText(bundle.getString("remove.all.overlays"));
+                optionAddPages.setText(bundle.getString("add.pages"));
+                optionRemovePage.setText(bundle.getString("delete"));
+                optionPageToFront.setText(bundle.getString("make.first"));
+                optionPageToLeft.setText(bundle.getString("move.left"));
+                optionPageToRight.setText(bundle.getString("move.right"));
+                optionPageToBack.setText(bundle.getString("make.last"));
+                optionRotLeft.setText(bundle.getString("rotate.left"));
+                optionRotRight.setText(bundle.getString("rotate.right"));
                 break;
             case FILE_UNMODIFIED:
                 optionSaveAs.setEnabled(false);
