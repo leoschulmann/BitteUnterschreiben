@@ -1,11 +1,10 @@
 package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
-import com.leoschulmann.podpishiplz.view.AppWindow;
-import com.leoschulmann.podpishiplz.view.FilePicker;
 import com.leoschulmann.podpishiplz.worker.AbstractUnterschreibenWorker;
 import com.leoschulmann.podpishiplz.worker.OpeningWorker;
 import com.leoschulmann.podpishiplz.worker.SavingWorker;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
@@ -14,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class FileIOController {
     public static void loadOverlay(File file) {
@@ -45,13 +45,11 @@ public class FileIOController {
             worker.runDialog();
     }
 
-    public static void openPdfFile(AppWindow appWindow) {
-        String file = FilePicker.openPDF(appWindow);
-        if (file != null) {
-            AbstractUnterschreibenWorker worker = new OpeningWorker(appWindow, file);
-            worker.execute();
-            worker.runDialog();
-        }
+    public static void openPdfFile(String file, boolean[] selectedPages) {
+        LoggerFactory.getLogger(FileIOController.class).debug("Loading file: {}", file);
+        AbstractUnterschreibenWorker worker = new OpeningWorker(BitteUnterschreiben.getApp(), file, selectedPages);
+        worker.execute();
+        worker.runDialog();
     }
 
     public static BufferedImage getOverlayIm(File f) {
@@ -69,5 +67,18 @@ public class FileIOController {
             g.dispose();
             return im;
         }
+    }
+
+    public static BufferedImage[] getPdfPreviews(String file)  {  //todo dirty. rewrite
+        LoggerFactory.getLogger(FileIOController.class).info("Loading thumbnails for {}", file);
+        PDDocument pdDocument = null;
+        try {
+            pdDocument = PDDocument.load(new File(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        boolean[] selectedPages = new boolean[pdDocument.getNumberOfPages()];
+        Arrays.fill(selectedPages, true);
+        return PDFController.generatePageThumbnails(pdDocument, selectedPages);
     }
 }

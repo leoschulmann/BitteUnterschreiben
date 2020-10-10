@@ -1,6 +1,5 @@
 package com.leoschulmann.podpishiplz.controller;
 
-import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.PageThumbnailButton;
@@ -20,7 +19,7 @@ public class TopPanelController {
     private final static JButton welcomeBtn = new JButton(bundle.getString("open.pdf"));
 
     static {
-        welcomeBtn.addActionListener(e -> GUIController.openOption(BitteUnterschreiben.getApp()));
+        welcomeBtn.addActionListener(e -> GUIController.openOption());
     }
 
     public static void setTsp(TopScrollerPanel tsp) {

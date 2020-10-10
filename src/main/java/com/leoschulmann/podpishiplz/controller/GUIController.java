@@ -2,8 +2,8 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.model.Page;
-import com.leoschulmann.podpishiplz.view.AppWindow;
 import com.leoschulmann.podpishiplz.view.FilePicker;
+import com.leoschulmann.podpishiplz.view.PageSelectorDialogue;
 import com.leoschulmann.podpishiplz.view.PageThumbnailButton;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +16,25 @@ import java.util.ResourceBundle;
 public class GUIController {
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
-    public static void openOption(AppWindow appWindow) {
-        FileIOController.openPdfFile(appWindow);
+    public static void openOption() {
+        String file = FilePicker.openPDF(BitteUnterschreiben.getApp());
+        if (file != null) {
+            closeDocument();
+            FileIOController.openPdfFile(file, null);
+        }
+    }
+
+    public static void addPagesFromFileOption() {
+        String file = FilePicker.openPDF(BitteUnterschreiben.getApp());
+        if (file != null) {
+            PageSelectorDialogue psd = new PageSelectorDialogue(BitteUnterschreiben.getApp(), file);
+            boolean[] selectedPages = psd.showDialog();
+            if (selectedPages != null) {
+                LoggerFactory.getLogger(GUIController.class).debug("Selected pages: {}", (Object) selectedPages);
+                FileIOController.openPdfFile(file, selectedPages);
+                EventController.notify(EventType.FILE_MODIFIED, null);
+            }
+        }
     }
 
     public static void placeOption(JFrame appWindow) {

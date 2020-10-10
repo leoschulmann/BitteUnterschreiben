@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PDFController {
-    public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument) {
+    public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument, boolean[] selectedPages) {
         LoggerFactory.getLogger(PDFController.class).debug("Building thumbnails.");
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
         try {
@@ -25,6 +25,7 @@ public class PDFController {
 //            renderer.setRenderingHints(new RenderingHints(RenderingHints.KEY_INTERPOLATION,
 //            RenderingHints.VALUE_INTERPOLATION_BILINEAR));
             for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
+                if (!selectedPages[i]) continue;
                 //setup intermediate image height (appr 585 px for A4)
                 //might lower the init render size to cut some rescaling passes
                 BufferedImage raw = renderer.renderImageWithDPI(i, 50f);
@@ -37,9 +38,10 @@ public class PDFController {
         return images;
     }
 
-    public static PDRectangle[] getMediaBoxes(PDDocument pdDocument) {
+    public static PDRectangle[] getMediaBoxes(PDDocument pdDocument, boolean[] selectedPages) {
         PDRectangle[] boxes = new PDRectangle[pdDocument.getNumberOfPages()];
         for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
+            if (!selectedPages[i]) continue;
             boxes[i] = pdDocument.getPage(i).getMediaBox();
         }
         return boxes;

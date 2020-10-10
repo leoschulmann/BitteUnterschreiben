@@ -12,11 +12,12 @@ import java.util.ResourceBundle;
 public class OpeningWorker extends AbstractUnterschreibenWorker {
     private final String file;
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang");
+    private final boolean[] selectedPages;
 
-
-    public OpeningWorker(JFrame owner, String file) {
+    public OpeningWorker(JFrame owner, String file, boolean[] selectedPages) {
         super(owner, bundle.getString("opening"));
         this.file = file;
+        this.selectedPages = selectedPages;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class OpeningWorker extends AbstractUnterschreibenWorker {
         } catch (IOException e) {
             LoggerFactory.getLogger(OpeningWorker.class).error(e.getMessage(), e);
         }
-        DocumentController.addFileToDocument(pdDocument, file);
+        DocumentController.addFileToDocument(pdDocument, file, selectedPages);
         diag.dispose();
         return null;
     }

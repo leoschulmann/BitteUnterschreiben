@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.valueOf;
@@ -79,14 +80,19 @@ public class DocumentController {
         LoggerFactory.getLogger(DocumentController.class).info("Finished rendering pages.");
     }
 
-    public static void addFileToDocument(PDDocument pdDocument, String filename) {
-        BufferedImage[] thumbnails = PDFController.generatePageThumbnails(pdDocument);
-        PDRectangle[] mediaBoxes = PDFController.getMediaBoxes(pdDocument);
+    public static void addFileToDocument(PDDocument pdDocument, String filename, boolean[] selectedPages) {
+        if (selectedPages == null) {  //simple 'Open' file yields null'ed array
+            selectedPages = new boolean[pdDocument.getNumberOfPages()];
+            Arrays.fill(selectedPages, true);
+        }
+        BufferedImage[] thumbnails = PDFController.generatePageThumbnails(pdDocument, selectedPages);
+        PDRectangle[] mediaBoxes = PDFController.getMediaBoxes(pdDocument, selectedPages);
         Page firstPage = null;
         if (getFileName() == null) { //new document
             setFilename(filename);
         }
         for (int pg = 0; pg < pdDocument.getNumberOfPages(); pg++) {
+            if (!selectedPages[pg]) continue;
             Page p = new Page(filename, pg);
             if (firstPage == null) firstPage = p;
             p.setMediaWidth((int) (mediaBoxes[pg].getWidth()));

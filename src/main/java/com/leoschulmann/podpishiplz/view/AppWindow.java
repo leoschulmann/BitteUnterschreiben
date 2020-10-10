@@ -46,7 +46,7 @@ public class AppWindow extends JFrame {
         MenuBar menuBar = new MenuBar();
         setJMenuBar(menuBar);
 
-        menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption(this));
+        menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption());
         menuBar.getOptionPlace().addActionListener(e -> GUIController.placeOption(this));
         menuBar.getOptionRemove().addActionListener(e -> GUIController.deleteSelectedOverlayOption());
         menuBar.getOptionSaveAs().addActionListener(e -> GUIController.saveFileAs());
@@ -72,10 +72,9 @@ public class AppWindow extends JFrame {
                 e -> DocumentController.rotateLeft(DocumentController.getCurrentPage(), true));
         menuBar.getOptionRotRight().addActionListener(
                 e -> DocumentController.rotateLeft(DocumentController.getCurrentPage(), false));
+        menuBar.getOptionAddPages().addActionListener(e -> GUIController.addPagesFromFileOption());
 
         //todo implement
-        menuBar.getOptionAddPages().addActionListener(e -> JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
-                "Under construction", "Message", JOptionPane.INFORMATION_MESSAGE));
         menuBar.getOptionRemAllOverlays().addActionListener(e -> JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
                 "Under construction", "Message", JOptionPane.INFORMATION_MESSAGE));
 
