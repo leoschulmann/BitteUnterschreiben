@@ -26,4 +26,8 @@ public class PageSelectorElement extends JPanel {
     public boolean isSelected() {
         return checkBox.isSelected();
     }
+
+    public void setSelected(boolean b) {
+        checkBox.setSelected(b);
+    }
 }

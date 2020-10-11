@@ -4,6 +4,7 @@ import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.FilePicker;
 import com.leoschulmann.podpishiplz.view.PageSelectorDialogue;
+import com.leoschulmann.podpishiplz.view.PageSelectorElement;
 import com.leoschulmann.podpishiplz.view.PageThumbnailButton;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,9 @@ public class GUIController {
     public static void addPagesFromFileOption() {
         String file = FilePicker.openPDF(BitteUnterschreiben.getApp());
         if (file != null) {
-            PageSelectorDialogue psd = new PageSelectorDialogue(BitteUnterschreiben.getApp(), file);
+            PageSelectorElement[] previews;
+            previews = FileIOController.loadPreviewsFromFile(file);
+            PageSelectorDialogue psd = new PageSelectorDialogue(BitteUnterschreiben.getApp(), file, previews);
             boolean[] selectedPages = psd.showDialog();
             if (selectedPages != null) {
                 LoggerFactory.getLogger(GUIController.class).debug("Selected pages: {}", (Object) selectedPages);

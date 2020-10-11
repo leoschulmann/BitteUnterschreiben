@@ -1,9 +1,11 @@
 package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.BitteUnterschreiben;
+import com.leoschulmann.podpishiplz.view.PageSelectorElement;
 import com.leoschulmann.podpishiplz.worker.AbstractUnterschreibenWorker;
 import com.leoschulmann.podpishiplz.worker.OpeningWorker;
 import com.leoschulmann.podpishiplz.worker.SavingWorker;
+import com.leoschulmann.podpishiplz.worker.WorkerDialog;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +54,38 @@ public class FileIOController {
         worker.runDialog();
     }
 
+    public static PageSelectorElement[] loadPreviewsFromFile(String file) {
+        WorkerDialog splash = new WorkerDialog(BitteUnterschreiben.getApp(), "");
+        splash.setVisible(true);
+        final PageSelectorElement[][] elements = new PageSelectorElement[1][1];
+
+        Thread t = new Thread(() -> {
+            PDDocument pdDocument = null;
+            try {
+                pdDocument = PDDocument.load(new File(file));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            boolean[] allPages = new boolean[pdDocument.getNumberOfPages()];
+            Arrays.fill(allPages, true);
+            BufferedImage[] imgs = PDFController.generatePageThumbnails(pdDocument, allPages);
+            elements[0] = new PageSelectorElement[imgs.length];
+            for (int i = 0; i < imgs.length; i++) {
+                elements[0][i] = new PageSelectorElement(imgs[i]);
+            }
+        });
+        t.start();
+
+        try {
+            t.join();
+            splash.setVisible(false);
+            splash.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return elements[0];
+    }
+
     public static BufferedImage getOverlayIm(File f) {
         LoggerFactory.getLogger(FileIOController.class).info("Loading thumbnail for {}", f.getName());
         try {
@@ -67,18 +101,5 @@ public class FileIOController {
             g.dispose();
             return im;
         }
-    }
-
-    public static BufferedImage[] getPdfPreviews(String file)  {  //todo dirty. rewrite
-        LoggerFactory.getLogger(FileIOController.class).info("Loading thumbnails for {}", file);
-        PDDocument pdDocument = null;
-        try {
-            pdDocument = PDDocument.load(new File(file));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        boolean[] selectedPages = new boolean[pdDocument.getNumberOfPages()];
-        Arrays.fill(selectedPages, true);
-        return PDFController.generatePageThumbnails(pdDocument, selectedPages);
     }
 }
