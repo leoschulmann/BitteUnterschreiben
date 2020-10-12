@@ -40,8 +40,8 @@ public class GUIController {
         }
     }
 
-    public static void placeOption(JFrame appWindow) {
-        String file = FilePicker.openOverlay(appWindow);
+    public static void placeOption() {
+        String file = FilePicker.openOverlay(BitteUnterschreiben.getApp());
         if (file != null) {
             overlayThumbnailButtonOnClickAction(new File(file));
         }

@@ -40,6 +40,7 @@ public class BitteUnterschreiben {
         OverlaysPanelController.initListener();
         TopPanelController.initListener();
         MainPanelController.initListener();
+        MenuBarController.initListener();
         try {
             SettingsController.initSettings();
         } catch (IOException e) {
