@@ -31,7 +31,7 @@ public class Resizer {
         return halvingOp.filter(im, output);
     }
 
-    static double getRatio(int inputImageHeight, int outputImageHeight) {
+    private static double getRatio(int inputImageHeight, int outputImageHeight) {
         return 1.0 * outputImageHeight / inputImageHeight;
     }
 }

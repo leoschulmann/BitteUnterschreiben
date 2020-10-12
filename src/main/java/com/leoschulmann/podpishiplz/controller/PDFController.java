@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PDFController {
-    public static BufferedImage[] generatePageThumbnails(PDDocument pdDocument, boolean[] selectedPages) {
+    static BufferedImage[] generatePageThumbnails(PDDocument pdDocument, boolean[] selectedPages) {
         LoggerFactory.getLogger(PDFController.class).debug("Building thumbnails.");
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
         try {
@@ -38,7 +38,7 @@ public class PDFController {
         return images;
     }
 
-    public static PDRectangle[] getMediaBoxes(PDDocument pdDocument, boolean[] selectedPages) {
+    static PDRectangle[] getMediaBoxes(PDDocument pdDocument, boolean[] selectedPages) {
         PDRectangle[] boxes = new PDRectangle[pdDocument.getNumberOfPages()];
         for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
             if (!selectedPages[i]) continue;

@@ -10,7 +10,7 @@ public class OverlayPanel {
     private final JPanel panel;
     private final JScrollPane wrapper;
 
-    public OverlayPanel() {
+    OverlayPanel() {
         panel = new JPanel(new GridBagLayout());
         wrapper = new JScrollPane(panel);
         wrapper.setPreferredSize(new Dimension(1, 80));
@@ -29,7 +29,7 @@ public class OverlayPanel {
         gbc.gridx++;
     }
 
-    public JScrollPane getWrapper() {
+    JScrollPane getWrapper() {
         return wrapper;
     }
 

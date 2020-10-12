@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class FileIOController {
-    public static void loadOverlay(File file) {
+    static void loadOverlay(File file) {
         LoggerFactory.getLogger(FileIOController.class).info("Loading overlay {}", file.toString());
         try {
             BufferedImage im = ImageIO.read(file);
@@ -41,20 +41,20 @@ public class FileIOController {
     }
 
 
-    public static void blendAndSavePdfFile(float jpegQuality, Class<? extends CompositeContext> blender, String file) {
+    static void blendAndSavePdfFile(float jpegQuality, Class<? extends CompositeContext> blender, String file) {
             SavingWorker worker = new SavingWorker(file, jpegQuality, BitteUnterschreiben.getApp(), blender);
             worker.execute();
             worker.runDialog();
     }
 
-    public static void openPdfFile(String file, boolean[] selectedPages) {
+    static void openPdfFile(String file, boolean[] selectedPages) {
         LoggerFactory.getLogger(FileIOController.class).debug("Loading file: {}", file);
         AbstractUnterschreibenWorker worker = new OpeningWorker(BitteUnterschreiben.getApp(), file, selectedPages);
         worker.execute();
         worker.runDialog();
     }
 
-    public static PageSelectorElement[] loadPreviewsFromFile(String file) {
+    static PageSelectorElement[] loadPreviewsFromFile(String file) {
         WorkerDialog splash = new WorkerDialog(BitteUnterschreiben.getApp(), "");
         splash.setVisible(true);
         final PageSelectorElement[][] elements = new PageSelectorElement[1][1];
@@ -86,7 +86,7 @@ public class FileIOController {
         return elements[0];
     }
 
-    public static BufferedImage getOverlayIm(File f) {
+    static BufferedImage getOverlayIm(File f) {
         LoggerFactory.getLogger(FileIOController.class).info("Loading thumbnail for {}", f.getName());
         try {
             return ImageIO.read(f);

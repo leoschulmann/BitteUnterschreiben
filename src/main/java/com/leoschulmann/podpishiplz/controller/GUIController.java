@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 public class GUIController {
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
-    public static void openOption() {
+    static void openOption() {
         String file = FilePicker.openPDF(BitteUnterschreiben.getApp());
         if (file != null) {
             closeDocument();
@@ -25,7 +25,7 @@ public class GUIController {
         }
     }
 
-    public static void addPagesFromFileOption() {
+    static void addPagesFromFileOption() {
         String file = FilePicker.openPDF(BitteUnterschreiben.getApp());
         if (file != null) {
             PageSelectorElement[] previews;
@@ -40,25 +40,25 @@ public class GUIController {
         }
     }
 
-    public static void placeOption() {
+    static void placeOption() {
         String file = FilePicker.openOverlay(BitteUnterschreiben.getApp());
         if (file != null) {
             overlayThumbnailButtonOnClickAction(new File(file));
         }
     }
 
-    public static void overlayThumbnailButtonOnClickAction(File file) {
+    static void overlayThumbnailButtonOnClickAction(File file) {
         FileIOController.loadOverlay(file);
         MainPanelController.repaint();
         EventController.notify(EventType.FILE_MODIFIED, null);
     }
 
-    public static void deleteSelectedOverlayOption() {
+    static void deleteSelectedOverlayOption() {
         DocumentController.removeSelectedOverlay();
         MainPanelController.repaint();
     }
 
-    public static void openPage(Page page) {
+    static void openPage(Page page) {
         if (page == null) {
             DocumentController.setCurrentPage(null);
             MainPanelController.repaint();
@@ -73,12 +73,12 @@ public class GUIController {
         }
     }
 
-    public static void saveFile() {
+    static void saveFile() {
         FileIOController.blendAndSavePdfFile(SettingsController.getJpegQuality(),
                 SettingsController.getBlender(), DocumentController.getFileName());
     }
 
-    public static void saveFileAs() {
+    static void saveFileAs() {
         String file = FilePicker.savePdfDialog(BitteUnterschreiben.getApp());
         if (file != null) {
             FileIOController.blendAndSavePdfFile(SettingsController.getJpegQuality(),
@@ -86,7 +86,7 @@ public class GUIController {
         }
     }
 
-    public static PageThumbnailButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
+    static PageThumbnailButton generateThumbnailButton(BufferedImage thumbnail, Page p) {
         PageThumbnailButton jb = new PageThumbnailButton(thumbnail, p);
         jb.setVerticalTextPosition(SwingConstants.BOTTOM);
         jb.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -95,23 +95,23 @@ public class GUIController {
         return jb;
     }
 
-    public static void placeButton(JButton jb) {
+    static void placeButton(JButton jb) {
         TopPanelController.put(jb);
         TopPanelController.revalidateAndRepaint();
     }
 
-    public static void openSettingsDialogue() {
+    static void openSettingsDialogue() {
         SettingsController.openSettings();
     }
 
-    public static void quit() {
+    static void quit() {
         if (mundaneCheckIfDocumentChanged(bundle.getString("exit.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Quitting");
             System.exit(0);
         }
     }
 
-    public static void closeDocument() {
+    static void closeDocument() {
         if (mundaneCheckIfDocumentChanged(bundle.getString("close.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Closing document");
             while (DocumentController.getCurrentPage() != null) {

@@ -23,11 +23,11 @@ public class PageSelectorElement extends JPanel {
         add(checkBox, BorderLayout.SOUTH);
     }
 
-    public boolean isSelected() {
+    boolean isSelected() {
         return checkBox.isSelected();
     }
 
-    public void setSelected(boolean b) {
+    void setSelected(boolean b) {
         checkBox.setSelected(b);
     }
 }

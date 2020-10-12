@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 public class TopPanelController {
     private static TopScrollerPanel tsp;
-    public static final List<PageThumbnailButton> BUTTONS = new ArrayList<>();
+    static final List<PageThumbnailButton> BUTTONS = new ArrayList<>();
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
     private final static JButton welcomeBtn = new JButton(bundle.getString("open.pdf"));
 
@@ -26,17 +26,17 @@ public class TopPanelController {
         TopPanelController.tsp = tsp;
     }
 
-    public static void removeAll() {
+    private static void removeAll() {
         tsp.getPanel().removeAll();
     }
 
-    public static void revalidateAndRepaint() {
+    static void revalidateAndRepaint() {
         tsp.getPanel().revalidate();
         tsp.getPanel().repaint();
 
     }
 
-    public static void put(JButton jb) {
+    static void put(JButton jb) {
         tsp.put(jb);
     }
 
@@ -44,7 +44,7 @@ public class TopPanelController {
         tsp.rem(c);
     }
 
-    public static void clearAndPlaceThumbnailsOrdered() {
+    private static void clearAndPlaceThumbnailsOrdered() {
         BUTTONS.stream().sorted((o1, o2) -> {
             if (o1.equals(o2)) return 0;
             else if (DocumentController.getPageNumber(o1.getPage()) < DocumentController.getPageNumber(o2.getPage())) {

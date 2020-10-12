@@ -18,7 +18,7 @@ public class SettingsPDFMetadata extends JPanel implements SettingsTab {
     private static JLabel pdfProducerLabel = new JLabel(bundle.getString("pdf.producer"));
     private static JLabel overrideProducerLabel = new JLabel(bundle.getString("override.producer"));
 
-    public SettingsPDFMetadata() {
+    SettingsPDFMetadata() {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setLayout(new GridBagLayout());
         GridBagConstraints g = new GridBagConstraints();

@@ -17,9 +17,9 @@ public class SettingsBlending extends JPanel implements SettingsTab, EventListen
     private static ImageIcon darkenBlendingIcon;
     private static ImageIcon multiplyBlendingIcon;
     private static JRadioButton noopBlender;
-    public static JRadioButton darkenBlender;
-    public static JRadioButton multiplyBlender;
-    public static JRadioButton[] btns;
+    private static JRadioButton darkenBlender;
+    private static JRadioButton multiplyBlender;
+    private static JRadioButton[] btns;
     private static JPanel dummy1;
     private static JPanel dummy2;
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());

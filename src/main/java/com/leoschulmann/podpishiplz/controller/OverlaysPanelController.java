@@ -20,11 +20,11 @@ public class OverlaysPanelController {
     private static boolean disabled;
     private static final List<OverlayThumbButton> BUTTONS = new ArrayList<>();
 
-    public static void removeAll() {
+    private static void removeAll() {
         panel.removeAll();
     }
 
-    public static void loadThumb(File f) {
+    private static void loadThumb(File f) {
         try {
             BufferedImage raw = FileIOController.getOverlayIm(f);
             BufferedImage thumbnail = Resizer.resize(raw, 50);
@@ -56,11 +56,11 @@ public class OverlaysPanelController {
         }
     }
 
-    public static void placeButtons() {
+    private static void placeButtons() {
         BUTTONS.forEach(panel::put);
     }
 
-    public static void revalidateAndRepaint() {
+    private static void revalidateAndRepaint() {
         panel.revalidate();
         panel.repaint();
     }
@@ -70,11 +70,11 @@ public class OverlaysPanelController {
         OverlaysPanelController.panel = panel;
     }
 
-    public static void disableAll() {
+    private static void disableAll() {
         Arrays.stream(panel.getComponents()).forEach(component -> component.setEnabled(false));
     }
 
-    public static void enableAll() {
+    private static void enableAll() {
         Arrays.stream(panel.getComponents()).forEach(component -> component.setEnabled(true));
     }
 

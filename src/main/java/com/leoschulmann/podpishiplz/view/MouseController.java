@@ -5,7 +5,6 @@ import com.leoschulmann.podpishiplz.controller.EventController;
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
 import com.leoschulmann.podpishiplz.model.Overlay;
-import org.slf4j.LoggerFactory;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

@@ -72,7 +72,7 @@ public class MainPanelController {
     }
 
     // resized divided by real
-    public static double getResizeRatio() {
+    private static double getResizeRatio() {
         return 1.0 * getPageHeight() / getImage().getHeight();
     }
 
@@ -106,7 +106,7 @@ public class MainPanelController {
         EventController.subscribe(EventType.PAGE_ROTATED, el);
     }
 
-    public static void resetPosition() {
+    static void resetPosition() {
         pageX0 = getPageStartX();
         pageY0 = getPageStartY();
         pageWidth = getPageStartWidth();

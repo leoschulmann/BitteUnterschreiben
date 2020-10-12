@@ -16,7 +16,7 @@ public class SettingsGraphics extends JPanel implements SettingsTab {
     private static JLabel jpegCompressionLabel = new JLabel(bundle.getString("jpeg.compression"));
     private static JLabel resolutionLabel = new JLabel(bundle.getString("resolution.dpi"));
 
-    public SettingsGraphics() {
+    SettingsGraphics() {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setLayout(new GridBagLayout());
         GridBagConstraints g = new GridBagConstraints();

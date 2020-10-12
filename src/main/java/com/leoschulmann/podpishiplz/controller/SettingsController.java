@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class SettingsController {
     public static final String DEFAULT_COLOR = "00ff00";  //default is green
-    public static final int DEFAULT_MAX_OVERLAYS = 20;  //default is 20
+    private static final int DEFAULT_MAX_OVERLAYS = 20;  //default is 20
     private static SettingsDialogue settingsDialogue;
     private static final File settingsFile = new File("./settings.yml");
     private static Settings settings;
@@ -27,7 +27,7 @@ public class SettingsController {
         return settings.getBlendingMode();
     }
 
-    public static Class<? extends CompositeContext> getBlender() {
+    static Class<? extends CompositeContext> getBlender() {
         Class<? extends CompositeContext> blender = null;
         switch (getBlendingMode()) {
             case (1):
@@ -61,7 +61,7 @@ public class SettingsController {
         settings.setResolution(resolutionMultiplier);
     }
 
-    public static void openSettings() {
+    static void openSettings() {
         if (settingsDialogue == null) {
             settingsDialogue = new SettingsDialogue(BitteUnterschreiben.getApp());
         }
@@ -96,7 +96,7 @@ public class SettingsController {
         LoggerFactory.getLogger(SettingsController.class).info("{} file saved.", settingsFile.getName());
     }
 
-    public static void addToUsedOverlays(File file) {
+    private static void addToUsedOverlays(File file) {
         settings.getUsedOverlays().compute(file, (file1, integer) -> {
             if (integer == null) {
                 LoggerFactory.getLogger(SettingsController.class)
@@ -115,7 +115,7 @@ public class SettingsController {
         }
     }
 
-    public static List<File> getUsedOverlays() {
+    static List<File> getUsedOverlays() {
         return settings.getUsedOverlays()
                 .entrySet()
                 .stream()

@@ -10,7 +10,7 @@ public class TopScrollerPanel {
     private final JScrollPane wrapper;
     private final GridBagConstraints gbc;
 
-    public TopScrollerPanel() {
+    TopScrollerPanel() {
         TopPanelController.setTsp(this);
         panel = new JPanel(new GridBagLayout());
         wrapper = new JScrollPane(panel);
@@ -22,7 +22,7 @@ public class TopScrollerPanel {
         gbc.anchor = GridBagConstraints.CENTER;
     }
 
-    public JScrollPane getWrapper() {
+    JScrollPane getWrapper() {
         return wrapper;
     }
 

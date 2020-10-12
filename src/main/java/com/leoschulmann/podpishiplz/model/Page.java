@@ -39,7 +39,7 @@ public class Page {
     }
 
 
-    public void setOverlays(List<Overlay> overlays) {
+    void setOverlays(List<Overlay> overlays) {
         this.overlays = overlays;
     }
 

@@ -42,7 +42,7 @@ public class DocumentController {
         changed = false;
     }
 
-    public static void addNewOverlay(BufferedImage image) {
+    static void addNewOverlay(BufferedImage image) {
         Overlay o = new Overlay(image);
         o.setRelCentX(Math.random());
         o.setRelCentY(Math.random());
@@ -51,7 +51,7 @@ public class DocumentController {
         currentPage.getOverlays().add(o);
     }
 
-    public static void removeSelectedOverlay() {
+    static void removeSelectedOverlay() {
         Overlay ov = currentPage.getOverlays().stream().filter(Overlay::isSelected).findFirst().orElse(null);
         currentPage.getOverlays().remove(ov);
     }
@@ -124,11 +124,11 @@ public class DocumentController {
         if (currentPage == null) GUIController.openPage(firstPage);
     }
 
-    public static void addPage(Page p) {
+    static void addPage(Page p) {
         doc.getPages().add(p);
     }
 
-    public static boolean contains(Page page) {
+    static boolean contains(Page page) {
         return doc.getPages().contains(page);
     }
 
@@ -208,15 +208,15 @@ public class DocumentController {
         EventController.notify(EventType.FILE_MODIFIED, true);
     }
 
-    public static String getFileName() {
+    static String getFileName() {
         return filename;
     }
 
-    public static void setFilename(String filename) {
+    private static void setFilename(String filename) {
         DocumentController.filename = filename;
     }
 
-    public static boolean isChanged() {
+    static boolean isChanged() {
         return changed;
     }
 

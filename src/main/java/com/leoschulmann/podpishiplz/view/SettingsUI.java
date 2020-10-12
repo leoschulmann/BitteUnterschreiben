@@ -26,7 +26,7 @@ public class SettingsUI extends JPanel implements SettingsTab, EventListener {
     private static JLabel selectionColorLabel = new JLabel(bundle.getString("selection.color"));
     private static JLabel languageLabel = new JLabel(bundle.getString("language"));
 
-    public SettingsUI() {
+    SettingsUI() {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setLayout(new GridBagLayout());
         GridBagConstraints g = new GridBagConstraints();
