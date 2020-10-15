@@ -12,6 +12,7 @@ public class Overlay {
     private double relCentX;
     private double relCentY;
     private final Rectangle bounds;
+    private double rotation;
 
 
     public Overlay(BufferedImage image) {
@@ -64,5 +65,13 @@ public class Overlay {
 
     public Rectangle getBounds() {
         return bounds;
+    }
+
+    public double getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(double rotation) {
+        this.rotation = rotation;
     }
 }
