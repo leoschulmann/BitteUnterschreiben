@@ -1,5 +1,7 @@
 package com.leoschulmann.podpishiplz.graphics;
 
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Rotater {
@@ -25,5 +27,18 @@ public class Rotater {
             }
         }
         return dest;
+    }
+
+    public static BufferedImage freeRotate(BufferedImage im, double radians) {
+        BufferedImage rotated = new BufferedImage(im.getWidth(), im.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = rotated.createGraphics();
+        AffineTransform at = new AffineTransform();
+        int anchorX = im.getWidth() / 2;
+        int anchorY = im.getHeight() / 2;
+        at.rotate(radians, anchorX, anchorY);
+        g.setTransform(at);
+        g.drawImage(im, 0, 0, null);
+        g.dispose();
+        return rotated;
     }
 }

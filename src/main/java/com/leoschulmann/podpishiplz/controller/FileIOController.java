@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +24,15 @@ public class FileIOController {
         try {
             BufferedImage im = ImageIO.read(file);
             if (im.getType() != BufferedImage.TYPE_INT_ARGB) {  // converting to int raster. byte raster won't work
-                BufferedImage newImage = new BufferedImage(
-                        im.getWidth(), im.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                int maxDimension = (int) Math.sqrt(Math.pow(im.getWidth(), 2) + Math.pow(im.getHeight(), 2));
+                //newImage: each side equals diagonal of the original BufferedImage (prevents clipping on rotation)
+                BufferedImage newImage = new BufferedImage(maxDimension, maxDimension, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = newImage.createGraphics();
+                AffineTransform at = new AffineTransform();
+                int translateX = (maxDimension - im.getWidth()) / 2;
+                int translateY = (maxDimension - im.getHeight()) / 2;
+                at.translate(translateX, translateY);
+                g.setTransform(at);
                 g.drawImage(im, 0, 0, null);
                 g.dispose();
                 im = newImage;

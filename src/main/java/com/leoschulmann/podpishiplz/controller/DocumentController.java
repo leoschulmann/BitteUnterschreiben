@@ -69,7 +69,14 @@ public class DocumentController {
             for (Overlay o : p.getOverlays()) {
                 int ovWidth = (int) (o.getImage().getWidth() * SettingsController.getResolutionMultiplier());
                 int ovHeight = (int) (o.getImage().getHeight() * SettingsController.getResolutionMultiplier());
-                g2d.drawImage(o.getImage(),
+                BufferedImage bim;
+                if (o.getRotation() == 0.) {
+                    bim = o.getImage();
+                } else {
+                    bim = Rotater.freeRotate(o.getImage(), o.getRotation());
+                }
+
+                g2d.drawImage(bim,
                         (int) (o.getRelCentX() * imWidth - (ovWidth / 2)),
                         (int) (o.getRelCentY() * imHeight - (ovHeight / 2)),
                         ovWidth, ovHeight, null);

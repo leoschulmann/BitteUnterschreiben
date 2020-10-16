@@ -19,6 +19,7 @@ public class MouseController extends MouseAdapter {
     private int clickY;
     private final static int SHIFT_CHECK = InputEvent.SHIFT_DOWN_MASK | InputEvent.BUTTON1_DOWN_MASK;  // 1088
     private double startingAngle;
+    private double objectAngle;
 
     public MouseController(MainPanel panel) {
         this.panel = panel;
@@ -32,15 +33,28 @@ public class MouseController extends MouseAdapter {
 
             //on click+shift
             if (e.getModifiersEx() == SHIFT_CHECK) {
-                MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
+                final Overlay[] finalOverlay = new Overlay[1];
+
+                //if any overlay is selected get it, if not get overlay under the cursor
+                MainPanelController.getOverlays().stream()
+                        .filter(Overlay::isSelected)
                         .findFirst()
-                        .ifPresent(o -> {
-                            o.setSelected(true);
-                            startingAngle = getAngle( //image real center XY vs click XY
-                                    o.getRelCentX() * MainPanelController.getPageWidth() + MainPanelController.getPageX0(),
-                                    o.getRelCentY() * MainPanelController.getPageHeight() + MainPanelController.getPageY0(),
-                                    clickX, clickY);
-                        });
+                        .ifPresentOrElse(overlay -> finalOverlay[0] = overlay,
+                                () -> MainPanelController.getOverlays().stream()
+                                        .filter(o -> o.getBounds().contains(e.getX(), e.getY()))
+                                        .findFirst()
+                                        .ifPresent(o -> finalOverlay[0] = o
+                                        ));
+
+                // calculate starting angle
+                Overlay overlay = finalOverlay[0];
+                if (overlay != null) {
+                    startingAngle = getAngle( //image real center XY vs click XY
+                            overlay.getRelCentX() * MainPanelController.getPageWidth() + MainPanelController.getPageX0(),
+                            overlay.getRelCentY() * MainPanelController.getPageHeight() + MainPanelController.getPageY0(),
+                            clickX, clickY);
+                    objectAngle = overlay.getRotation();
+                }
             } else {
                 //on click
                 MainPanelController.getOverlays().forEach(overlay -> overlay.setSelected(false));
@@ -55,39 +69,47 @@ public class MouseController extends MouseAdapter {
     @Override
     public void mouseDragged(MouseEvent e) {
         if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
-            MainPanelController.getOverlays().stream()
-                    .filter(o -> o.getBounds().contains(e.getX(), e.getY()))
-                    .findFirst()
-                    .ifPresentOrElse(overlay -> {  //drag selected overlay on page
-                                int shiftX = e.getX() - clickX;
-                                int shiftY = e.getY() - clickY;
-                                double mouseOffsetX = clickX - overlay.getBounds().getCenterX();
-                                double mouseOffsetY = clickY - overlay.getBounds().getCenterY();
-                                overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageX0() - mouseOffsetX) / MainPanelController.getPageWidth());
-                                overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageY0() - mouseOffsetY) / MainPanelController.getPageHeight());
-                                clickX += shiftX;
-                                clickY += shiftY;
-                                panel.repaint();
-                            },
-                            () -> {
-                                if ((e.getModifiersEx() == SHIFT_CHECK)) {  // on shift and empty space rotate overlay
-                                    MainPanelController.getOverlays().stream()
-                                            .filter(Overlay::isSelected)
-                                            .findFirst()
-                                            .ifPresent(overlay -> {
-                                                double rotateAngle = getAngle(
-                                                        overlay.getRelCentX() * MainPanelController.getPageWidth() +
-                                                                MainPanelController.getPageX0(),
-                                                        overlay.getRelCentY() * MainPanelController.getPageHeight() +
-                                                                MainPanelController.getPageY0(), e.getX(), e.getY())
-                                                        - startingAngle;
-                                                overlay.setRotation(rotateAngle);
-                                                LoggerFactory.getLogger(MouseController.class).debug("Rotating {} deg",
-                                                        (int) (Math.toDegrees(rotateAngle)));
-                                                panel.repaint();
-                                            });
-                                } else {
-                                    // drag the whole page on panel
+
+            //CASE 1: any selected overlay and pressed SHIFT - rotate selected overlay
+            if (e.getModifiersEx() == SHIFT_CHECK &&
+                    MainPanelController.getOverlays().stream().anyMatch(Overlay::isSelected)) {
+
+                MainPanelController.getOverlays().stream()
+                        .filter(Overlay::isSelected)
+                        .findFirst()
+                        .ifPresent(overlay -> {
+                            double finishAngle = getAngle(
+                                    overlay.getRelCentX() * MainPanelController.getPageWidth() +
+                                            MainPanelController.getPageX0(),
+                                    overlay.getRelCentY() * MainPanelController.getPageHeight() +
+                                            MainPanelController.getPageY0(), e.getX(), e.getY());
+                            double rotateAngle = objectAngle + (finishAngle - startingAngle);
+                            overlay.setRotation(rotateAngle);
+                            LoggerFactory.getLogger(MouseController.class).debug(
+                                    "Rotate angle = {}", (int) (Math.toDegrees(rotateAngle)));
+                            panel.repaint();
+                        });
+            }
+
+            // CASE 2: any (selected or not) overlay under the cursor - drag this overlay
+            else {
+                MainPanelController.getOverlays().stream()
+                        .filter(o -> o.getBounds().contains(e.getX(), e.getY()))
+                        .findFirst()
+                        .ifPresentOrElse(overlay -> {
+                                    int shiftX = e.getX() - clickX;
+                                    int shiftY = e.getY() - clickY;
+                                    double mouseOffsetX = clickX - overlay.getBounds().getCenterX();
+                                    double mouseOffsetY = clickY - overlay.getBounds().getCenterY();
+                                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageX0() - mouseOffsetX) / MainPanelController.getPageWidth());
+                                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageY0() - mouseOffsetY) / MainPanelController.getPageHeight());
+                                    clickX += shiftX;
+                                    clickY += shiftY;
+                                    panel.repaint();
+                                },
+
+               // CASE 3: no overlays under the mouse cursor -- pan the whole page
+                                () -> {
                                     int deltax = e.getX() - clickX;
                                     int deltay = e.getY() - clickY;
                                     MainPanelController.setPageX0(MainPanelController.getPageX0() + deltax);
@@ -96,8 +118,8 @@ public class MouseController extends MouseAdapter {
                                     clickX += deltax;
                                     clickY += deltay;
                                     panel.getMainPanelWrapper().setViewportView(panel);
-                                }
-                            });
+                                });
+            }
         }
     }
 

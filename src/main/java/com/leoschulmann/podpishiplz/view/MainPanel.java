@@ -5,6 +5,7 @@ import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
+import com.leoschulmann.podpishiplz.graphics.Rotater;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
@@ -45,12 +46,23 @@ public class MainPanel extends JPanel {
 
             if (MainPanelController.getOverlays().size() > 0) {
                 MainPanelController.getOverlays().forEach(o -> {
-                    int overlayResizeWidth = MainPanelController.getOverlayResizeWidth(o);
-                    int overlayResizeHeight = MainPanelController.getOverlayResizeHeight(o);
+                    BufferedImage image;
+                    int overlayResizeWidth;
+                    int overlayResizeHeight;
                     int overlayX = MainPanelController.getOverlayX(o);
                     int overlayY = MainPanelController.getOverlayY(o);
+                    if (o.getRotation() != 0.) {
+                        image = Rotater.freeRotate(o.getImage(), o.getRotation());
+                        overlayResizeWidth = (int) (MainPanelController.getResizeRatio() * image.getWidth());
+                        overlayResizeHeight = (int) (MainPanelController.getResizeRatio() * image.getHeight());
+
+                    } else {
+                        image = o.getImage();
+                        overlayResizeWidth = MainPanelController.getOverlayResizeWidth(o);
+                        overlayResizeHeight = MainPanelController.getOverlayResizeHeight(o);
+                    }
                     o.setBounds(overlayX, overlayY, overlayResizeWidth, overlayResizeHeight);
-                    g.drawImage(o.getImage(), overlayX, overlayY, overlayResizeWidth, overlayResizeHeight, null);
+                    g.drawImage(image, overlayX, overlayY, overlayResizeWidth, overlayResizeHeight, null);
                 });
             }
 

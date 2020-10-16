@@ -72,7 +72,7 @@ public class MainPanelController {
     }
 
     // resized divided by real
-    private static double getResizeRatio() {
+    public static double getResizeRatio() {
         return 1.0 * getPageHeight() / getImage().getHeight();
     }
 
