@@ -9,7 +9,7 @@ public class BlenderDarken implements  CompositeContext {
     private final ColorModel srcCM;
     private final ColorModel dstCM;
 
-    BlenderDarken(ColorModel srcCM, ColorModel dstCM, RenderingHints hints) {
+   public BlenderDarken(ColorModel srcCM, ColorModel dstCM, RenderingHints hints) {
         this.srcCM = srcCM;
         this.dstCM = dstCM;
     }

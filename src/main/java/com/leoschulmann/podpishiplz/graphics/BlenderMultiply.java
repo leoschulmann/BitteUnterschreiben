@@ -9,7 +9,7 @@ public class BlenderMultiply implements CompositeContext {
     private final ColorModel srcCM;
     private final ColorModel dstCM;
 
-    BlenderMultiply(ColorModel srcCM, ColorModel dstCM, RenderingHints hints) {
+    public BlenderMultiply(ColorModel srcCM, ColorModel dstCM, RenderingHints hints) {
         this.srcCM = srcCM;
         this.dstCM = dstCM;
     }
