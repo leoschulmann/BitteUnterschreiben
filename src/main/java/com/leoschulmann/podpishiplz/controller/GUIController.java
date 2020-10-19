@@ -22,6 +22,7 @@ public class GUIController {
         if (file != null) {
             closeDocument();
             FileIOController.openPdfFile(file, null);
+            BitteUnterschreiben.getApp().setFrameTitle(file);
         }
     }
 
@@ -118,6 +119,7 @@ public class GUIController {
                 DocumentController.deletePage(DocumentController.getCurrentPage());  //todo write simple method
             }
             EventController.notify(EventType.FILE_UNMODIFIED, null);
+            BitteUnterschreiben.getApp().resetFrameTitle();
         }
     }
 

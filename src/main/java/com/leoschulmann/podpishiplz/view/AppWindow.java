@@ -11,6 +11,7 @@ public class AppWindow extends JFrame {
     private final MainPanel mainPanel;
     private final TopScrollerPanel topScrollerPanel;
     private final OverlayPanel overlayPanel;
+    private final String title;
 
     public AppWindow() throws HeadlessException {
 
@@ -27,7 +28,7 @@ public class AppWindow extends JFrame {
             LoggerFactory.getLogger(AppWindow.class).error(e.getMessage(), e);
         }
 
-        String title = SettingsController.getDefaultProducer();
+        title = SettingsController.getDefaultProducer();
 
         setTitle(title);
         setSize(new Dimension(850, 600));
@@ -45,5 +46,13 @@ public class AppWindow extends JFrame {
         add(mainPanel.getMainPanelWrapper(), BorderLayout.CENTER);
         add(overlayPanel.getWrapper(), BorderLayout.SOUTH);
         LoggerFactory.getLogger(AppWindow.class).debug("Finished building {}", this.getClass().getSimpleName());
+    }
+
+    public void setFrameTitle(String title) {
+        setTitle(title);
+    }
+
+    public void resetFrameTitle() {
+        setTitle(title);
     }
 }

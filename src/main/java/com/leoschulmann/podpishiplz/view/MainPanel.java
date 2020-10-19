@@ -20,6 +20,7 @@ public class MainPanel extends JPanel {
 
     public MainPanel() {
         mainPanelWrapper = new JScrollPane(this);
+        mainPanelWrapper.setBorder(BorderFactory.createEmptyBorder());
         MainPanelController.setMainPanel(this);
         MouseController mouse = new MouseController(this);
         addMouseListener(mouse);
