@@ -17,7 +17,7 @@ public class MainPanelController {
     private static int pageY0;
     private static int pageHeight;
     private static int pageWidth;
-    private static double aspectRatio;
+    private static double imAspectRatio;
 
     public static int getOverlayResizeWidth(Overlay o) {
         return (int) (o.getWidth() * getResizeRatio());
@@ -29,33 +29,39 @@ public class MainPanelController {
 
     // resized page size
     private static int getPageStartHeight() {
-        if (isVertical()) {
+        LoggerFactory.getLogger(MainPanelController.class).debug("Panel AR : {}, image AR {}",
+                getPanelAspectRatio(), imAspectRatio);
+        if (getPanelAspectRatio() > imAspectRatio) {
             return panel.getMainPanelWrapper().getHeight() - (INSET * 2);
         } else {
-            return getPageStartWidth() * getImage().getHeight() / getImage().getWidth();
+            return (int) (getPageStartWidth() / imAspectRatio);
         }
     }
 
     private static int getPageStartWidth() {
-        if (isVertical()) {
-            return getPageStartHeight() * getImage().getWidth() / getImage().getHeight();
-        } else {
+        if (imAspectRatio > getPanelAspectRatio()) {
             return panel.getMainPanelWrapper().getWidth() - (INSET * 2);
+        } else {
+            return (int) (getPageStartHeight() * imAspectRatio);
         }
+    }
+
+    private static double getPanelAspectRatio() {
+        return 1. * panel.getMainPanelWrapper().getWidth() / panel.getMainPanelWrapper().getHeight();
     }
 
     // resized page top left coords
     private static int getPageStartX() {
-        if (isVertical()) {
-            return (panel.getWidth() - getPageWidth()) / 2;
+        if (getPanelAspectRatio() > imAspectRatio) {
+            return (panel.getMainPanelWrapper().getWidth() - getPageStartWidth()) / 2;
         } else return INSET;
     }
 
     private static int getPageStartY() {
-        if (isVertical()) {
-            return INSET;
+        if (imAspectRatio > getPanelAspectRatio()) {
+            return (panel.getMainPanelWrapper().getHeight() - getPageStartHeight()) / 2;
         } else {
-            return (panel.getHeight() - getPageHeight()) / 2;
+            return INSET;
         }
     }
 
@@ -65,10 +71,6 @@ public class MainPanelController {
 
     public static List<Overlay> getOverlays() {
         return DocumentController.getCurrentPage().getOverlays();
-    }
-
-    private static boolean isVertical() {
-        return getImage().getHeight() > getImage().getWidth();
     }
 
     // resized divided by real
@@ -107,11 +109,11 @@ public class MainPanelController {
     }
 
     static void resetPosition() {
-        pageX0 = getPageStartX();
-        pageY0 = getPageStartY();
+        imAspectRatio = 1. * getImage().getWidth() / getImage().getHeight();
         pageWidth = getPageStartWidth();
         pageHeight = getPageStartHeight();
-        aspectRatio = 1.0 * pageWidth / pageHeight;
+        pageX0 = getPageStartX();
+        pageY0 = getPageStartY();
         LoggerFactory.getLogger(MainPanelController.class)
                 .debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
     }
@@ -145,7 +147,7 @@ public class MainPanelController {
                 SettingsController.isInvertZoom() ? -zoomAmount : zoomAmount);
         if ((pageHeight >= MIN_ZOOM_SIZE && pageWidth >= MIN_ZOOM_SIZE) || modifier > 1.0) {
             pageHeight *= modifier;
-            pageWidth = (int) (aspectRatio * pageHeight);
+            pageWidth = (int) (imAspectRatio * pageHeight);
         }
     }
 }
