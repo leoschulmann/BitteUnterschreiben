@@ -1,5 +1,6 @@
 package com.leoschulmann.podpishiplz.view;
 
+import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.EventController;
 import com.leoschulmann.podpishiplz.controller.EventType;
@@ -7,6 +8,7 @@ import com.leoschulmann.podpishiplz.controller.MainPanelController;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -73,7 +75,8 @@ public class MouseController extends MouseAdapter {
             //CASE 1: any selected overlay and pressed SHIFT - rotate selected overlay
             if (e.getModifiersEx() == SHIFT_CHECK &&
                     MainPanelController.getOverlays().stream().anyMatch(Overlay::isSelected)) {
-
+                MainPanelController.setRotatingMode(true);
+                BitteUnterschreiben.getApp().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
                 MainPanelController.getOverlays().stream()
                         .filter(Overlay::isSelected)
                         .findFirst()
@@ -133,7 +136,20 @@ public class MouseController extends MouseAdapter {
     }
 
     @Override
+    public void mouseMoved(MouseEvent e) {
+        if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
+            MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
+                    .findFirst()
+                    .ifPresentOrElse(o -> BitteUnterschreiben.getApp().setCursor(
+                            Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)),
+                            () -> BitteUnterschreiben.getApp().setCursor(Cursor.getDefaultCursor())
+                    );
+        }
+    }
+
+    @Override
     public void mouseReleased(MouseEvent e) {
+        MainPanelController.setRotatingMode(false);
         panel.repaint();
     }
 

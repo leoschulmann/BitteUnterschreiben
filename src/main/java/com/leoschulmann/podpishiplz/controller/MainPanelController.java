@@ -18,6 +18,7 @@ public class MainPanelController {
     private static int pageHeight;
     private static int pageWidth;
     private static double imAspectRatio;
+    private static boolean rotation;
 
     public static int getOverlayResizeWidth(Overlay o) {
         return (int) (o.getWidth() * getResizeRatio());
@@ -149,5 +150,13 @@ public class MainPanelController {
             pageHeight *= modifier;
             pageWidth = (int) (imAspectRatio * pageHeight);
         }
+    }
+
+    public static void setRotatingMode(boolean b) {
+        rotation = b;
+    }
+
+    public static boolean isRotation() {
+        return rotation;
     }
 }

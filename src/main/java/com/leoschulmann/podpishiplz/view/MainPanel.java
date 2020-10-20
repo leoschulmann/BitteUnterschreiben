@@ -71,7 +71,11 @@ public class MainPanel extends JPanel {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setColor(Color.decode('#' + SettingsController.getSelectionColor()));
                 g2.setStroke(new BasicStroke(2));
-                g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                if (MainPanelController.isRotation()) {
+                    g.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
+                } else {
+                    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                }
 
             });
         } else {
