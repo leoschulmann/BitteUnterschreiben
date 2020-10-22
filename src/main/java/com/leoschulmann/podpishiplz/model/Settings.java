@@ -19,19 +19,13 @@ public class Settings {
 
     private Map<File, Integer> usedOverlays;
 
-    public Settings(int blendingMode, float jpgQuality, float resolution) {
-              /*
-            0: no-op blending mode
-            1: Darken
-            2: Multiply
-             */
-        this.blendingMode = blendingMode;
-        this.jpgQuality = jpgQuality;
-        this.resolution = resolution;
-        this.usedOverlays = new HashMap<>();
-    }
-
     public Settings() {
+        this.blendingMode = 1;  //0: no-op blending mode        1: Darken         2: Multiply
+        this.jpgQuality = 0.5f;
+        this.resolution = 0.6666667f;
+        this.usedOverlays = new HashMap<>();
+        this.language = "en";
+        this.maxOverlays = 10;
     }
 
     public int getBlendingMode() {

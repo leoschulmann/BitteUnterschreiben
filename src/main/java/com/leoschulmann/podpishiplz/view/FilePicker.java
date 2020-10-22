@@ -5,6 +5,9 @@ import com.leoschulmann.podpishiplz.controller.EventType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -39,8 +42,14 @@ public class FilePicker implements EventListener {
 
     public static String openOverlay(JFrame appWindow) {
         FileDialog fileDialog = new FileDialog(appWindow, bundle.getString("open.overlay"), FileDialog.LOAD);
-        fileDialog.setFile("*.png");   //for Win
-        fileDialog.setFilenameFilter((dir, name) -> name.endsWith(".png"));  // for Mac
+//        fileDialog.setFile("*.png");   //for Win
+        fileDialog.setFilenameFilter(new FilenameFilter() {
+            String[] exts = new String[]{".png", ".tiff", ".tif", ".jpg", ".bmp"};
+            @Override
+            public boolean accept(File dir, String name) {
+                return Arrays.stream(exts).anyMatch(name::endsWith);
+            }
+        });  // for Mac
         fileDialog.setMultipleMode(false);
         fileDialog.setVisible(true);
         if (fileDialog.getFile() == null) return null;

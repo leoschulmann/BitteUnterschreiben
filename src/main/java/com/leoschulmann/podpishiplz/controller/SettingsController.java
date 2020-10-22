@@ -72,14 +72,17 @@ public class SettingsController {
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
         if (settingsFile.createNewFile()) {
             LoggerFactory.getLogger(SettingsController.class).info("{} file not found.", settingsFile.getName());
-            // default values 'Darken', 50% quality, 200 ppi downsampling
-            settings = new Settings(1, 0.5f, 0.6666667f);
-            om.writeValue(settingsFile, settings);
-            LoggerFactory.getLogger(SettingsController.class).info("New file with default settings created.");
+            createNewSettingsYML(om);
         } else {
             LoggerFactory.getLogger(SettingsController.class).info("File {} exists, reading settings."
                     , settingsFile.getName());
-            settings = om.readValue(settingsFile, Settings.class);
+            try {
+                settings = om.readValue(settingsFile, Settings.class);
+            } catch (IOException e) {
+                LoggerFactory.getLogger(SettingsController.class).warn("Exception during file deserialization");
+                LoggerFactory.getLogger(SettingsController.class).warn(e.getMessage());
+                createNewSettingsYML(om);
+            }
         }
 
         EventListener settingsEventListener = (event, object) -> {
@@ -88,6 +91,13 @@ public class SettingsController {
             }
         };
         EventController.subscribe(EventType.OVERLAY_LOADED_FROM_DISK, settingsEventListener);
+    }
+
+    private static void createNewSettingsYML(ObjectMapper om) throws IOException {
+        // default values 'Darken', 50% quality, 200 ppi downsampling
+        settings = new Settings();
+        om.writeValue(settingsFile, settings);
+        LoggerFactory.getLogger(SettingsController.class).info("New file with default settings created.");
     }
 
     public static void saveYML() throws IOException {

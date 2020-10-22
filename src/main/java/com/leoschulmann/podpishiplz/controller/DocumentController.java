@@ -245,4 +245,8 @@ public class DocumentController {
         EventController.subscribe(EventType.FILE_UNMODIFIED, el);
         EventController.subscribe(EventType.NO_PAGES_IN_DOCUMENT, el);
     }
+
+    public static void removeAllOverlaysFromPage() {
+        getCurrentPage().getOverlays().removeAll(getCurrentPage().getOverlays());
+    }
 }

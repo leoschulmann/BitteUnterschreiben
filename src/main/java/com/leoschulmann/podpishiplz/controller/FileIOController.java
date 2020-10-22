@@ -23,20 +23,20 @@ public class FileIOController {
         LoggerFactory.getLogger(FileIOController.class).info("Loading overlay {}", file.toString());
         try {
             BufferedImage im = ImageIO.read(file);
-            if (im.getType() != BufferedImage.TYPE_INT_ARGB) {  // converting to int raster. byte raster won't work
-                int maxDimension = (int) Math.sqrt(Math.pow(im.getWidth(), 2) + Math.pow(im.getHeight(), 2));
-                //newImage: each side equals diagonal of the original BufferedImage (prevents clipping on rotation)
-                BufferedImage newImage = new BufferedImage(maxDimension, maxDimension, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g = newImage.createGraphics();
-                AffineTransform at = new AffineTransform();
-                int translateX = (maxDimension - im.getWidth()) / 2;
-                int translateY = (maxDimension - im.getHeight()) / 2;
-                at.translate(translateX, translateY);
-                g.setTransform(at);
-                g.drawImage(im, 0, 0, null);
-                g.dispose();
-                im = newImage;
-            }
+            if (im == null) throw new IllegalArgumentException("Can't load file " + file.toString());
+            // converting to int raster. byte raster won't work
+            int maxDimension = (int) Math.sqrt(Math.pow(im.getWidth(), 2) + Math.pow(im.getHeight(), 2));
+            //newImage: each side equals diagonal of the original BufferedImage (prevents clipping on rotation)
+            BufferedImage newImage = new BufferedImage(maxDimension, maxDimension, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = newImage.createGraphics();
+            AffineTransform at = new AffineTransform();
+            int translateX = (maxDimension - im.getWidth()) / 2;
+            int translateY = (maxDimension - im.getHeight()) / 2;
+            at.translate(translateX, translateY);
+            g.setTransform(at);
+            g.drawImage(im, 0, 0, null);
+            g.dispose();
+            im = newImage;
             EventController.notify(EventType.OVERLAY_LOADED_FROM_DISK, file);
             EventController.notify(EventType.REFRESH_OVERLAYS_PANEL, null);
             DocumentController.addNewOverlay(im);
@@ -44,9 +44,12 @@ public class FileIOController {
             JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
             LoggerFactory.getLogger(FileIOController.class).error(e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+
         }
     }
-
 
     static void blendAndSavePdfFile(float jpegQuality, Class<? extends CompositeContext> blender, String file) {
             SavingWorker worker = new SavingWorker(file, jpegQuality, BitteUnterschreiben.getApp(), blender);

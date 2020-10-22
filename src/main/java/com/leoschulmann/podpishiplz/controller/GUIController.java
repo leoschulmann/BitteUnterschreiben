@@ -131,4 +131,9 @@ public class GUIController {
         }
         return answer == 0;  //JOptionPane 'OK' == 0, 'Cancel' == 2
     }
+
+    public static void deleteAllOverlaysOption() {
+        DocumentController.removeAllOverlaysFromPage();
+        MainPanelController.repaint();
+    }
 }

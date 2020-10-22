@@ -30,6 +30,7 @@ public class MenuBarController {
         menuBar.getOptionOpen().addActionListener(e -> GUIController.openOption());
         menuBar.getOptionPlace().addActionListener(e -> GUIController.placeOption());
         menuBar.getOptionRemove().addActionListener(e -> GUIController.deleteSelectedOverlayOption());
+        menuBar.getOptionRemAllOverlays().addActionListener(e -> GUIController.deleteAllOverlaysOption());
         menuBar.getOptionSaveAs().addActionListener(e -> GUIController.saveFileAs());
         menuBar.getOptionSave().addActionListener(e -> GUIController.saveFile());
         menuBar.getOptionExit().addActionListener(e -> GUIController.quit());
@@ -53,9 +54,6 @@ public class MenuBarController {
                 e -> DocumentController.rotateLeft(DocumentController.getCurrentPage(), false));
         menuBar.getOptionAddPages().addActionListener(e -> GUIController.addPagesFromFileOption());
 
-        //todo implement
-        menuBar.getOptionRemAllOverlays().addActionListener(e -> JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
-                "Under construction", "Message", JOptionPane.INFORMATION_MESSAGE));
         return menuBar;
     }
 
