@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class SettingsController {
     public static final String DEFAULT_COLOR = "00ff00";  //default is green
     private static final int DEFAULT_MAX_OVERLAYS = 20;  //default is 20
     private static SettingsDialogue settingsDialogue;
-    private static final File settingsFile = new File("./settings.yml");
+    private static File settingsFile;
     private static Settings settings;
 
     public static int getBlendingMode() {
@@ -69,9 +70,16 @@ public class SettingsController {
     }
 
     public static void initSettings() throws IOException {
+        if (System.getProperty("os.name").contains("Mac")) {
+            settingsFile = new File(System.getProperty("user.home") +
+                    "/Library/Application Support/BitteUnterschreiben/settings.yml");
+        } else if (System.getProperty("os.name").contains("Windows")){
+            settingsFile = new File(System.getenv("APPDATA") + "/BitteUnterschreiben/settings.yml");}
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
-        if (settingsFile.createNewFile()) {
+        if (!settingsFile.exists()) {
             LoggerFactory.getLogger(SettingsController.class).info("{} file not found.", settingsFile.getName());
+            settingsFile.getParentFile().mkdirs();
+            settingsFile.createNewFile();
             createNewSettingsYML(om);
         } else {
             LoggerFactory.getLogger(SettingsController.class).info("File {} exists, reading settings."
