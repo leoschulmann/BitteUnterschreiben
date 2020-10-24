@@ -31,7 +31,7 @@ public class AppWindow extends JFrame {
         title = SettingsController.getDefaultProducer();
 
         setTitle(title);
-        setSize(new Dimension(850, 600));
+        setSize(new Dimension(850, 850));
         setVisible(true);
         setResizable(true);
         setLocationRelativeTo(null); //center on screen

@@ -97,7 +97,7 @@ public class MouseController extends MouseAdapter {
             // CASE 2: any (selected or not) overlay under the cursor - drag this overlay
             else {
                 MainPanelController.getOverlays().stream()
-                        .filter(o -> o.getBounds().contains(e.getX(), e.getY()))
+                        .filter(Overlay::isSelected)
                         .findFirst()
                         .ifPresentOrElse(overlay -> {
                                     int shiftX = e.getX() - clickX;

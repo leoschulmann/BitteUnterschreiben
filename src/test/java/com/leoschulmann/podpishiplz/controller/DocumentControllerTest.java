@@ -21,7 +21,7 @@ class DocumentControllerTest {
         MainPanel mainPanelMock = Mockito.mock(MainPanel.class);
         JScrollPane jspMock = Mockito.mock(JScrollPane.class);
         Mockito.when(mainPanelMock.getMainPanelWrapper()).thenReturn(jspMock);
-        Mockito.when(jspMock.getWidth()).thenReturn(10);
+        Mockito.when(jspMock.getWidth()).thenReturn(20);
         Mockito.when(jspMock.getHeight()).thenReturn(20);
         Mockito.doNothing().when(mainPanelMock).repaint();
         MainPanelController.setMainPanel(mainPanelMock);

@@ -17,12 +17,15 @@ import java.awt.image.BufferedImage;
 
 public class MainPanel extends JPanel {
     private final JScrollPane mainPanelWrapper;
+    private final Color bgColor;
+    private final MouseController mouse;
 
     public MainPanel() {
         mainPanelWrapper = new JScrollPane(this);
         mainPanelWrapper.setBorder(BorderFactory.createEmptyBorder());
+        bgColor = UIManager.getColor("Panel.background");
         MainPanelController.setMainPanel(this);
-        MouseController mouse = new MouseController(this);
+        mouse = new MouseController(this);
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);
@@ -36,14 +39,20 @@ public class MainPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        if (getMouseListeners().length == 0) addMouseListener(mouse);
+        if (getMouseMotionListeners().length == 0) addMouseMotionListener(mouse);
+        if (getMouseWheelListeners().length == 0) addMouseWheelListener(mouse);
         if (DocumentController.getCurrentPage() != null) {
-
+            g.setColor(bgColor);
+            g.fillRect(0, 0, getWidth(), getHeight());
             int pageHeight = MainPanelController.getPageHeight();
             int pageWidth = MainPanelController.getPageWidth();
             int pageX0 = MainPanelController.getPageX0();
             int pageY0 = MainPanelController.getPageY0();
             setPreferredSize(new Dimension(pageX0 + pageWidth, pageY0 + pageHeight));
             g.drawImage(MainPanelController.getImage(), pageX0, pageY0, pageWidth, pageHeight, null);
+            g.setColor(Color.GRAY);
+            g.drawRect(pageX0, pageY0, pageWidth, pageHeight);
 
             if (MainPanelController.getOverlays().size() > 0) {
                 MainPanelController.getOverlays().forEach(o -> {
@@ -79,6 +88,9 @@ public class MainPanel extends JPanel {
 
             });
         } else {
+            removeMouseListener(mouse);
+            removeMouseMotionListener(mouse);
+            removeMouseWheelListener(mouse);
             BufferedImage im;
             try {
                 im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png"));
@@ -91,6 +103,9 @@ public class MainPanel extends JPanel {
                 gr.drawString("Error", 5, 50);
                 gr.dispose();
             }
+            g.setColor(bgColor);
+            g.fillRect(0, 0, getWidth(), getHeight());
+
             int imX0 = (mainPanelWrapper.getWidth() - im.getWidth()) / 2;
             int imY0 = (mainPanelWrapper.getHeight() - im.getHeight()) / 2;
 
