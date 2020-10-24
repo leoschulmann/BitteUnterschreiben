@@ -12,9 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SettingsController {
@@ -148,6 +147,13 @@ public class SettingsController {
                 .debug("Removing overlay from list {}.", file.getName());
 
         settings.getUsedOverlays().remove(file);
+        try {
+            saveYML();
+            LoggerFactory.getLogger(SettingsController.class).debug("Saving {} overlays",
+                    settings.getUsedOverlays().keySet().size());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         EventController.notify(EventType.REFRESH_OVERLAYS_PANEL, null);
     }
 

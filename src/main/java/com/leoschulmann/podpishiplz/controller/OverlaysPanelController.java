@@ -5,15 +5,14 @@ import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.view.OverlayPanel;
 import com.leoschulmann.podpishiplz.view.OverlayThumbButton;
 import com.leoschulmann.podpishiplz.view.OverlayThumbButtonContextMenu;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class OverlaysPanelController {
     private static OverlayPanel panel;
@@ -24,7 +23,7 @@ public class OverlaysPanelController {
         panel.removeAll();
     }
 
-    private static void loadThumb(File f) {
+    private static OverlayThumbButton loadThumb(File f) {
         try {
             BufferedImage raw = FileIOController.getOverlayIm(f);
             BufferedImage thumbnail = Resizer.resize(raw, 50);
@@ -47,12 +46,13 @@ public class OverlaysPanelController {
                 }
             });
 
-            BUTTONS.add(butt);
+            return butt;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(),
                     "Can't find file\n" + f.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             SettingsController.removeOverlayFromList(f);
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -92,18 +92,15 @@ public class OverlaysPanelController {
                     break;
                 case REFRESH_OVERLAYS_PANEL:
                     removeAll();
+                    List<File> overlaysFromSettings = SettingsController.getUsedOverlays();
+                    LoggerFactory.getLogger(OverlaysPanelController.class).debug("Loading {} overlays",
+                            overlaysFromSettings.size());
+                    List<OverlayThumbButton> cache = new ArrayList<>(BUTTONS);
+                    BUTTONS.clear();
 
-                    List<File> settingsData = SettingsController.getUsedOverlays();
-                    for (int i = 0; i < settingsData.size(); i++) {
-                        File f = settingsData.get(i);
-                        OverlayThumbButton butt = BUTTONS.stream().filter(otb -> otb.getFile().equals(f))
-                                .findFirst().orElse(null);
-                        if (butt != null) {
-                            BUTTONS.remove(butt);
-                            BUTTONS.add(i, butt);
-                        } else {
-                            loadThumb(f);
-                        }
+                    for (File f : overlaysFromSettings) {
+                        Optional<OverlayThumbButton> opt = cache.stream().filter(b -> b.getFile().equals(f)).findAny();
+                        BUTTONS.add((opt.orElseGet(() -> loadThumb(f))));
                     }
                     placeButtons();
                     revalidateAndRepaint();
