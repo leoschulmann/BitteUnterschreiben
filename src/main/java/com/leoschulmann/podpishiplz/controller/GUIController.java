@@ -51,7 +51,6 @@ public class GUIController {
     static void overlayThumbnailButtonOnClickAction(File file) {
         FileIOController.loadOverlay(file);
         MainPanelController.repaint();
-        EventController.notify(EventType.FILE_MODIFIED, null);
     }
 
     static void deleteSelectedOverlayOption() {
@@ -77,6 +76,7 @@ public class GUIController {
     static void saveFile() {
         FileIOController.blendAndSavePdfFile(SettingsController.getJpegQuality(),
                 SettingsController.getBlender(), DocumentController.getFileName());
+        EventController.notify(EventType.FILE_UNMODIFIED, null);
     }
 
     static void saveFileAs() {
@@ -119,6 +119,7 @@ public class GUIController {
                 DocumentController.deletePage(DocumentController.getCurrentPage());  //todo write simple method
             }
             EventController.notify(EventType.FILE_UNMODIFIED, null);
+            EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
             BitteUnterschreiben.getApp().resetFrameTitle();
         }
     }

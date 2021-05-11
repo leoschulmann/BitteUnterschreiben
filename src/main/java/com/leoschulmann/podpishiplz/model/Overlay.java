@@ -32,6 +32,7 @@ public class Overlay {
         this.selected = selected;
         if (this.selected) {
             EventController.notify(EventType.OVERLAY_SELECTED, this);
+            EventController.notify(EventType.FILE_MODIFIED, null);
         }
     }
 

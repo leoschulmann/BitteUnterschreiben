@@ -235,9 +235,11 @@ public class DocumentController {
                     changed = true;
                     break;
                 case NO_PAGES_IN_DOCUMENT:
+                    changed = false;
+                    fileName = null;
+                    break;
                 case FILE_UNMODIFIED:
                     changed = false;
-                    filename = null;
                     break;
             }
         };
