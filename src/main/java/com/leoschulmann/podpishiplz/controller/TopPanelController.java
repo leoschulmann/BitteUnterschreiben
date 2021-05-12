@@ -4,6 +4,7 @@ import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.PageThumbnailButton;
 import com.leoschulmann.podpishiplz.view.TopScrollerPanel;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class TopPanelController {
-    private static TopScrollerPanel tsp;
+    @Setter
+    private static TopScrollerPanel topScrollerPanel;
     static final List<PageThumbnailButton> BUTTONS = new ArrayList<>();
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
     private final static JButton welcomeBtn = new JButton(bundle.getString("open.pdf"));
@@ -22,26 +24,22 @@ public class TopPanelController {
         welcomeBtn.addActionListener(e -> GUIController.openOption());
     }
 
-    public static void setTsp(TopScrollerPanel tsp) {
-        TopPanelController.tsp = tsp;
-    }
-
     private static void removeAll() {
-        tsp.getPanel().removeAll();
+        topScrollerPanel.getPanel().removeAll();
     }
 
     static void revalidateAndRepaint() {
-        tsp.getPanel().revalidate();
-        tsp.getPanel().repaint();
+        topScrollerPanel.getPanel().revalidate();
+        topScrollerPanel.getPanel().repaint();
 
     }
 
     static void put(JButton jb) {
-        tsp.put(jb);
+        topScrollerPanel.put(jb);
     }
 
     public static void remove(Component c) {
-        tsp.rem(c);
+        topScrollerPanel.rem(c);
     }
 
     private static void clearAndPlaceThumbnailsOrdered() {

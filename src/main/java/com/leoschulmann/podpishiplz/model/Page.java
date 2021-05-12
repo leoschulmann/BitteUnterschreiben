@@ -1,6 +1,8 @@
 package com.leoschulmann.podpishiplz.model;
 
 import com.leoschulmann.podpishiplz.controller.PDFController;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,10 +12,24 @@ import java.util.List;
 public class Page {
     private final File originalFile;
     private final int originalFilePageNumber;
+
+    @Setter
     private BufferedImage image;
+
+    @Getter
+    @Setter
     private List<Overlay> overlays;
+
+    @Setter
+    @Getter
     private int mediaWidth;  // in px @ 72 dpi
+
+    @Setter
+    @Getter
     private int mediaHeight;
+
+    @Setter
+    @Getter
     private BufferedImage renderedImage;
 
 
@@ -28,42 +44,5 @@ public class Page {
             image = PDFController.get300dpiPage(originalFile, originalFilePageNumber);
         }
         return image;
-    }
-
-    public List<Overlay> getOverlays() {
-        return overlays;
-    }
-
-    public void setImage(BufferedImage image) {
-        this.image = image;
-    }
-
-
-    void setOverlays(List<Overlay> overlays) {
-        this.overlays = overlays;
-    }
-
-    public int getMediaWidth() {
-        return mediaWidth;
-    }
-
-    public int getMediaHeight() {
-        return mediaHeight;
-    }
-
-    public BufferedImage getRenderedImage() {
-        return renderedImage;
-    }
-
-    public void setRenderedImage(BufferedImage renderedImage) {
-        this.renderedImage = renderedImage;
-    }
-
-    public void setMediaWidth(int mediaWidth) {
-        this.mediaWidth = mediaWidth;
-    }
-
-    public void setMediaHeight(int mediaHeight) {
-        this.mediaHeight = mediaHeight;
     }
 }

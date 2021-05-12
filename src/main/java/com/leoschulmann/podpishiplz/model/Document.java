@@ -1,9 +1,12 @@
 package com.leoschulmann.podpishiplz.model;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Document {
+    @Getter
     private final List<Page> pages;
 
     public Document() {
@@ -14,9 +17,5 @@ public class Document {
         Page p = pages.remove(pos);
         p.setImage(null);
         p.setOverlays(null);  //might be excessive
-    }
-
-    public List<Page> getPages() {
-        return pages;
     }
 }

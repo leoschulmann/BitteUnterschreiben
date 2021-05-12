@@ -6,6 +6,7 @@ import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
 import com.leoschulmann.podpishiplz.graphics.Rotater;
+import lombok.Getter;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
@@ -16,6 +17,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
 public class MainPanel extends JPanel {
+    @Getter
     private final JScrollPane mainPanelWrapper;
     private final Color bgColor;
     private final MouseController mouse;
@@ -80,7 +82,7 @@ public class MainPanel extends JPanel {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setColor(Color.decode('#' + SettingsController.getSelectionColor()));
                 g2.setStroke(new BasicStroke(2));
-                if (MainPanelController.isRotation()) {
+                if (MainPanelController.isRotatingMode()) {
                     g.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
                 } else {
                     g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -112,9 +114,5 @@ public class MainPanel extends JPanel {
             g.drawImage(im, imX0, imY0, im.getWidth(), im.getHeight(), null);
             setPreferredSize(new Dimension(im.getWidth(), im.getHeight()));
         }
-    }
-
-    public JScrollPane getMainPanelWrapper() {
-        return mainPanelWrapper;
     }
 }

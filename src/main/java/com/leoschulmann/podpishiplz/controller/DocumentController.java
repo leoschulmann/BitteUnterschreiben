@@ -6,6 +6,8 @@ import com.leoschulmann.podpishiplz.model.Document;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.model.Page;
 import com.leoschulmann.podpishiplz.view.PageThumbButtonContextMenu;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.slf4j.LoggerFactory;
@@ -22,8 +24,12 @@ import static java.lang.String.valueOf;
 
 public class DocumentController {
     private static Document doc;
-    private static String filename;
+    @Getter
+    @Setter
+    private static String fileName;
+    @Getter
     private static Page currentPage;
+    @Getter
     private static boolean changed;
 
     public static void setCurrentPage(Page page) {
@@ -31,10 +37,6 @@ public class DocumentController {
             throw new IllegalArgumentException();
         }
         DocumentController.currentPage = page;
-    }
-
-    public static Page getCurrentPage() {
-        return currentPage;
     }
 
     public static void createDocument() {
@@ -96,7 +98,7 @@ public class DocumentController {
         PDRectangle[] mediaBoxes = PDFController.getMediaBoxes(pdDocument, selectedPages);
         Page firstPage = null;
         if (getFileName() == null) { //new document
-            setFilename(filename);
+            setFileName(filename);
         }
         for (int pg = 0; pg < pdDocument.getNumberOfPages(); pg++) {
             if (!selectedPages[pg]) continue;
@@ -213,18 +215,6 @@ public class DocumentController {
         page.setMediaWidth(temp);
         EventController.notify(EventType.PAGE_ROTATED, page);
         EventController.notify(EventType.FILE_MODIFIED, true);
-    }
-
-    static String getFileName() {
-        return filename;
-    }
-
-    private static void setFilename(String filename) {
-        DocumentController.filename = filename;
-    }
-
-    static boolean isChanged() {
-        return changed;
     }
 
 

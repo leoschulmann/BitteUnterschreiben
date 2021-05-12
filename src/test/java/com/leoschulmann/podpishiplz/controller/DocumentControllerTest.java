@@ -28,12 +28,12 @@ class DocumentControllerTest {
         TopPanelController.initListener();
         OverlayPanel overlayPanel = Mockito.mock(OverlayPanel.class);
         Mockito.when(overlayPanel.getComponents()).thenReturn(new Component[0]);
-        OverlaysPanelController.setPanel(overlayPanel);
+        OverlaysPanelController.setOverlayPanel(overlayPanel);
         JPanel panelmock = Mockito.mock(JPanel.class);
         Mockito.doNothing().when(panelmock).removeAll();
         TopScrollerPanel tspmock = Mockito.mock(TopScrollerPanel.class);
         Mockito.when(tspmock.getPanel()).thenReturn(panelmock);
-        TopPanelController.setTsp(tspmock);
+        TopPanelController.setTopScrollerPanel(tspmock);
     }
 
     @BeforeEach

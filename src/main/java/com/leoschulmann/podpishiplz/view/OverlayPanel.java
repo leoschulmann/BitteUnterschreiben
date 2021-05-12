@@ -1,6 +1,7 @@
 package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.OverlaysPanelController;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 public class OverlayPanel {
     private final GridBagConstraints gbc;
     private final JPanel panel;
+    @Getter
     private final JScrollPane wrapper;
 
     OverlayPanel() {
@@ -16,7 +18,7 @@ public class OverlayPanel {
         wrapper.setPreferredSize(new Dimension(1, 80));
         wrapper.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-        OverlaysPanelController.setPanel(this);
+        OverlaysPanelController.setOverlayPanel(this);
 
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -27,10 +29,6 @@ public class OverlayPanel {
     public void put(Component c) {
         panel.add(c, gbc);
         gbc.gridx++;
-    }
-
-    JScrollPane getWrapper() {
-        return wrapper;
     }
 
     public void revalidate() {

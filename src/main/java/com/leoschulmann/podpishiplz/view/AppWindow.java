@@ -8,9 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AppWindow extends JFrame {
-    private final MainPanel mainPanel;
-    private final TopScrollerPanel topScrollerPanel;
-    private final OverlayPanel overlayPanel;
     private final String title;
 
     public AppWindow() throws HeadlessException {
@@ -38,9 +35,9 @@ public class AppWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        mainPanel = new MainPanel();
-        topScrollerPanel = new TopScrollerPanel();
-        overlayPanel = new OverlayPanel();
+        MainPanel mainPanel = new MainPanel();
+        TopScrollerPanel topScrollerPanel = new TopScrollerPanel();
+        OverlayPanel overlayPanel = new OverlayPanel();
         setJMenuBar(MenuBarController.getMenuBar());
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         add(mainPanel.getMainPanelWrapper(), BorderLayout.CENTER);

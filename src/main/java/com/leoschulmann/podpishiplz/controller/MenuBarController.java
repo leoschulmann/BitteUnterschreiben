@@ -1,6 +1,5 @@
 package com.leoschulmann.podpishiplz.controller;
 
-import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.view.MenuBar;
 
 import javax.swing.*;

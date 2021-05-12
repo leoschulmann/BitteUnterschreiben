@@ -2,6 +2,8 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.model.Overlay;
 import com.leoschulmann.podpishiplz.view.MainPanel;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
@@ -10,15 +12,29 @@ import java.util.List;
 import java.util.Optional;
 
 public class MainPanelController {
-    private static MainPanel panel;
+    @Setter
+    private static MainPanel mainPanel;
+
+    @Getter
+    private static int pageX0;
+
+    @Getter
+    private static int pageY0;
+
+    @Getter
+    private static int pageHeight;
+
+    @Getter
+    private static int pageWidth;
+
+    private static double imAspectRatio;
+
+    @Setter
+    @Getter
+    private static boolean rotatingMode;
+
     private static final int INSET = 10;  // margin (px)
     private static final int MIN_ZOOM_SIZE = 10;
-    private static int pageX0;
-    private static int pageY0;
-    private static int pageHeight;
-    private static int pageWidth;
-    private static double imAspectRatio;
-    private static boolean rotation;
 
     public static int getOverlayResizeWidth(Overlay o) {
         return (int) (o.getWidth() * getResizeRatio());
@@ -33,7 +49,7 @@ public class MainPanelController {
         LoggerFactory.getLogger(MainPanelController.class).debug("Panel AR : {}, image AR {}",
                 getPanelAspectRatio(), imAspectRatio);
         if (getPanelAspectRatio() > imAspectRatio) {
-            return panel.getMainPanelWrapper().getHeight() - (INSET * 2);
+            return mainPanel.getMainPanelWrapper().getHeight() - (INSET * 2);
         } else {
             return (int) (getPageStartWidth() / imAspectRatio);
         }
@@ -41,26 +57,26 @@ public class MainPanelController {
 
     private static int getPageStartWidth() {
         if (imAspectRatio > getPanelAspectRatio()) {
-            return panel.getMainPanelWrapper().getWidth() - (INSET * 2);
+            return mainPanel.getMainPanelWrapper().getWidth() - (INSET * 2);
         } else {
             return (int) (getPageStartHeight() * imAspectRatio);
         }
     }
 
     private static double getPanelAspectRatio() {
-        return 1. * panel.getMainPanelWrapper().getWidth() / panel.getMainPanelWrapper().getHeight();
+        return 1. * mainPanel.getMainPanelWrapper().getWidth() / mainPanel.getMainPanelWrapper().getHeight();
     }
 
     // resized page top left coords
     private static int getPageStartX() {
         if (getPanelAspectRatio() > imAspectRatio) {
-            return (panel.getMainPanelWrapper().getWidth() - getPageStartWidth()) / 2;
+            return (mainPanel.getMainPanelWrapper().getWidth() - getPageStartWidth()) / 2;
         } else return INSET;
     }
 
     private static int getPageStartY() {
         if (imAspectRatio > getPanelAspectRatio()) {
-            return (panel.getMainPanelWrapper().getHeight() - getPageStartHeight()) / 2;
+            return (mainPanel.getMainPanelWrapper().getHeight() - getPageStartHeight()) / 2;
         } else {
             return INSET;
         }
@@ -91,19 +107,15 @@ public class MainPanelController {
         return getOverlays().stream().filter(Overlay::isSelected).findFirst().map(Overlay::getBounds);
     }
 
-    public static void setMainPanel(MainPanel mainpanel) {
-        panel = mainpanel;
-    }
-
     public static void repaint() {
-        panel.repaint();
+        mainPanel.repaint();
     }
 
     public static void initListener() {
         EventListener el = (event, object) -> {
             if (event == EventType.PAGE_ROTATED) {
                 resetPosition();
-                panel.repaint();
+                mainPanel.repaint();
             }
         };
         EventController.subscribe(EventType.PAGE_ROTATED, el);
@@ -119,28 +131,12 @@ public class MainPanelController {
                 .debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
     }
 
-    public static int getPageX0() {
-        return pageX0;
-    }
-
     public static void setPageX0(int pageX0) {
       if (pageX0>=0) MainPanelController.pageX0 = pageX0;
     }
 
-    public static int getPageY0() {
-        return pageY0;
-    }
-
     public static void setPageY0(int pageY0) {
        if (pageY0>=0) MainPanelController.pageY0 = pageY0;
-    }
-
-    public static int getPageHeight() {
-        return pageHeight;
-    }
-
-    public static int getPageWidth() {
-        return pageWidth;
     }
 
     public static void zoom(double zoomAmount) {
@@ -150,13 +146,5 @@ public class MainPanelController {
             pageHeight *= modifier;
             pageWidth = (int) (imAspectRatio * pageHeight);
         }
-    }
-
-    public static void setRotatingMode(boolean b) {
-        rotation = b;
-    }
-
-    public static boolean isRotation() {
-        return rotation;
     }
 }

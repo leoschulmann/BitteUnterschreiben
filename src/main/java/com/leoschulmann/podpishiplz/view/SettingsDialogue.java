@@ -15,10 +15,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class SettingsDialogue extends JDialog implements EventListener {
-    private final SettingsGraphics graphicsSettings;
-    private final SettingsPDFMetadata pdfMetadataSettings;
-    private final SettingsBlending blendingSettings;
-    private final SettingsUI userInterfaceSettings;
     private final java.util.List<SettingsTab> tabList;
     private final JButton cancel;
     private final JButton ok;
@@ -34,10 +30,10 @@ public class SettingsDialogue extends JDialog implements EventListener {
 
         tabList = new ArrayList<>();
 
-        tabList.add(graphicsSettings = new SettingsGraphics());
-        tabList.add(userInterfaceSettings = new SettingsUI());
-        tabList.add(blendingSettings = new SettingsBlending());
-        tabList.add(pdfMetadataSettings = new SettingsPDFMetadata());
+        tabList.add(new SettingsGraphics());
+        tabList.add(new SettingsUI());
+        tabList.add(new SettingsBlending());
+        tabList.add(new SettingsPDFMetadata());
 
         tabs = new JTabbedPane();
         manageTabs(tabList);

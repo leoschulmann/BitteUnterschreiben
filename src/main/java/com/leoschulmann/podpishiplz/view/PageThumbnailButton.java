@@ -1,21 +1,19 @@
 package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.model.Page;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 public class PageThumbnailButton extends JButton {
+    @Getter
     private final Page page;
     private boolean marked = false;
 
     public PageThumbnailButton(BufferedImage thumbnail, Page page) {
         super(new ImageIcon(thumbnail));
         this.page = page;
-    }
-
-    public Page getPage() {
-        return page;
     }
 
     public void setThumbnailImage(BufferedImage image) {

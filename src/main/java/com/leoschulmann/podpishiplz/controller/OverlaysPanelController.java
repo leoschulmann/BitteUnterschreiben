@@ -5,6 +5,7 @@ import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.view.OverlayPanel;
 import com.leoschulmann.podpishiplz.view.OverlayThumbButton;
 import com.leoschulmann.podpishiplz.view.OverlayThumbButtonContextMenu;
+import lombok.Setter;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -15,12 +16,13 @@ import java.io.File;
 import java.util.*;
 
 public class OverlaysPanelController {
-    private static OverlayPanel panel;
+    @Setter
+    private static OverlayPanel overlayPanel;
     private static boolean disabled;
     private static final List<OverlayThumbButton> BUTTONS = new ArrayList<>();
 
     private static void removeAll() {
-        panel.removeAll();
+        overlayPanel.removeAll();
     }
 
     private static OverlayThumbButton loadThumb(File f) {
@@ -57,25 +59,20 @@ public class OverlaysPanelController {
     }
 
     private static void placeButtons() {
-        BUTTONS.forEach(panel::put);
+        BUTTONS.forEach(overlayPanel::put);
     }
 
     private static void revalidateAndRepaint() {
-        panel.revalidate();
-        panel.repaint();
-    }
-
-
-    public static void setPanel(OverlayPanel panel) {
-        OverlaysPanelController.panel = panel;
+        overlayPanel.revalidate();
+        overlayPanel.repaint();
     }
 
     private static void disableAll() {
-        Arrays.stream(panel.getComponents()).forEach(component -> component.setEnabled(false));
+        Arrays.stream(overlayPanel.getComponents()).forEach(component -> component.setEnabled(false));
     }
 
     private static void enableAll() {
-        Arrays.stream(panel.getComponents()).forEach(component -> component.setEnabled(true));
+        Arrays.stream(overlayPanel.getComponents()).forEach(component -> component.setEnabled(true));
     }
 
     public static void initListener() {

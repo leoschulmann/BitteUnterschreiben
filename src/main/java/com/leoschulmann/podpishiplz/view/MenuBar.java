@@ -1,11 +1,13 @@
 package com.leoschulmann.podpishiplz.view;
 
+import lombok.Getter;
+
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
-
+@Getter
 public class MenuBar extends JMenuBar {
     private final JMenuItem optionOpen;
     private final JMenuItem optionPlace;
@@ -28,11 +30,9 @@ public class MenuBar extends JMenuBar {
     private final JMenuItem optionRotLeft;
     private final JMenuItem optionRotRight;
     private final JMenuItem optionRemAllOverlays;
-
-
-    private static final ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
     private final Set<JMenuItem> pageOptions;
     private final Set<JMenuItem> overlayOptions;
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
     public MenuBar() {
         menuFile = new JMenu(bundle.getString("file"));
@@ -93,97 +93,4 @@ public class MenuBar extends JMenuBar {
         add(menuEdit);
 
     }
-
-    public JMenuItem getOptionOpen() {
-        return optionOpen;
-    }
-
-    public JMenuItem getOptionPlace() {
-        return optionPlace;
-    }
-
-    public JMenuItem getOptionRemove() {
-        return optionRemove;
-    }
-
-    public JMenuItem getOptionSaveAs() {
-        return optionSaveAs;
-    }
-
-    public JMenuItem getOptionSettings() {
-        return optionSettings;
-    }
-
-    public JMenuItem getOptionSave() {
-        return optionSave;
-    }
-
-    public JMenuItem getOptionClose() {
-        return optionClose;
-    }
-
-    public JMenuItem getOptionExit() {
-        return optionExit;
-    }
-
-    public JMenuItem getOptionAddPages() {
-        return optionAddPages;
-    }
-
-    public JMenuItem getOptionRemovePage() {
-        return optionRemovePage;
-    }
-
-    public JMenuItem getOptionPageToFront() {
-        return optionPageToFront;
-    }
-
-    public JMenuItem getOptionPageToLeft() {
-        return optionPageToLeft;
-    }
-
-    public JMenuItem getOptionPageToRight() {
-        return optionPageToRight;
-    }
-
-    public JMenuItem getOptionPageToBack() {
-        return optionPageToBack;
-    }
-
-    public JMenuItem getOptionRotLeft() {
-        return optionRotLeft;
-    }
-
-    public JMenuItem getOptionRotRight() {
-        return optionRotRight;
-    }
-
-    public JMenuItem getOptionRemAllOverlays() {
-        return optionRemAllOverlays;
-    }
-
-    public JMenu getMenuEdit() {
-        return menuEdit;
-    }
-
-    public JMenu getMenuFile() {
-        return menuFile;
-    }
-
-    public JMenu getPageSubmenu() {
-        return pageSubmenu;
-    }
-
-    public JMenu getOverlaySubmenu() {
-        return overlaySubmenu;
-    }
-
-    public  Set<JMenuItem> getPageOptions() {
-        return pageOptions;
-    }
-
-    public  Set<JMenuItem> getOverlayOptions() {
-        return overlayOptions;
-    }
-
 }
