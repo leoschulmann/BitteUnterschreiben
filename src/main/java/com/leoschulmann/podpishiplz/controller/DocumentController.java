@@ -58,36 +58,33 @@ public class DocumentController {
         currentPage.getOverlays().remove(ov);
     }
 
-    public static void renderAllPages(Class<? extends CompositeContext> blender) {  //todo add proper interpolation
-        LoggerFactory.getLogger(DocumentController.class).debug("Initiating rendering pages.");
-        for (Page p : doc.getPages()) {
-            BufferedImage im = p.getImage();
-            int imWidth = (int) (im.getWidth() * SettingsController.getResolutionMultiplier());
-            int imHeight = (int) (im.getHeight() * SettingsController.getResolutionMultiplier());
-            BufferedImage render = new BufferedImage(imWidth, imHeight, im.getType());
-            Graphics2D g2d = render.createGraphics();
-            g2d.drawImage(im, 0, 0, imWidth, imHeight, null);
-            if (blender != null) g2d.setComposite(new BlenderComposite(blender));
-            for (Overlay o : p.getOverlays()) {
-                int ovWidth = (int) (o.getImage().getWidth() * SettingsController.getResolutionMultiplier());
-                int ovHeight = (int) (o.getImage().getHeight() * SettingsController.getResolutionMultiplier());
-                BufferedImage bim;
-                if (o.getRotation() == 0.) {
-                    bim = o.getImage();
-                } else {
-                    bim = Rotater.freeRotate(o.getImage(), o.getRotation());
-                }
-
-                g2d.drawImage(bim,
-                        (int) (o.getRelCentX() * imWidth - (ovWidth / 2)),
-                        (int) (o.getRelCentY() * imHeight - (ovHeight / 2)),
-                        ovWidth, ovHeight, null);
+    public static void renderPage(Class<? extends CompositeContext> blender, Page p) {
+        BufferedImage im = p.getImage();
+        int imWidth = (int) (im.getWidth() * SettingsController.getResolutionMultiplier());
+        int imHeight = (int) (im.getHeight() * SettingsController.getResolutionMultiplier());
+        BufferedImage render = new BufferedImage(imWidth, imHeight, im.getType());
+        Graphics2D g2d = render.createGraphics();
+        g2d.drawImage(im, 0, 0, imWidth, imHeight, null);
+        if (blender != null) g2d.setComposite(new BlenderComposite(blender));
+        for (Overlay o : p.getOverlays()) {
+            int ovWidth = (int) (o.getImage().getWidth() * SettingsController.getResolutionMultiplier());
+            int ovHeight = (int) (o.getImage().getHeight() * SettingsController.getResolutionMultiplier());
+            BufferedImage bim;
+            if (o.getRotation() == 0.) {
+                bim = o.getImage();
+            } else {
+                bim = Rotater.freeRotate(o.getImage(), o.getRotation());
             }
-            g2d.dispose();
-            p.setRenderedImage(render);
+
+            g2d.drawImage(bim,
+                    (int) (o.getRelCentX() * imWidth - (ovWidth / 2)),
+                    (int) (o.getRelCentY() * imHeight - (ovHeight / 2)),
+                    ovWidth, ovHeight, null);
         }
-        LoggerFactory.getLogger(DocumentController.class).info("Finished rendering pages.");
+        g2d.dispose();
+        p.setRenderedImage(render);
     }
+
 
     public static void addFileToDocument(PDDocument pdDocument, String filename, boolean[] selectedPages) {
         if (selectedPages == null) {  //simple 'Open' file yields null'ed array
@@ -240,5 +237,14 @@ public class DocumentController {
 
     public static void removeAllOverlaysFromPage() {
         getCurrentPage().getOverlays().removeAll(getCurrentPage().getOverlays());
+    }
+
+    public static void purgeDocument() {
+        getAllPages().forEach(p -> {
+            p.getOverlays().clear();
+            p.setImage(null);
+            p.setRenderedImage(null);
+        });
+        System.gc();
     }
 }

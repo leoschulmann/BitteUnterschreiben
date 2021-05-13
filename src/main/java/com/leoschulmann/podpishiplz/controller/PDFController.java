@@ -62,7 +62,7 @@ public class PDFController {
         return bufferedImage;
     }
 
-    public static PDDocument buildPDF(float jpegQuality) throws IOException {
+    public static PDDocument createPdf() {
         LoggerFactory.getLogger(PDFController.class).debug("Initiating building PDF.");
         PDDocument pdf = new PDDocument();
         String producer = SettingsController.isProducerOverride() ?
@@ -70,17 +70,17 @@ public class PDFController {
         pdf.getDocumentInformation().setProducer(producer);
         pdf.getDocumentInformation().setCreator(SettingsController.getCreator());
         LoggerFactory.getLogger(PDFController.class).info("Creator field set to {}", producer);
-        for (Page pg : DocumentController.getAllPages()) {
-            int width = pg.getMediaWidth();
-            int height = pg.getMediaHeight();
-            PDPage page = new PDPage(new PDRectangle(width, height));
-            pdf.addPage(page);
-            PDPageContentStream contentStream = new PDPageContentStream(pdf, page, PDPageContentStream.AppendMode.APPEND, false);
-            PDImageXObject imXObj = JPEGFactory.createFromImage(pdf, pg.getRenderedImage(), jpegQuality);
-            contentStream.drawImage(imXObj, 0, 0, width, height);
-            contentStream.close();
-        }
-        LoggerFactory.getLogger(PDFController.class).info("Finished building PDF.");
         return pdf;
+    }
+
+    public static void addPage(PDDocument pdf, Page pg, float jpgQ) throws IOException {
+        int width = pg.getMediaWidth();
+        int height = pg.getMediaHeight();
+        PDPage page = new PDPage(new PDRectangle(width, height));
+        pdf.addPage(page);
+        PDPageContentStream contentStream = new PDPageContentStream(pdf, page, PDPageContentStream.AppendMode.APPEND, false);
+        PDImageXObject imXObj = JPEGFactory.createFromImage(pdf, pg.getRenderedImage(), jpgQ);
+        contentStream.drawImage(imXObj, 0, 0, width, height);
+        contentStream.close();
     }
 }

@@ -108,6 +108,7 @@ public class GUIController {
     static void quit() {
         if (mundaneCheckIfDocumentChanged(bundle.getString("exit.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Quitting");
+            DocumentController.purgeDocument();
             System.exit(0);
         }
     }
@@ -115,9 +116,7 @@ public class GUIController {
     static void closeDocument() {
         if (mundaneCheckIfDocumentChanged(bundle.getString("close.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Closing document");
-            while (DocumentController.getCurrentPage() != null) {
-                DocumentController.deletePage(DocumentController.getCurrentPage());  //todo write simple method
-            }
+            DocumentController.purgeDocument();
             EventController.notify(EventType.FILE_UNMODIFIED, null);
             EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
             BitteUnterschreiben.getApp().resetFrameTitle();

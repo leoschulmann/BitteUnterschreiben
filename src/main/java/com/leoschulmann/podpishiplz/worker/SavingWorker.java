@@ -2,6 +2,7 @@ package com.leoschulmann.podpishiplz.worker;
 
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.PDFController;
+import com.leoschulmann.podpishiplz.model.Page;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.LoggerFactory;
 
@@ -26,17 +27,30 @@ public class SavingWorker extends AbstractUnterschreibenWorker {
 
     @Override
     protected Void doInBackground() {
-        DocumentController.renderAllPages(blender);
-        diag.setText(bundle.getString("saving"));
-        PDDocument pdf;
+
+        PDDocument pdf = PDFController.createPdf();
+        int size = DocumentController.getAllPages().size();
+        for (int i = 0; i < size; i++) {
+            Page p = DocumentController.getAllPages().get(i);
+            diag.setText((int) (1. * i / size * 100) + "%");
+            DocumentController.renderPage(blender, p);
+            try {
+                PDFController.addPage(pdf, p, jpgQ);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            p.setRenderedImage(null);
+            p.setImage(null);
+        }
         try {
-            pdf = PDFController.buildPDF(jpgQ);
             pdf.save(file);
-            LoggerFactory.getLogger(SavingWorker.class).info("File {} saved.", file);
             pdf.close();
+            LoggerFactory.getLogger(SavingWorker.class).info("File {} saved.", file);
         } catch (IOException e) {
             LoggerFactory.getLogger(SavingWorker.class).error(e.getMessage(), e);
         }
+
+        System.gc();
         diag.dispose();
         return null;
     }

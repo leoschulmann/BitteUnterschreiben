@@ -31,6 +31,7 @@ public class OpeningWorker extends AbstractUnterschreibenWorker {
         }
         DocumentController.addFileToDocument(pdDocument, file, selectedPages);
         diag.dispose();
+        System.gc();
         return null;
     }
 }
