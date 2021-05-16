@@ -19,6 +19,10 @@ public class GUIController {
 
     static void openOption() {
         String file = FilePicker.openPDF(BitteUnterschreiben.getApp());
+        openFile(file);
+    }
+
+    static void openFile(String file) {
         if (file != null) {
             closeDocument();
             FileIOController.openPdfFile(file, null);
@@ -50,23 +54,23 @@ public class GUIController {
 
     static void overlayThumbnailButtonOnClickAction(File file) {
         FileIOController.loadOverlay(file);
-        MainPanelController.repaint();
+        MainPanelController.setPageMode();
     }
 
     static void deleteSelectedOverlayOption() {
         DocumentController.removeSelectedOverlay();
-        MainPanelController.repaint();
+        MainPanelController.setPageMode();
     }
 
     static void openPage(Page page) {
         if (page == null) {
             DocumentController.setCurrentPage(null);
-            MainPanelController.repaint();
+            MainPanelController.setEmptyMode();
             EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
         } else if (DocumentController.contains(page)) {
             DocumentController.setCurrentPage(page);
             MainPanelController.resetPosition();
-            MainPanelController.repaint();
+            MainPanelController.setPageMode();
             EventController.notify(EventType.MAIN_PANEL_FULL, page);
             page.getOverlays().forEach(overlay -> overlay.setSelected(false));
             EventController.notify(EventType.OVERLAY_DESELECTED, null);
@@ -134,6 +138,6 @@ public class GUIController {
 
     public static void deleteAllOverlaysOption() {
         DocumentController.removeAllOverlaysFromPage();
-        MainPanelController.repaint();
+        MainPanelController.setPageMode();
     }
 }

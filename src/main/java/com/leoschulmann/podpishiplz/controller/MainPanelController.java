@@ -1,9 +1,11 @@
 package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.model.Overlay;
+import com.leoschulmann.podpishiplz.view.DrawMode;
 import com.leoschulmann.podpishiplz.view.MainPanel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
@@ -11,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class MainPanelController {
     @Setter
     private static MainPanel mainPanel;
@@ -107,18 +110,29 @@ public class MainPanelController {
         return getOverlays().stream().filter(Overlay::isSelected).findFirst().map(Overlay::getBounds);
     }
 
-    public static void repaint() {
-        mainPanel.repaint();
-    }
-
     public static void initListener() {
         EventListener el = (event, object) -> {
-            if (event == EventType.PAGE_ROTATED) {
-                resetPosition();
-                mainPanel.repaint();
+            switch (event) {
+                case PAGE_ROTATED:
+                    resetPosition();
+                    setPageMode();
+                    break;
+                case DRAG_ENTER_EVENT:
+                    setDraggingMode();
+                    break;
+                case DRAG_EXIT_EVENT:
+                    setEmptyMode();
+                    break;
+                case DROP_EVENT:
+                    GUIController.openFile((String) object);
+                    setPageMode();
+                    break;
             }
         };
         EventController.subscribe(EventType.PAGE_ROTATED, el);
+        EventController.subscribe(EventType.DROP_EVENT, el);
+        EventController.subscribe(EventType.DRAG_ENTER_EVENT, el);
+        EventController.subscribe(EventType.DRAG_EXIT_EVENT, el);
     }
 
     static void resetPosition() {
@@ -132,11 +146,11 @@ public class MainPanelController {
     }
 
     public static void setPageX0(int pageX0) {
-      if (pageX0>=0) MainPanelController.pageX0 = pageX0;
+        if (pageX0 >= 0) MainPanelController.pageX0 = pageX0;
     }
 
     public static void setPageY0(int pageY0) {
-       if (pageY0>=0) MainPanelController.pageY0 = pageY0;
+        if (pageY0 >= 0) MainPanelController.pageY0 = pageY0;
     }
 
     public static void zoom(double zoomAmount) {
@@ -146,5 +160,22 @@ public class MainPanelController {
             pageHeight *= modifier;
             pageWidth = (int) (imAspectRatio * pageHeight);
         }
+    }
+
+    static void setPageMode() {
+        mainPanel.setMode(DrawMode.PAGE);
+        mainPanel.repaint();
+
+    }
+
+    static void setEmptyMode() {
+        mainPanel.setMode(DrawMode.EMPTY);
+        mainPanel.repaint();
+
+    }
+
+    private static void setDraggingMode() {
+        mainPanel.setMode(DrawMode.DND);
+        mainPanel.repaint();
     }
 }

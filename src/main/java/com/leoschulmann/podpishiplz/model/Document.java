@@ -12,10 +12,4 @@ public class Document {
     public Document() {
         pages = new ArrayList<>();
     }
-
-    public void remPage(int pos) {
-        Page p = pages.remove(pos);
-        p.setImage(null);
-        p.setOverlays(null);  //might be excessive
-    }
 }

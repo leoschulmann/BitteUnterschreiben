@@ -75,7 +75,6 @@ public class MenuBarController {
                     menuBar.getOptionSaveAs().setEnabled(false);
                     menuBar.getOptionSave().setEnabled(false);
                     menuBar.getOptionClose().setEnabled(false);
-                    menuBar.getOptionClose().setEnabled(false);
                     menuBar.getOverlayOptions().forEach(e -> e.setEnabled(false));
                     menuBar.getPageOptions().forEach(e -> e.setEnabled(false));
                     break;

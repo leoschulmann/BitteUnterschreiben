@@ -24,7 +24,7 @@ public class TopPanelController {
         welcomeBtn.addActionListener(e -> GUIController.openOption());
     }
 
-    private static void removeAll() {
+     static void removeAll() {
         topScrollerPanel.getPanel().removeAll();
     }
 

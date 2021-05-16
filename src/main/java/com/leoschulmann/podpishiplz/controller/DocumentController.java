@@ -104,7 +104,7 @@ public class DocumentController {
             p.setMediaWidth((int) (mediaBoxes[pg].getWidth()));
             p.setMediaHeight((int) (mediaBoxes[pg].getHeight()));
             addPage(p);
-            if (getAllPages().size() == 1) {
+            if (pg == 0) {
                 EventController.notify(EventType.PAGES_ADDED, null);
             }
             JButton jb = GUIController.generateThumbnailButton(thumbnails[pg], p);
@@ -190,7 +190,7 @@ public class DocumentController {
 
     public static void deletePage(Page page) {
         int idx = getPageNumber(page);
-        doc.remPage(getPageNumber(page));
+        remPage(getPageNumber(page));
         EventController.notify(EventType.PAGES_REORDERED, page);
         if (getAllPages().size() == 0) {
             EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
@@ -245,6 +245,15 @@ public class DocumentController {
             p.setImage(null);
             p.setRenderedImage(null);
         });
+        TopPanelController.removeAll();
+        TopPanelController.revalidateAndRepaint();
         System.gc();
+    }
+
+    public static void remPage(int pos) {
+        Page p = doc.getPages().remove(pos);
+        p.setImage(null);
+        p.setOverlays(null);
+        p.setRenderedImage(null);
     }
 }
