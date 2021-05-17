@@ -245,6 +245,7 @@ public class DocumentController {
             p.setImage(null);
             p.setRenderedImage(null);
         });
+        getAllPages().clear();
         TopPanelController.removeAll();
         TopPanelController.revalidateAndRepaint();
         System.gc();

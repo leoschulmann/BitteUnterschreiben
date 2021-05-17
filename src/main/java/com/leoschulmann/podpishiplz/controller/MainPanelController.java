@@ -125,6 +125,8 @@ public class MainPanelController {
                     break;
                 case DROP_EVENT:
                     GUIController.openFile((String) object);
+                    break;
+                case OPEN_WORKER_FINISHED:
                     setPageMode();
                     break;
             }

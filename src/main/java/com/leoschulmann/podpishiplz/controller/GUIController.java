@@ -24,9 +24,10 @@ public class GUIController {
 
     static void openFile(String file) {
         if (file != null) {
-            closeDocument();
-            FileIOController.openPdfFile(file, null);
-            BitteUnterschreiben.getApp().setFrameTitle(file);
+            if (closeDocument()) {
+                FileIOController.openPdfFile(file, null);
+                BitteUnterschreiben.getApp().setFrameTitle(file);
+            }
         }
     }
 
@@ -110,24 +111,26 @@ public class GUIController {
     }
 
     static void quit() {
-        if (mundaneCheckIfDocumentChanged(bundle.getString("exit.message"))) {
+        if (showOkCancelOnUnsavedDoc(bundle.getString("exit.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Quitting");
             DocumentController.purgeDocument();
             System.exit(0);
         }
     }
 
-    static void closeDocument() {
-        if (mundaneCheckIfDocumentChanged(bundle.getString("close.message"))) {
+    static boolean closeDocument() {
+        if (showOkCancelOnUnsavedDoc(bundle.getString("close.message"))) {
             LoggerFactory.getLogger(GUIController.class).debug("Closing document");
             DocumentController.purgeDocument();
             EventController.notify(EventType.FILE_UNMODIFIED, null);
             EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);
             BitteUnterschreiben.getApp().resetFrameTitle();
+            return true;
         }
+        return false;
     }
 
-    private static boolean mundaneCheckIfDocumentChanged(String message) {
+    private static boolean showOkCancelOnUnsavedDoc(String message) {
         int answer = 0;
         if (DocumentController.isChanged()) {
             answer = JOptionPane.showConfirmDialog(BitteUnterschreiben.getApp(), message,

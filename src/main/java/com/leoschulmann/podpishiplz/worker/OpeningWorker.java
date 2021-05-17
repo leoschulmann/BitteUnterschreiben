@@ -18,6 +18,7 @@ public class OpeningWorker extends AbstractUnterschreibenWorker {
         super(owner, bundle.getString("opening"));
         this.file = file;
         this.selectedPages = selectedPages;
+        addPropertyChangeListener(new OpeningWorkerListener());
     }
 
     @Override

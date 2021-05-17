@@ -16,5 +16,6 @@ public enum EventType {
     DRAG_ENTER_EVENT,
     DRAG_EXIT_EVENT,
     DROP_EVENT,
+    OPEN_WORKER_FINISHED,
     FILE_UNMODIFIED
 }
