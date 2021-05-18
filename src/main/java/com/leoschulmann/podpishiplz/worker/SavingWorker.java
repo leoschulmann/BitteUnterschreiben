@@ -3,14 +3,15 @@ package com.leoschulmann.podpishiplz.worker;
 import com.leoschulmann.podpishiplz.controller.DocumentController;
 import com.leoschulmann.podpishiplz.controller.PDFController;
 import com.leoschulmann.podpishiplz.model.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+@Slf4j
 public class SavingWorker extends AbstractUnterschreibenWorker {
     private final String file;
     private final float jpgQ;
@@ -45,9 +46,9 @@ public class SavingWorker extends AbstractUnterschreibenWorker {
         try {
             pdf.save(file);
             pdf.close();
-            LoggerFactory.getLogger(SavingWorker.class).info("File {} saved.", file);
+            log.info("File {} saved.", file);
         } catch (IOException e) {
-            LoggerFactory.getLogger(SavingWorker.class).error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         System.gc();

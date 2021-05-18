@@ -4,7 +4,7 @@ import com.leoschulmann.podpishiplz.BitteUnterschreiben;
 import com.leoschulmann.podpishiplz.controller.EventListener;
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
+@Slf4j
 public class SettingsBlending extends JPanel implements SettingsTab, EventListener {
     private static ImageIcon noBlendingIcon;
     private static ImageIcon darkenBlendingIcon;
@@ -86,8 +87,7 @@ public class SettingsBlending extends JPanel implements SettingsTab, EventListen
     public void saveState() {
         int mode = IntStream.range(0, btns.length).filter(i -> btns[i].isSelected()).findFirst().orElse(-1);
         SettingsController.setBlendingMode(mode);
-        LoggerFactory.getLogger(SettingsBlending.class).debug(
-                "Saving data: blending mode {}", mode);
+        log.debug("Saving data: blending mode {}", mode);
     }
 
     @Override

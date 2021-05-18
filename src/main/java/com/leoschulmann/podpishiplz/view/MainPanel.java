@@ -8,7 +8,7 @@ import com.leoschulmann.podpishiplz.controller.SettingsController;
 import com.leoschulmann.podpishiplz.graphics.Rotater;
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,6 +19,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
+@Slf4j
 public class MainPanel extends JPanel {
     @Getter
     private final JScrollPane mainPanelWrapper;
@@ -118,7 +119,7 @@ public class MainPanel extends JPanel {
                 try {
                     im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png"));
                 } catch (Exception e) {
-                    LoggerFactory.getLogger(MainPanel.class).error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                     JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     im = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
                     Graphics gr = im.createGraphics();

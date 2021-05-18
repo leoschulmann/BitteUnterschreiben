@@ -2,6 +2,7 @@ package com.leoschulmann.podpishiplz.controller;
 
 import com.leoschulmann.podpishiplz.graphics.Resizer;
 import com.leoschulmann.podpishiplz.model.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -9,15 +10,15 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+@Slf4j
 public class PDFController {
     static BufferedImage[] generatePageThumbnails(PDDocument pdDocument, boolean[] selectedPages) {
-        LoggerFactory.getLogger(PDFController.class).debug("Building thumbnails.");
+        log.debug("Building thumbnails.");
         BufferedImage[] images = new BufferedImage[pdDocument.getNumberOfPages()];
         try {
             PDFRenderer renderer = new PDFRenderer(pdDocument);
@@ -48,7 +49,7 @@ public class PDFController {
     }
 
     public static BufferedImage get300dpiPage(File file, int page) {
-        LoggerFactory.getLogger(PDFController.class).debug("Rendering 300dpi image of {}({}).", file.getName(), page);
+        log.debug("Rendering 300dpi image of {}({}).", file.getName(), page);
         PDDocument pdDocument;
         BufferedImage bufferedImage = null;
         try {
@@ -63,13 +64,13 @@ public class PDFController {
     }
 
     public static PDDocument createPdf() {
-        LoggerFactory.getLogger(PDFController.class).debug("Initiating building PDF.");
+        log.debug("Initiating building PDF.");
         PDDocument pdf = new PDDocument();
         String producer = SettingsController.isProducerOverride() ?
                 SettingsController.getProducer() : SettingsController.getDefaultProducer();
         pdf.getDocumentInformation().setProducer(producer);
         pdf.getDocumentInformation().setCreator(SettingsController.getCreator());
-        LoggerFactory.getLogger(PDFController.class).info("Creator field set to {}", producer);
+        log.info("Creator field set to {}", producer);
         return pdf;
     }
 

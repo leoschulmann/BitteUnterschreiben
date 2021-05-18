@@ -2,13 +2,14 @@ package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Slf4j
 public class SettingsGraphics extends JPanel implements SettingsTab {
     private static JSlider jpegQltySlider;
     private static JSlider dpiSlider;
@@ -57,8 +58,7 @@ public class SettingsGraphics extends JPanel implements SettingsTab {
         float r = 1.0f * dpiSlider.getValue() / 300;
         SettingsController.setJpegQuality(q);
         SettingsController.setResolutionMultiplier(r);
-        LoggerFactory.getLogger(SettingsGraphics.class).debug(
-                "Saving data: quality {}, resolution {}", q, r);
+        log.debug("Saving data: quality {}, resolution {}", q, r);
     }
 
     @Override

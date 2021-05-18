@@ -6,7 +6,6 @@ import com.leoschulmann.podpishiplz.view.MainPanel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -49,7 +48,7 @@ public class MainPanelController {
 
     // resized page size
     private static int getPageStartHeight() {
-        LoggerFactory.getLogger(MainPanelController.class).debug("Panel AR : {}, image AR {}",
+        log.debug("Panel AR : {}, image AR {}",
                 getPanelAspectRatio(), imAspectRatio);
         if (getPanelAspectRatio() > imAspectRatio) {
             return mainPanel.getMainPanelWrapper().getHeight() - (INSET * 2);
@@ -143,8 +142,7 @@ public class MainPanelController {
         pageHeight = getPageStartHeight();
         pageX0 = getPageStartX();
         pageY0 = getPageStartY();
-        LoggerFactory.getLogger(MainPanelController.class)
-                .debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
+        log.debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
     }
 
     public static void setPageX0(int pageX0) {

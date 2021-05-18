@@ -6,8 +6,8 @@ import com.leoschulmann.podpishiplz.worker.AbstractUnterschreibenWorker;
 import com.leoschulmann.podpishiplz.worker.OpeningWorker;
 import com.leoschulmann.podpishiplz.worker.SavingWorker;
 import com.leoschulmann.podpishiplz.worker.WorkerDialog;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,9 +18,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+@Slf4j
 public class FileIOController {
     static void loadOverlay(File file) {
-        LoggerFactory.getLogger(FileIOController.class).info("Loading overlay {}", file.toString());
+        log.info("Loading overlay {}", file.toString());
         try {
             BufferedImage im = ImageIO.read(file);
             if (im == null) throw new IllegalArgumentException("Can't load file " + file.toString());
@@ -43,7 +44,7 @@ public class FileIOController {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
-            LoggerFactory.getLogger(FileIOController.class).error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -58,7 +59,7 @@ public class FileIOController {
     }
 
     static void openPdfFile(String file, boolean[] selectedPages) {
-        LoggerFactory.getLogger(FileIOController.class).debug("Loading file: {}", file);
+        log.debug("Loading file: {}", file);
         AbstractUnterschreibenWorker worker = new OpeningWorker(BitteUnterschreiben.getApp(), file, selectedPages);
         worker.execute();
         worker.runDialog();
@@ -97,13 +98,13 @@ public class FileIOController {
     }
 
     static BufferedImage getOverlayIm(File f) {
-        LoggerFactory.getLogger(FileIOController.class).info("Loading thumbnail for {}", f.getName());
+        log.info("Loading thumbnail for {}", f.getName());
         try {
             return ImageIO.read(f);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
-            LoggerFactory.getLogger(FileIOController.class).error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             BufferedImage im = new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB);
             Graphics g = im.createGraphics();
             g.setColor(Color.RED);

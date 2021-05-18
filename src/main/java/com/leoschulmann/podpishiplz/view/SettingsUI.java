@@ -4,7 +4,7 @@ import com.leoschulmann.podpishiplz.controller.EventController;
 import com.leoschulmann.podpishiplz.controller.EventListener;
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +12,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
 
+@Slf4j
 public class SettingsUI extends JPanel implements SettingsTab, EventListener {
     private static JSlider zoomMultiplier;
     private static JCheckBox invertZoom;
@@ -122,8 +123,7 @@ public class SettingsUI extends JPanel implements SettingsTab, EventListener {
         SettingsController.setInvertZoom(invertZoom.isSelected());
         SettingsController.setSelectionColor(color.getText());
         SettingsController.setLanguage(key);
-        LoggerFactory.getLogger(SettingsGraphics.class).debug(
-                "Saving data: max overlays {}, zoom {}, invert '{}', color #{}, language '{}'",
+        log.debug("Saving data: max overlays {}, zoom {}, invert '{}', color #{}, language '{}'",
                 mo, z, invertZoom.isSelected(), color.getText(), key);
     }
 

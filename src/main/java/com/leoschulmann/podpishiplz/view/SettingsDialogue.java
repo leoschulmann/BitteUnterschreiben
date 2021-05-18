@@ -4,7 +4,7 @@ import com.leoschulmann.podpishiplz.controller.EventController;
 import com.leoschulmann.podpishiplz.controller.EventListener;
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Slf4j
 public class SettingsDialogue extends JDialog implements EventListener {
     private final java.util.List<SettingsTab> tabList;
     private final JButton cancel;
@@ -62,7 +63,7 @@ public class SettingsDialogue extends JDialog implements EventListener {
     private void manageTabs(List<SettingsTab> tabList) {
         tabs.removeAll();
         for (SettingsTab st : tabList) {
-            LoggerFactory.getLogger(SettingsDialogue.class).debug("Adding {}", st.getTitle());
+            log.debug("Adding {}", st.getTitle());
             tabs.add(st.getTitle(), (JPanel) st);
         }
     }
@@ -74,7 +75,7 @@ public class SettingsDialogue extends JDialog implements EventListener {
             SettingsController.saveYML();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            LoggerFactory.getLogger(SettingsDialogue.class).error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         setVisible(false);
     }

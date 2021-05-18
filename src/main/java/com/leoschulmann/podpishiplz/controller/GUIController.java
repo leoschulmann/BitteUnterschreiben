@@ -6,7 +6,7 @@ import com.leoschulmann.podpishiplz.view.FilePicker;
 import com.leoschulmann.podpishiplz.view.PageSelectorDialogue;
 import com.leoschulmann.podpishiplz.view.PageSelectorElement;
 import com.leoschulmann.podpishiplz.view.PageThumbnailButton;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Slf4j
 public class GUIController {
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
 
@@ -39,7 +40,7 @@ public class GUIController {
             PageSelectorDialogue psd = new PageSelectorDialogue(BitteUnterschreiben.getApp(), file, previews);
             boolean[] selectedPages = psd.showDialog();
             if (selectedPages != null) {
-                LoggerFactory.getLogger(GUIController.class).debug("Selected pages: {}", (Object) selectedPages);
+                log.debug("Selected pages: {}", selectedPages);
                 FileIOController.openPdfFile(file, selectedPages);
                 EventController.notify(EventType.FILE_MODIFIED, null);
             }
@@ -112,7 +113,7 @@ public class GUIController {
 
     static void quit() {
         if (showOkCancelOnUnsavedDoc(bundle.getString("exit.message"))) {
-            LoggerFactory.getLogger(GUIController.class).debug("Quitting");
+            log.debug("Quitting");
             DocumentController.purgeDocument();
             System.exit(0);
         }
@@ -120,7 +121,7 @@ public class GUIController {
 
     static boolean closeDocument() {
         if (showOkCancelOnUnsavedDoc(bundle.getString("close.message"))) {
-            LoggerFactory.getLogger(GUIController.class).debug("Closing document");
+            log.debug("Closing document");
             DocumentController.purgeDocument();
             EventController.notify(EventType.FILE_UNMODIFIED, null);
             EventController.notify(EventType.NO_PAGES_IN_DOCUMENT, null);

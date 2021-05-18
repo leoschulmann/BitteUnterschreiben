@@ -1,6 +1,6 @@
 package com.leoschulmann.podpishiplz.view;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Slf4j
 public class PageSelectorDialogue extends JDialog {
     private static ResourceBundle bundle = ResourceBundle.getBundle("lang", Locale.getDefault());
     private boolean[] result;
@@ -41,7 +42,7 @@ public class PageSelectorDialogue extends JDialog {
         pack();
         setSize(500, getHeight() + 10);
         setLocationRelativeTo(owner);
-        LoggerFactory.getLogger(PageSelectorDialogue.class).debug("Dialogue created [{}x{}]", getWidth(), getHeight());
+        log.debug("Dialogue created [{}x{}]", getWidth(), getHeight());
 
         ok.addActionListener(e -> {
             result = new boolean[pages.length];

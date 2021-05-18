@@ -2,13 +2,14 @@ package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Slf4j
 public class SettingsPDFMetadata extends JPanel implements SettingsTab {
     private static JTextField producerField;
     private static JTextField creatorField;
@@ -78,8 +79,7 @@ public class SettingsPDFMetadata extends JPanel implements SettingsTab {
         SettingsController.setProducerOverride(producerOverrideCB.isSelected());
         SettingsController.setProducer(p);
         SettingsController.setCreator(c);
-        LoggerFactory.getLogger(SettingsPDFMetadata.class).debug(
-                "Saving data: creator '{}', producer '{}', producer override '{}'", c, p, producerOverrideCB.isSelected());
+        log.debug("Saving data: creator '{}', producer '{}', producer override '{}'", c, p, producerOverrideCB.isSelected());
     }
 
     @Override

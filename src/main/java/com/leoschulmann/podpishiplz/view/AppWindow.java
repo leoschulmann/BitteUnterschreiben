@@ -2,11 +2,12 @@ package com.leoschulmann.podpishiplz.view;
 
 import com.leoschulmann.podpishiplz.controller.MenuBarController;
 import com.leoschulmann.podpishiplz.controller.SettingsController;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
 
+@Slf4j
 public class AppWindow extends JFrame {
     private final String title;
 
@@ -16,13 +17,13 @@ public class AppWindow extends JFrame {
         try {
             UIManager.setLookAndFeel(OSDesign);  //sets OS-specific Look and Feel
             if (OSDesign.contains("apple")) {
-                LoggerFactory.getLogger(AppWindow.class).info("Creating MacOS interface look and feel.");
+                log.info("Creating MacOS interface look and feel.");
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getClass().toString()
                     + " " + e.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            LoggerFactory.getLogger(AppWindow.class).error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         title = SettingsController.getDefaultProducer();
@@ -42,7 +43,7 @@ public class AppWindow extends JFrame {
         add(topScrollerPanel.getWrapper(), BorderLayout.NORTH);
         add(mainPanel.getMainPanelWrapper(), BorderLayout.CENTER);
         add(overlayPanel.getWrapper(), BorderLayout.SOUTH);
-        LoggerFactory.getLogger(AppWindow.class).debug("Finished building {}", this.getClass().getSimpleName());
+        log.debug("Finished building {}", this.getClass().getSimpleName());
     }
 
     public void setFrameTitle(String title) {

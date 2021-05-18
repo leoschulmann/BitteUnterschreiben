@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;

@@ -6,7 +6,7 @@ import com.leoschulmann.podpishiplz.view.OverlayPanel;
 import com.leoschulmann.podpishiplz.view.OverlayThumbButton;
 import com.leoschulmann.podpishiplz.view.OverlayThumbButtonContextMenu;
 import lombok.Setter;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
 
+@Slf4j
 public class OverlaysPanelController {
     @Setter
     private static OverlayPanel overlayPanel;
@@ -90,8 +91,7 @@ public class OverlaysPanelController {
                 case REFRESH_OVERLAYS_PANEL:
                     removeAll();
                     List<File> overlaysFromSettings = SettingsController.getUsedOverlays();
-                    LoggerFactory.getLogger(OverlaysPanelController.class).debug("Loading {} overlays",
-                            overlaysFromSettings.size());
+                    log.debug("Loading {} overlays", overlaysFromSettings.size());
                     List<OverlayThumbButton> cache = new ArrayList<>(BUTTONS);
                     BUTTONS.clear();
 

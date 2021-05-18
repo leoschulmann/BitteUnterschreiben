@@ -6,6 +6,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import com.leoschulmann.podpishiplz.controller.*;
 import com.leoschulmann.podpishiplz.view.AppWindow;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
+@Slf4j
 public class BitteUnterschreiben {
     static AppWindow app;
 
@@ -28,7 +30,7 @@ public class BitteUnterschreiben {
         if (args.length > 0 && args[0].equals("-v")) {
             root.setLevel(Level.DEBUG);
             root.addAppender(consoleLogger);
-            LoggerFactory.getLogger(BitteUnterschreiben.class).info("Console logging enabled (-v)");
+            log.info("Console logging enabled (-v)");
         }
         SwingUtilities.invokeAndWait(() -> app = new AppWindow());
         init();

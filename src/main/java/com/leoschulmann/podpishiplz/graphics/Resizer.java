@@ -1,13 +1,15 @@
 package com.leoschulmann.podpishiplz.graphics;
 
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
+@Slf4j
 public class Resizer {
-    static final AffineTransformOp halvingOp = new AffineTransformOp(
+    private static final AffineTransformOp halvingOp = new AffineTransformOp(
             AffineTransform.getScaleInstance(0.5, 0.5),
             AffineTransformOp.TYPE_BILINEAR);
 
@@ -18,12 +20,11 @@ public class Resizer {
         if (pictureAR > getRatio(maxWidth, desiredHeight)) {
             desiredWidth = maxWidth;
             desiredHeight = (int) (1. * desiredWidth / pictureAR);
-        }  else {
-            desiredWidth = (int) (1.* desiredHeight * pictureAR);
+        } else {
+            desiredWidth = (int) (1. * desiredHeight * pictureAR);
         }
 
-        LoggerFactory.getLogger(Resizer.class).debug("Resizing image : {}x{}px -> {}x{}px",
-                im.getWidth(), im.getHeight(), desiredWidth, desiredHeight);
+        log.debug("Resizing image : {}x{}px -> {}x{}px", im.getWidth(), im.getHeight(), desiredWidth, desiredHeight);
 
         while (getRatio(im.getHeight(), desiredHeight) >= 2) {
             im = reduceImageInHalf(im);

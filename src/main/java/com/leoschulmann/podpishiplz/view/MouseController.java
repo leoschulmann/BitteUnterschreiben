@@ -6,7 +6,7 @@ import com.leoschulmann.podpishiplz.controller.EventController;
 import com.leoschulmann.podpishiplz.controller.EventType;
 import com.leoschulmann.podpishiplz.controller.MainPanelController;
 import com.leoschulmann.podpishiplz.model.Overlay;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+@Slf4j
 public class MouseController extends MouseAdapter {
 
     private final MainPanel panel;
@@ -88,8 +89,7 @@ public class MouseController extends MouseAdapter {
                                             MainPanelController.getPageY0(), e.getX(), e.getY());
                             double rotateAngle = objectAngle + (finishAngle - startingAngle);
                             overlay.setRotation(rotateAngle);
-                            LoggerFactory.getLogger(MouseController.class).debug(
-                                    "Rotate angle = {}", (int) (Math.toDegrees(rotateAngle)));
+                            log.debug("Rotate angle = {}", (int) (Math.toDegrees(rotateAngle)));
                             panel.repaint();
                         });
             }
@@ -111,7 +111,7 @@ public class MouseController extends MouseAdapter {
                                     panel.repaint();
                                 },
 
-               // CASE 3: no overlays under the mouse cursor -- pan the whole page
+                                // CASE 3: no overlays under the mouse cursor -- pan the whole page
                                 () -> {
                                     int deltax = e.getX() - clickX;
                                     int deltay = e.getY() - clickY;
