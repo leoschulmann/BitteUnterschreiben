@@ -11,14 +11,26 @@ public class Resizer {
             AffineTransform.getScaleInstance(0.5, 0.5),
             AffineTransformOp.TYPE_BILINEAR);
 
-    public static BufferedImage resize(BufferedImage im, int desiredHeight) {
-        LoggerFactory.getLogger(Resizer.class).debug("Resizing image : {}px -> {}px", im.getHeight(), desiredHeight);
-        while (getRatio(im.getHeight(), desiredHeight) < 0.5) {
+    public static BufferedImage resize(BufferedImage im, int desiredHeight, int maxWidth) {
+        int desiredWidth;
+        double pictureAR = getRatio(im.getWidth(), im.getHeight());
+
+        if (pictureAR > getRatio(maxWidth, desiredHeight)) {
+            desiredWidth = maxWidth;
+            desiredHeight = (int) (1. * desiredWidth / pictureAR);
+        }  else {
+            desiredWidth = (int) (1.* desiredHeight * pictureAR);
+        }
+
+        LoggerFactory.getLogger(Resizer.class).debug("Resizing image : {}x{}px -> {}x{}px",
+                im.getWidth(), im.getHeight(), desiredWidth, desiredHeight);
+
+        while (getRatio(im.getHeight(), desiredHeight) >= 2) {
             im = reduceImageInHalf(im);
         }
 
-        double lastPassRatio = getRatio(im.getHeight(), desiredHeight);
-        int desiredWidth = (int) (im.getWidth() * lastPassRatio);
+        double lastPassRatio = getRatio(desiredHeight, im.getHeight());
+
         BufferedImage resultPicture = new BufferedImage(desiredWidth, desiredHeight, BufferedImage.TYPE_INT_ARGB);
         AffineTransform transform = AffineTransform.getScaleInstance(lastPassRatio, lastPassRatio);
         AffineTransformOp operation = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
@@ -31,7 +43,7 @@ public class Resizer {
         return halvingOp.filter(im, output);
     }
 
-    private static double getRatio(int inputImageHeight, int outputImageHeight) {
-        return 1.0 * outputImageHeight / inputImageHeight;
+    private static double getRatio(int lengthA, int lengthB) {
+        return 1.0 * lengthA / lengthB;
     }
 }

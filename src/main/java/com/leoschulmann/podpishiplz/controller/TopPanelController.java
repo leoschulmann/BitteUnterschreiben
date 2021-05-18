@@ -84,7 +84,7 @@ public class TopPanelController {
                             .filter(b -> b.getPage() == pageRotated)
                             .findFirst()
                             .orElse(null);
-                    butt.setThumbnailImage(Resizer.resize(pageRotated.getImage(), 75));
+                    butt.setThumbnailImage(Resizer.resize(pageRotated.getImage(), 75, 75));
                     butt.repaint();
                     break;
                 case MAIN_PANEL_FULL:

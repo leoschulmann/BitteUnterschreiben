@@ -29,7 +29,7 @@ public class PDFController {
                 //setup intermediate image height (appr 585 px for A4)
                 //might lower the init render size to cut some rescaling passes
                 BufferedImage raw = renderer.renderImageWithDPI(i, 50f);
-                images[i] = Resizer.resize(raw, 75);  // input image and desired thumbnail height
+                images[i] = Resizer.resize(raw, 75, 75);  // input image and desired thumbnail height
             }
             pdDocument.close();
         } catch (IOException e) {

@@ -28,7 +28,7 @@ public class OverlaysPanelController {
     private static OverlayThumbButton loadThumb(File f) {
         try {
             BufferedImage raw = FileIOController.getOverlayIm(f);
-            BufferedImage thumbnail = Resizer.resize(raw, 50);
+            BufferedImage thumbnail = Resizer.resize(raw, 50, 150);
             OverlayThumbButton butt = new OverlayThumbButton(thumbnail, f.toString(), f);
             butt.setVerticalTextPosition(SwingConstants.BOTTOM);
             butt.addActionListener(e -> GUIController.overlayThumbnailButtonOnClickAction(butt.getFile()));

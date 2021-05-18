@@ -19,7 +19,7 @@ public class  TopScrollerPanel {
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.SOUTH;
     }
 
     JScrollPane getWrapper() {
