@@ -8,6 +8,7 @@ import com.leoschulmann.podpishiplz.controller.MainPanelController;
 import com.leoschulmann.podpishiplz.model.Overlay;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
@@ -53,8 +54,9 @@ public class MouseController extends MouseAdapter {
                 Overlay overlay = finalOverlay[0];
                 if (overlay != null) {
                     startingAngle = getAngle( //image real center XY vs click XY
-                            overlay.getRelCentX() * MainPanelController.getPageWidth() + MainPanelController.getPageX0(),
-                            overlay.getRelCentY() * MainPanelController.getPageHeight() + MainPanelController.getPageY0(),
+                            //todo check 'zoomed' methods
+                            overlay.getRelCentX() * MainPanelController.getZoomedImageWidth() + MainPanelController.getPageX0(),
+                            overlay.getRelCentY() * MainPanelController.getZoomedImageHeight() + MainPanelController.getPageY0(),
                             clickX, clickY);
                     objectAngle = overlay.getRotation();
                 }
@@ -83,9 +85,10 @@ public class MouseController extends MouseAdapter {
                         .findFirst()
                         .ifPresent(overlay -> {
                             double finishAngle = getAngle(
-                                    overlay.getRelCentX() * MainPanelController.getPageWidth() +
+                                    //todo check 'zoomed' methods
+                                    overlay.getRelCentX() * MainPanelController.getZoomedImageWidth() +
                                             MainPanelController.getPageX0(),
-                                    overlay.getRelCentY() * MainPanelController.getPageHeight() +
+                                    overlay.getRelCentY() * MainPanelController.getZoomedImageHeight() +
                                             MainPanelController.getPageY0(), e.getX(), e.getY());
                             double rotateAngle = objectAngle + (finishAngle - startingAngle);
                             overlay.setRotation(rotateAngle);
@@ -104,8 +107,9 @@ public class MouseController extends MouseAdapter {
                                     int shiftY = e.getY() - clickY;
                                     double mouseOffsetX = clickX - overlay.getBounds().getCenterX();
                                     double mouseOffsetY = clickY - overlay.getBounds().getCenterY();
-                                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageX0() - mouseOffsetX) / MainPanelController.getPageWidth());
-                                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageY0() - mouseOffsetY) / MainPanelController.getPageHeight());
+                                    //todo bugs somewhere here
+                                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageX0() - mouseOffsetX) / MainPanelController.getZoomedImageWidth());
+                                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageY0() - mouseOffsetY) / MainPanelController.getZoomedImageHeight());
                                     clickX += shiftX;
                                     clickY += shiftY;
                                     panel.repaint();
@@ -115,12 +119,19 @@ public class MouseController extends MouseAdapter {
                                 () -> {
                                     int deltax = e.getX() - clickX;
                                     int deltay = e.getY() - clickY;
-                                    MainPanelController.setPageX0(MainPanelController.getPageX0() + deltax);
-                                    MainPanelController.setPageY0(MainPanelController.getPageY0() + deltay);
-                                    panel.repaint();
                                     clickX += deltax;
                                     clickY += deltay;
-                                    panel.getMainPanelWrapper().setViewportView(panel);
+
+                                    //todo some wiggly dragging
+                                    Point p = panel.getMainPanelWrapper().getViewport().getViewPosition();
+
+                                    int viewX = p.x - deltax;
+                                    int viewY = p.y - deltay;
+
+                                    if (viewX >= 0 && viewY >= 0) {
+                                        Point target = new Point(viewX, viewY);
+                                        panel.getMainPanelWrapper().getViewport().setViewPosition(target);
+                                    }
                                 });
             }
         }
@@ -129,14 +140,14 @@ public class MouseController extends MouseAdapter {
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
-            MainPanelController.zoom(e.getPreciseWheelRotation());
-            panel.getMainPanelWrapper().setViewportView(panel);
+            MainPanelController.changeZoom(e.getPreciseWheelRotation());
             panel.repaint();
+            panel.getMainPanelWrapper().setViewportView(panel);
         }
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) { //todo show overlay border on rollover
         if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
             MainPanelController.getOverlays().stream().filter(o -> o.getBounds().contains(e.getX(), e.getY()))
                     .findFirst()

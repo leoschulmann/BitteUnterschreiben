@@ -36,14 +36,18 @@ public class MainPanelController {
     private static boolean rotatingMode;
 
     private static final int INSET = 10;  // margin (px)
-    private static final int MIN_ZOOM_SIZE = 10;
+    private static final double MINIMUM_ZOOM = 0.05d;
+    private static final double MAXIMUM_ZOOM = 10.d;
+
+    @Getter
+    private static double zoom = 1.d;
 
     public static int getOverlayResizeWidth(Overlay o) {
-        return (int) (o.getWidth() * getResizeRatio());
+        return (int) (o.getWidth() * zoom);
     }
 
     public static int getOverlayResizeHeight(Overlay o) {
-        return (int) (o.getHeight() * getResizeRatio());
+        return (int) (o.getHeight() * zoom);
     }
 
     // resized page size
@@ -98,11 +102,11 @@ public class MainPanelController {
     }
 
     public static int getOverlayX(Overlay o) {
-        return getPageX0() + (int) (o.getRelCentX() * getPageWidth()) - getOverlayResizeWidth(o) / 2;
+        return getInsetX() + (int) (getZoomedImageWidth() * o.getRelCentX()) - getOverlayResizeWidth(o) / 2;
     }
 
     public static int getOverlayY(Overlay o) {
-        return getPageY0() + (int) (o.getRelCentY() * getPageHeight()) - getOverlayResizeHeight(o) / 2;
+        return getInsetY() + (int) (getZoomedImageHeight() * o.getRelCentY()) - getOverlayResizeHeight(o) / 2;
     }
 
     public static Optional<Rectangle> getSelectedOverlayBounds() {
@@ -137,12 +141,49 @@ public class MainPanelController {
     }
 
     static void resetPosition() {
-        imAspectRatio = 1. * getImage().getWidth() / getImage().getHeight();
-        pageWidth = getPageStartWidth();
-        pageHeight = getPageStartHeight();
-        pageX0 = getPageStartX();
-        pageY0 = getPageStartY();
-        log.debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
+        zoom = determineInitialZoom();
+
+
+//        imAspectRatio = 1. * getImage().getWidth() / getImage().getHeight();
+//        pageWidth = getPageStartWidth();
+//        pageHeight = getPageStartHeight();
+//        pageX0 = getPageStartX();
+//        pageY0 = getPageStartY();
+//        log.debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
+    }
+
+    private static double determineInitialZoom() {
+        int vpW = mainPanel.getMainPanelWrapper().getWidth();
+        int vpH = mainPanel.getMainPanelWrapper().getHeight();
+
+        double widthRatio = 1. * getImage().getWidth() / vpW;
+        double heightRatio = 1. * getImage().getHeight() / vpH;
+
+        return widthRatio > heightRatio ? 1. / (widthRatio * 1.1) : 1. / (heightRatio * 1.1);
+    }
+
+    public static int getZoomedImageHeight() {
+        return (int) (getImage().getHeight() * zoom);
+    }
+
+    public static int getZoomedImageWidth() {
+        return (int) (getImage().getWidth() * zoom);
+    }
+
+    public static int getPanelWidth() {
+        return getZoomedImageWidth() * 2;
+    }
+
+    public static int getPanelHeight() {
+        return getZoomedImageHeight() * 2;
+    }
+
+    public static int getInsetX() {
+        return (getPanelWidth() - getZoomedImageWidth()) / 2;
+    }
+
+    public static int getInsetY() {
+        return (getPanelHeight() - getZoomedImageHeight()) / 2;
     }
 
     public static void setPageX0(int pageX0) {
@@ -153,12 +194,14 @@ public class MainPanelController {
         if (pageY0 >= 0) MainPanelController.pageY0 = pageY0;
     }
 
-    public static void zoom(double zoomAmount) {
+    public static void changeZoom(double zoomAmount) {
         double modifier = Math.pow(SettingsController.getZoomSpeed(),
                 SettingsController.isInvertZoom() ? -zoomAmount : zoomAmount);
-        if ((pageHeight >= MIN_ZOOM_SIZE && pageWidth >= MIN_ZOOM_SIZE) || modifier > 1.0) {
-            pageHeight *= modifier;
-            pageWidth = (int) (imAspectRatio * pageHeight);
+
+        if (zoom >= MINIMUM_ZOOM || modifier > 1.) {
+            if (zoom <= MAXIMUM_ZOOM || modifier < 1.) {
+                zoom *= modifier;
+            }
         }
     }
 
