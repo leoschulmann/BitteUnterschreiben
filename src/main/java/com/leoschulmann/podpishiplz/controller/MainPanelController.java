@@ -117,20 +117,20 @@ public class MainPanelController {
         EventListener el = (event, object) -> {
             switch (event) {
                 case PAGE_ROTATED:
-                    resetPosition();
-                    setPageMode();
+                    resetZoom();
+                    redrawInPageMode();
                     break;
                 case DRAG_ENTER_EVENT:
-                    setDraggingMode();
+                    redrawInDraggingMode();
                     break;
                 case DRAG_EXIT_EVENT:
-                    setEmptyMode();
+                    redrawInEmptyMode();
                     break;
                 case DROP_EVENT:
                     GUIController.openFile((String) object);
                     break;
                 case OPEN_WORKER_FINISHED:
-                    setPageMode();
+                    redrawInPageMode();
                     break;
             }
         };
@@ -140,26 +140,29 @@ public class MainPanelController {
         EventController.subscribe(EventType.DRAG_EXIT_EVENT, el);
     }
 
-    static void resetPosition() {
-        zoom = determineInitialZoom();
-
-
-//        imAspectRatio = 1. * getImage().getWidth() / getImage().getHeight();
-//        pageWidth = getPageStartWidth();
-//        pageHeight = getPageStartHeight();
-//        pageX0 = getPageStartX();
-//        pageY0 = getPageStartY();
-//        log.debug("Resetting page : size [{},{}], top left corner ({},{})", pageWidth, pageHeight, pageX0, pageY0);
-    }
-
-    private static double determineInitialZoom() {
+    static void resetZoom() {
         int vpW = mainPanel.getMainPanelWrapper().getWidth();
         int vpH = mainPanel.getMainPanelWrapper().getHeight();
 
         double widthRatio = 1. * getImage().getWidth() / vpW;
         double heightRatio = 1. * getImage().getHeight() / vpH;
 
-        return widthRatio > heightRatio ? 1. / (widthRatio * 1.1) : 1. / (heightRatio * 1.1);
+        zoom = widthRatio > heightRatio ? 1. / (widthRatio * 1.1) : 1. / (heightRatio * 1.1);
+        log.debug("setting init zoom value {}", zoom);
+    }
+
+    static void setPageCentered() {
+        int vpW = mainPanel.getMainPanelWrapper().getViewport().getWidth();
+        int vpH = mainPanel.getMainPanelWrapper().getViewport().getHeight();
+
+        int x = (getPanelWidth() - vpW) / 2;
+        int y = (getPanelHeight() - vpH) / 2;
+
+        Point initCenter = new Point(Math.max(x, 0), Math.max(y, 0));
+
+        mainPanel.getMainPanelWrapper().getViewport().setViewPosition(initCenter);
+
+        log.debug("setting init center:{}:{}", initCenter.getX(), initCenter.getY());
     }
 
     public static int getZoomedImageHeight() {
@@ -205,19 +208,19 @@ public class MainPanelController {
         }
     }
 
-    static void setPageMode() {
+    static void redrawInPageMode() {
         mainPanel.setMode(DrawMode.PAGE);
         mainPanel.repaint();
 
     }
 
-    static void setEmptyMode() {
+    static void redrawInEmptyMode() {
         mainPanel.setMode(DrawMode.EMPTY);
         mainPanel.repaint();
 
     }
 
-    private static void setDraggingMode() {
+    private static void redrawInDraggingMode() {
         mainPanel.setMode(DrawMode.DND);
         mainPanel.repaint();
     }

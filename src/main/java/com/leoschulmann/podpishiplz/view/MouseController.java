@@ -128,10 +128,11 @@ public class MouseController extends MouseAdapter {
                                     int viewX = p.x - deltax;
                                     int viewY = p.y - deltay;
 
-                                    if (viewX >= 0 && viewY >= 0) {
-                                        Point target = new Point(viewX, viewY);
-                                        panel.getMainPanelWrapper().getViewport().setViewPosition(target);
-                                    }
+                                    if (viewX < 0) viewX = 0;
+                                    if (viewY < 0) viewY = 0;
+
+                                    Point target = new Point(viewX, viewY);
+                                    panel.getMainPanelWrapper().getViewport().setViewPosition(target);
                                 });
             }
         }

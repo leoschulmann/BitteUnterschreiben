@@ -142,6 +142,7 @@ public class MainPanel extends JPanel {
 
                 g.drawImage(im, imX0, imY0, im.getWidth(), im.getHeight(), null);
                 setPreferredSize(new Dimension(im.getWidth(), im.getHeight()));
+                mainPanelWrapper.getViewport().setViewPosition(new Point(0,0));
                 break;
 
             case DND:

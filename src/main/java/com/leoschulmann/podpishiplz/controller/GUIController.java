@@ -56,23 +56,24 @@ public class GUIController {
 
     static void overlayThumbnailButtonOnClickAction(File file) {
         FileIOController.loadOverlay(file);
-        MainPanelController.setPageMode();
+        MainPanelController.redrawInPageMode();
     }
 
     static void deleteSelectedOverlayOption() {
         DocumentController.removeSelectedOverlay();
-        MainPanelController.setPageMode();
+        MainPanelController.redrawInPageMode();
     }
 
     static void openPage(Page page) {
         if (page == null) {
             DocumentController.setCurrentPage(null);
-            MainPanelController.setEmptyMode();
+            MainPanelController.redrawInEmptyMode();
             EventController.notify(EventType.MAIN_PANEL_EMPTY, null);
         } else if (DocumentController.contains(page)) {
             DocumentController.setCurrentPage(page);
-            MainPanelController.resetPosition();
-            MainPanelController.setPageMode();
+            MainPanelController.resetZoom();
+            MainPanelController.redrawInPageMode();
+            MainPanelController.setPageCentered();
             EventController.notify(EventType.MAIN_PANEL_FULL, page);
             page.getOverlays().forEach(overlay -> overlay.setSelected(false));
             EventController.notify(EventType.OVERLAY_DESELECTED, null);
@@ -142,6 +143,6 @@ public class GUIController {
 
     public static void deleteAllOverlaysOption() {
         DocumentController.removeAllOverlaysFromPage();
-        MainPanelController.setPageMode();
+        MainPanelController.redrawInPageMode();
     }
 }
