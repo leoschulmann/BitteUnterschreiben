@@ -107,9 +107,13 @@ public class MouseController extends MouseAdapter {
                                     int shiftY = e.getY() - clickY;
                                     double mouseOffsetX = clickX - overlay.getBounds().getCenterX();
                                     double mouseOffsetY = clickY - overlay.getBounds().getCenterY();
-                                    //todo bugs somewhere here
-                                    overlay.setRelCentX((1.0 * e.getX() - MainPanelController.getPageX0() - mouseOffsetX) / MainPanelController.getZoomedImageWidth());
-                                    overlay.setRelCentY((1.0 * e.getY() - MainPanelController.getPageY0() - mouseOffsetY) / MainPanelController.getZoomedImageHeight());
+                                    double relCentX = (1.0 * e.getX() - mouseOffsetX - MainPanelController.getInsetX())
+                                            / MainPanelController.getZoomedImageWidth();
+                                    double relCentY = (1.0 * e.getY() - mouseOffsetY - MainPanelController.getInsetY())
+                                            / MainPanelController.getZoomedImageHeight();
+
+                                    overlay.setRelCentX(relCentX);
+                                    overlay.setRelCentY(relCentY);
                                     clickX += shiftX;
                                     clickY += shiftY;
                                     panel.repaint();
