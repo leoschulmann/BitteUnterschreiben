@@ -54,9 +54,10 @@ public class MouseController extends MouseAdapter {
                 Overlay overlay = finalOverlay[0];
                 if (overlay != null) {
                     startingAngle = getAngle( //image real center XY vs click XY
-                            //todo check 'zoomed' methods
-                            overlay.getRelCentX() * MainPanelController.getZoomedImageWidth() + MainPanelController.getPageX0(),
-                            overlay.getRelCentY() * MainPanelController.getZoomedImageHeight() + MainPanelController.getPageY0(),
+                            overlay.getRelCentX() * MainPanelController.getZoomedImageWidth() +
+                                    MainPanelController.getInsetX(),
+                            overlay.getRelCentY() * MainPanelController.getZoomedImageHeight() +
+                                    MainPanelController.getInsetY(),
                             clickX, clickY);
                     objectAngle = overlay.getRotation();
                 }
@@ -85,11 +86,11 @@ public class MouseController extends MouseAdapter {
                         .findFirst()
                         .ifPresent(overlay -> {
                             double finishAngle = getAngle(
-                                    //todo check 'zoomed' methods
                                     overlay.getRelCentX() * MainPanelController.getZoomedImageWidth() +
-                                            MainPanelController.getPageX0(),
+                                            MainPanelController.getInsetX(),
                                     overlay.getRelCentY() * MainPanelController.getZoomedImageHeight() +
-                                            MainPanelController.getPageY0(), e.getX(), e.getY());
+                                            MainPanelController.getInsetY(),
+                                    e.getX(), e.getY());
                             double rotateAngle = objectAngle + (finishAngle - startingAngle);
                             overlay.setRotation(rotateAngle);
                             log.debug("Rotate angle = {}", (int) (Math.toDegrees(rotateAngle)));
