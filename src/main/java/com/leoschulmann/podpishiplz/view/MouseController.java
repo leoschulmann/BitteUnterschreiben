@@ -124,10 +124,7 @@ public class MouseController extends MouseAdapter {
                                 () -> {
                                     int deltax = e.getX() - clickX;
                                     int deltay = e.getY() - clickY;
-                                    clickX += deltax;
-                                    clickY += deltay;
 
-                                    //todo some wiggly dragging
                                     Point p = panel.getMainPanelWrapper().getViewport().getViewPosition();
 
                                     int viewX = p.x - deltax;
