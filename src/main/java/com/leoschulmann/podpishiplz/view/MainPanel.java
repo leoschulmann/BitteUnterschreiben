@@ -117,6 +117,10 @@ public class MainPanel extends JPanel {
                     }
 
                 });
+                log.trace("DRAWING\tvp:[{},{}]\tp:[{},{}]\tim:[{},{}]",
+                        mainPanelWrapper.getWidth(), mainPanelWrapper.getHeight(),
+                        this.getWidth(), this.getHeight(), MainPanelController.getZoomedImageWidth(),
+                        MainPanelController.getZoomedImageHeight());
                 break;
             case EMPTY:
                 removeMouseListener(mouse);
@@ -124,7 +128,7 @@ public class MainPanel extends JPanel {
                 removeMouseWheelListener(mouse);
                 BufferedImage im;
                 try {
-                    im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png"));
+                    im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png")); //todo cache
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
                     JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

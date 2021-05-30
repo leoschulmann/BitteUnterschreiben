@@ -17,30 +17,15 @@ public class MainPanelController {
     @Setter
     private static MainPanel mainPanel;
 
-    @Getter
-    private static int pageX0;
-
-    @Getter
-    private static int pageY0;
-
-    @Getter
-    private static int pageHeight;
-
-    @Getter
-    private static int pageWidth;
-
-    private static double imAspectRatio;
-
     @Setter
     @Getter
     private static boolean rotatingMode;
 
-    private static final int INSET = 10;  // margin (px)
     private static final double MINIMUM_ZOOM = 0.05d;
     private static final double MAXIMUM_ZOOM = 10.d;
 
     @Getter
-    private static double zoom = 1.d;
+    private static double zoom = 1.;
 
     public static int getOverlayResizeWidth(Overlay o) {
         return (int) (o.getWidth() * zoom);
@@ -50,55 +35,12 @@ public class MainPanelController {
         return (int) (o.getHeight() * zoom);
     }
 
-    // resized page size
-    private static int getPageStartHeight() {
-        log.debug("Panel AR : {}, image AR {}",
-                getPanelAspectRatio(), imAspectRatio);
-        if (getPanelAspectRatio() > imAspectRatio) {
-            return mainPanel.getMainPanelWrapper().getHeight() - (INSET * 2);
-        } else {
-            return (int) (getPageStartWidth() / imAspectRatio);
-        }
-    }
-
-    private static int getPageStartWidth() {
-        if (imAspectRatio > getPanelAspectRatio()) {
-            return mainPanel.getMainPanelWrapper().getWidth() - (INSET * 2);
-        } else {
-            return (int) (getPageStartHeight() * imAspectRatio);
-        }
-    }
-
-    private static double getPanelAspectRatio() {
-        return 1. * mainPanel.getMainPanelWrapper().getWidth() / mainPanel.getMainPanelWrapper().getHeight();
-    }
-
-    // resized page top left coords
-    private static int getPageStartX() {
-        if (getPanelAspectRatio() > imAspectRatio) {
-            return (mainPanel.getMainPanelWrapper().getWidth() - getPageStartWidth()) / 2;
-        } else return INSET;
-    }
-
-    private static int getPageStartY() {
-        if (imAspectRatio > getPanelAspectRatio()) {
-            return (mainPanel.getMainPanelWrapper().getHeight() - getPageStartHeight()) / 2;
-        } else {
-            return INSET;
-        }
-    }
-
     public static BufferedImage getImage() {
         return DocumentController.getCurrentPage().getImage();
     }
 
     public static List<Overlay> getOverlays() {
         return DocumentController.getCurrentPage().getOverlays();
-    }
-
-    // resized divided by real
-    public static double getResizeRatio() {
-        return 1.0 * getPageHeight() / getImage().getHeight();
     }
 
     public static int getOverlayX(Overlay o) {
@@ -174,11 +116,11 @@ public class MainPanelController {
     }
 
     public static int getPanelWidth() {
-        return getZoomedImageWidth() * 2;
+        return Math.max(mainPanel.getMainPanelWrapper().getWidth(), getZoomedImageWidth() * 2);
     }
 
     public static int getPanelHeight() {
-        return getZoomedImageHeight() * 2;
+        return Math.max(mainPanel.getMainPanelWrapper().getHeight(), getZoomedImageHeight() * 2);
     }
 
     public static int getInsetX() {
@@ -187,14 +129,6 @@ public class MainPanelController {
 
     public static int getInsetY() {
         return (getPanelHeight() - getZoomedImageHeight()) / 2;
-    }
-
-    public static void setPageX0(int pageX0) {
-        if (pageX0 >= 0) MainPanelController.pageX0 = pageX0;
-    }
-
-    public static void setPageY0(int pageY0) {
-        if (pageY0 >= 0) MainPanelController.pageY0 = pageY0;
     }
 
     public static void changeZoom(double zoomAmount) {
