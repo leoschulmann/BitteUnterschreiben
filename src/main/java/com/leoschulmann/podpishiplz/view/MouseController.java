@@ -143,8 +143,18 @@ public class MouseController extends MouseAdapter {
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (DocumentController.getCurrentPage() != null && MainPanelController.getOverlays() != null) {
+            Point vPos = panel.getMainPanelWrapper().getViewport().getViewPosition();
+
+            double ratioX = 1. * e.getX() / MainPanelController.getPanelWidth();
+            double ratioY = 1. * e.getY() / MainPanelController.getPanelHeight();
+
             MainPanelController.changeZoom(e.getPreciseWheelRotation());
+
+            int shiftX = (int) (e.getX() - ratioX * MainPanelController.getPanelWidth());
+            int shiftY = (int) (e.getY() - ratioY * MainPanelController.getPanelHeight());
+
             panel.repaint();
+            panel.getMainPanelWrapper().getViewport().setViewPosition(new Point(vPos.x - shiftX, vPos.y - shiftY));
             panel.getMainPanelWrapper().setViewportView(panel);
         }
     }
