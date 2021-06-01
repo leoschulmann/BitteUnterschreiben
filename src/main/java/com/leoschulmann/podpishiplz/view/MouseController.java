@@ -150,9 +150,8 @@ public class MouseController extends MouseAdapter {
 
             MainPanelController.changeZoom(e.getPreciseWheelRotation());
 
-            int shiftX = (int) (e.getX() - ratioX * MainPanelController.getPanelWidth());
-            int shiftY = (int) (e.getY() - ratioY * MainPanelController.getPanelHeight());
-
+            int shiftX = (int) Math.round(e.getX() - ratioX * MainPanelController.getPanelWidth());
+            int shiftY = (int) Math.round(e.getY() - ratioY * MainPanelController.getPanelHeight());
             panel.repaint();
             panel.getMainPanelWrapper().getViewport().setViewPosition(new Point(vPos.x - shiftX, vPos.y - shiftY));
             panel.getMainPanelWrapper().setViewportView(panel);
