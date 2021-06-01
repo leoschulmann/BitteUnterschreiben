@@ -40,10 +40,12 @@ public class MainPanel extends JPanel {
         mainPanelWrapper.setBorder(BorderFactory.createEmptyBorder());
         bgColor = UIManager.getColor("Panel.background");
         MainPanelController.setMainPanel(this);
+
         mouse = new MouseController(this);
-        addMouseListener(mouse);
-        addMouseMotionListener(mouse);
-        addMouseWheelListener(mouse);
+        mainPanelWrapper.addMouseListener(mouse);
+        mainPanelWrapper.addMouseMotionListener(mouse);
+        mainPanelWrapper.addMouseWheelListener(mouse);
+
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -59,23 +61,28 @@ public class MainPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-
         switch (mode) {
             case PAGE:
                 if (getMouseListeners().length == 0) addMouseListener(mouse);
                 if (getMouseMotionListeners().length == 0) addMouseMotionListener(mouse);
                 if (getMouseWheelListeners().length == 0) addMouseWheelListener(mouse);
 
+                setPreferredSize(new Dimension(MainPanelController.getPanelWidth(), MainPanelController.getPanelHeight()));
+
                 g.setColor(bgColor);
-                g.fillRect(0, 0, getWidth(), getHeight());
-                int pageHeight = MainPanelController.getPageHeight();
-                int pageWidth = MainPanelController.getPageWidth();
-                int pageX0 = MainPanelController.getPageX0();
-                int pageY0 = MainPanelController.getPageY0();
-                setPreferredSize(new Dimension(pageX0 + pageWidth, pageY0 + pageHeight));
-                g.drawImage(MainPanelController.getImage(), pageX0, pageY0, pageWidth, pageHeight, null);
+                g.fillRect(0, 0, MainPanelController.getPanelWidth(), MainPanelController.getPanelHeight());
+
+                g.drawImage(MainPanelController.getImage(),
+                        MainPanelController.getInsetX(),
+                        MainPanelController.getInsetY(),
+                        MainPanelController.getZoomedImageWidth(),
+                        MainPanelController.getZoomedImageHeight(), null);
+
                 g.setColor(Color.GRAY);
-                g.drawRect(pageX0, pageY0, pageWidth, pageHeight);
+                g.drawRect(MainPanelController.getInsetX(),
+                        MainPanelController.getInsetY(),
+                        MainPanelController.getZoomedImageWidth(),
+                        MainPanelController.getZoomedImageHeight());
 
                 if (MainPanelController.getOverlays().size() > 0) {
                     MainPanelController.getOverlays().forEach(o -> {
@@ -86,8 +93,8 @@ public class MainPanel extends JPanel {
                         int overlayY = MainPanelController.getOverlayY(o);
                         if (o.getRotation() != 0.) {
                             image = Rotater.freeRotate(o.getImage(), o.getRotation());
-                            overlayResizeWidth = (int) (MainPanelController.getResizeRatio() * image.getWidth());
-                            overlayResizeHeight = (int) (MainPanelController.getResizeRatio() * image.getHeight());
+                            overlayResizeWidth = (int) (MainPanelController.getZoom() * image.getWidth());
+                            overlayResizeHeight = (int) (MainPanelController.getZoom() * image.getHeight());
 
                         } else {
                             image = o.getImage();
@@ -110,6 +117,10 @@ public class MainPanel extends JPanel {
                     }
 
                 });
+                log.trace("DRAWING\tvp:[{},{}]\tp:[{},{}]\tim:[{},{}]",
+                        mainPanelWrapper.getWidth(), mainPanelWrapper.getHeight(),
+                        this.getWidth(), this.getHeight(), MainPanelController.getZoomedImageWidth(),
+                        MainPanelController.getZoomedImageHeight());
                 break;
             case EMPTY:
                 removeMouseListener(mouse);
@@ -117,7 +128,7 @@ public class MainPanel extends JPanel {
                 removeMouseWheelListener(mouse);
                 BufferedImage im;
                 try {
-                    im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png"));
+                    im = ImageIO.read(this.getClass().getClassLoader().getResource("splash.png")); //todo cache
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
                     JOptionPane.showMessageDialog(BitteUnterschreiben.getApp(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -135,6 +146,7 @@ public class MainPanel extends JPanel {
 
                 g.drawImage(im, imX0, imY0, im.getWidth(), im.getHeight(), null);
                 setPreferredSize(new Dimension(im.getWidth(), im.getHeight()));
+                mainPanelWrapper.getViewport().setViewPosition(new Point(0,0));
                 break;
 
             case DND:
