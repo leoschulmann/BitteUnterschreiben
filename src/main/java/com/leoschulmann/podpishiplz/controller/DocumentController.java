@@ -35,7 +35,7 @@ public class DocumentController {
         if (page != null && !contains(page)) {
             throw new IllegalArgumentException();
         }
-        DocumentController.currentPage = page;
+        currentPage = page;
     }
 
     public static void createDocument() {

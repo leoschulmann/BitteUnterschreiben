@@ -11,10 +11,16 @@ As a side-feature, *BitteUnterschreiben* is capable of merging multiple .pdf fil
 (select target dpi and jpg compression).
 
 *BU* relies upon [Apache PDFBox 2](https://pdfbox.apache.org), an open-source PDF library in terms of rendering and 
-saving. Other technologies used: Logback for logging, Jackson for .yml processing and JUnit+Mockito for testing.
-
-In a compiled as a single .jar file state *BitteUnterschreiben* weighs around 7.5 Mb, macOS and Windows standalone apps 
-weigh 130 and 50 megabytes respectively.
+saving. Other technologies used: Logback for logging, Jackson for .yml processing, JUnit+Mockito for testing and Lombok 
+for anything else. 
 
 Current version requires user to use .png, .jpg, .tif, .bmp files as overlay images. Images are treated as scanned in 
 300 dpi; transparency is desirable but not required (please see the examples in 'PNG' directory). 
+
+*BU* features two-language localization: in Russian and bad English.
+
+![](readme_img/app.png)
+_Placing overlays on page_
+
+![](readme_img/pdf_view.png)
+_Blended images as final .pdf file_
